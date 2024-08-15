@@ -461,7 +461,7 @@ codes.brokeEye = 160;
 % each trial
 if TrialRecord.CurrentTrialNumber == 1
 
-    [condArray, condReps, params] = xPairs_buildTrials_mix_v3();
+    [condArray, condReps, params] = corr_RL_buildTrials_v1();
 
     % store output in TrialRecord so variables live (have scope) beyond
     % this trial.  Other variables in script are only defined during the
