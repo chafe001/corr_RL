@@ -22,6 +22,14 @@ for d2 = 1 : length(d2_rndIndx)
     end % d2
 end % d3
 
+% what we want to do is show the same stack of images at the left and right
+% of fixation each trial, just vary the pairing to control correlation
+% strength of target pairs
+
+% We will have 4 target pairs from xPairing
+% We want noise pairs that contain 1 informative stimulus and one
+% noninformative stimulus
+
 
 bob = 1;
 
