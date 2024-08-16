@@ -88,16 +88,35 @@ params.rewBox_degPerWin = params.rewBox_width/ params.netWin_criterion;
 params.rewBox_yPos = -15;
 params.rewText_yPos = -20;
 
+% --- DEFINE AND INITIALIZE STIM STRUCT
+% Feature dimensions definiting stimulus appearance
+% Modeled on input parameters for boxGraphic(), add
+% other dims as needed
+stim.edgeColor = NaN; % [R G B]
+stim.faceColor = NaN; % [R G B]
+stim.size = NaN; % [WIDTH HEIGHT]
+stim.pos = NaN; % [X Y]
+stim.orientation = NaN;
+stim.scale = NaN; % [xScale, yScale]
+stim.angle = NaN; % Rotation in degrees
 
 % --- SET COMBINATIONS OF STIM FEATURES THAT DEFINE FEATURE SPACE
-% buildStim adds params and returns expanded params struct
-[stimSpace, params] = corr_RL_setStimSpace_v1(params);
+
+
+
+
+stimPos = repmat(stim, 1, params.stimArraySize);
+for s = 1 : params.stimArraySize
+    [stimPos(s).x, stimPos(s).y] = xPairs_findStimXY(params, s);
+end
 
 % --- LOOP THROUGH VARIABLES DEFINING TRIAL CONDITIONS
 for b = 1 : params.numBlocks
 
-    % Define stim and noise pairs by randomly selecting indices into stimSpace
-    [stimPairs, noisePairs, ind] = corr_RL_buildStimPairs_v1(stimSpace, params);
+    % Build 4 stim pairs from 4 randomly selected stimuli (in array of 8)
+    % and 4 noise pairs from remaining 4 stimuli (so no stimulus overlap
+    % between stim and noise pairs).
+    [stimPairs, noisePairs, ind] = xPairs_buildStimPairs_v4(params);
 
     % SET VECTOR OF CORRELATION STRENGTHS TO LOOP THROUGH
     if params.corrStrength_byBlock % set correlatoin level at block level
