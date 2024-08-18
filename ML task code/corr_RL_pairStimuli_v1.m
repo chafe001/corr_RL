@@ -16,24 +16,21 @@ RIGHT = 2;
 % Indexing for blockStim, is blockStim(screenSide,cueNum)
 
 % CUE PAIR 1: cue 1 left, cue 1 right, LEFT response
-cuePairs_leftResp(1).left = blockStim.cue(1,1);
-cuePairs_leftResp(1).right = blockStim.cue(2,1);
-
+cuePairs_leftResp(1).leftStim = blockStim.cue(1,1);
+cuePairs_leftResp(1).rightStim = blockStim.cue(2,1);
 
 % CUE PAIR 2: cue 1 left, cue 2 right, RIGHT response
-cuePairs(2).left = blockStim.cue(1,1);
-cuePairs(2).right = blockStim.cue(2,2);
-cuePairs(2).respSide = RIGHT;
+cuePairs_leftResp(2).leftStim = blockStim.cue(1,1);
+cuePairs_leftResp(2).rightStim = blockStim.cue(2,2);
 
 % CUE PAIR 3: cue 2 left, cue 1 right, LEFT response
-cuePairs(3).left = blockStim.cue(1,2);
-cuePairs(3).right = blockStim.cue(2,1);
-cuePairs(3).respSide = LEFT;
+cuePairs_rightResp(1).leftStim = blockStim.cue(1,2);
+cuePairs_rightResp(1).rightStim = blockStim.cue(2,1);
 
 % CUE PAIR 4: cue 2 left, cue 2 right, RIGHT response
-cuePairs(4).left = blockStim.cue(1,2);
-cuePairs(4).right = blockStim.cue(2,2);
-cuePairs(4).respSide = RIGHT;
+cuePairs_rightResp(2).leftStim = blockStim.cue(1,2);
+cuePairs_rightResp(2).rightStim = blockStim.cue(2,2);
+
 
 % --- BLOCKSTIM NOISE STIM PAIRING SCHEME
 % PAIR ID       LEFT STIM        RIGHT STIM       RESP DIR
@@ -47,43 +44,35 @@ cuePairs(4).respSide = RIGHT;
 % 8             NOISE 2          CUE 2            N/A
 
 % NOISE PAIR 1: cue 1 left, noise 1 right
-noisePairs(1).left = blockStim.cue(1,1);
-noisePairs(1).right = blockStim.noise(2,1);
-noisePairs(1).respSide = NaN;
+noisePairs(1).leftStim = blockStim.cue(1,1);
+noisePairs(1).rightStim = blockStim.noise(2,1);
 
 % NOISE PAIR 2: cue 1 left, noise 2 right
-noisePairs(2).left = blockStim.cue(1,1);
-noisePairs(2).right = blockStim.noise(2,2);
-noisePairs(2).respSide = NaN;
+noisePairs(2).leftStim = blockStim.cue(1,1);
+noisePairs(2).rightStim = blockStim.noise(2,2);
 
 % NOISE PAIR 3: cue 2 left, noise 1 right
-noisePairs(3).left = blockStim.cue(1,2);
-noisePairs(3).right = blockStim.noise(2,1);
-noisePairs(3).respSide = NaN;
+noisePairs(3).leftStim = blockStim.cue(1,2);
+noisePairs(3).rightStim = blockStim.noise(2,1);
 
 % NOISE PAIR 4: cue 2 left, noise 2 right
-noisePairs(4).left = blockStim.cue(1,2);
-noisePairs(4).right = blockStim.noise(2,2);
-noisePairs(4).respSide = NaN;
+noisePairs(4).leftStim = blockStim.cue(1,2);
+noisePairs(4).rightStim = blockStim.noise(2,2);
 
 % NOISE PAIR 5: cue 1 left, noise 1 right
-noisePairs(5).left = blockStim.noise(1,1);
-noisePairs(5).right = blockStim.cue(2,1);
-noisePairs(5).respSide = NaN;
+noisePairs(5).leftStim = blockStim.noise(1,1);
+noisePairs(5).rightStim = blockStim.cue(2,1);
 
 % NOISE PAIR 6: cue 1 left, noise 2 right
-noisePairs(6).left = blockStim.noise(1,1);
-noisePairs(6).right = blockStim.cue(2,2);
-noisePairs(6).respSide = NaN;
+noisePairs(6).leftStim = blockStim.noise(1,1);
+noisePairs(6).rightStim = blockStim.cue(2,2);
 
 % NOISE PAIR 7: cue 2 left, noise 1 right
-noisePairs(7).left = blockStim.noise(1,2);
-noisePairs(7).right = blockStim.cue(2,1);
-noisePairs(7).respSide = NaN;
+noisePairs(7).leftStim = blockStim.noise(1,2);
+noisePairs(7).rightStim = blockStim.cue(2,1);
 
 % NOISE PAIR 8: cue 2 left, noise 2 right
-noisePairs(8).left = blockStim.noise(1,2);
-noisePairs(8).right = blockStim.cue(2,2);
-noisePairs(8).respSide = NaN;
+noisePairs(8).leftStim = blockStim.noise(1,2);
+noisePairs(8).rightStim = blockStim.cue(2,2);
 
 end
