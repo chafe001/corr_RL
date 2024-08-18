@@ -94,6 +94,8 @@ params.Angles = [0 45 90 135];
 params.FaceColors = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
 % --- fixed feature dimensions
 params.Size = [1 4]; % [width height] in degrees
+params.leftPos = [-4 0];
+params.rightPos = [4 0];
 % --- control angle randomization
 params.randAngle = true;
 params.angleShift = 7;
@@ -102,7 +104,7 @@ params.angleShift = 7;
 for b = 1 : params.numBlocks
 
     % select feature combinations of stimuli for this block
-    [blockStim] = corr_RL_sampleStimSpace_v1(params);
+    [leftBlockStim, rightBlockStim] = corr_RL_sampleStimSpace_v1(params);
     
     % Define stim and noise pairs by randomly selecting indices into stimSpace
     [stimPairs, noisePairs, ind] = corr_RL_buildStimPairs_v1(stimSpace, params);

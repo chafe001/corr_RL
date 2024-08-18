@@ -44,10 +44,6 @@ allStim = reshape(stim, [(numAngles * numColors), 1]);
 % --- RANDOMLY PERMUTE 1D matrix to randomize cue and noise stimuli
 randStim = allStim(randperm(size(allStim, 1)), :);
 
-
-
-
-% --- SET BLOCKSTIM
 % params required for BoxGraphic
 % stim.EdgeColor = [R G B]
 % stim.FaceColor = [R G B]
@@ -57,40 +53,59 @@ randStim = allStim(randperm(size(allStim, 1)), :);
 % stim.Angle = Rotation in degrees
 % stim.Zorder = 0 (back) by default
 
-% params.variableDim(2).label = 'FaceColor';
-% params.variableDim(2).values = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
+% --- SET BLOCKSTIM
+% --- left cue 1
+blockStim.cue(1, 1).EdgeColor = randStim(1).FaceColor;
+blockStim.cue(1, 1).FaceColor = randStim(1).FaceColor;
+blockStim.cue(1, 1).Size = params.Size;
+blockStim.cue(1, 1).Position = params.leftPos;
+blockStim.cue(1, 1).Angle = randStim(1).Angle;
+% --- left cue 2
+blockStim.cue(1, 2).EdgeColor = randStim(2).FaceColor;
+blockStim.cue(1, 2).FaceColor = randStim(2).FaceColor;
+blockStim.cue(1, 2).Size = params.Size;
+blockStim.cue(1, 2).Position = params.leftPos;
+blockStim.cue(1, 2).Angle = randStim(2).Angle;
+% --- right cue 1
+blockStim.cue(2, 1).EdgeColor = randStim(3).FaceColor;
+blockStim.cue(2, 1).FaceColor = randStim(3).FaceColor;
+blockStim.cue(2, 1).Size = params.Size;
+blockStim.cue(2, 1).Position = params.leftPos;
+blockStim.cue(2, 1).Angle = randStim(3).Angle;
+% --- right cue 2
+blockStim.cue(2, 2).EdgeColor = randStim(4).FaceColor;
+blockStim.cue(2, 2).FaceColor = randStim(4).FaceColor;
+blockStim.cue(2, 2).Size = params.Size;
+blockStim.cue(2, 2).Position = params.leftPos;
+blockStim.cue(2, 2).Angle = randStim(4).Angle;
 
-% blockStim.left_cue1.EdgeColor = randStim(1).
-% blockStim.left_cue1.FaceColor = 
-
-
-
+% --- left noise 1
+blockStim.noise(1, 1).EdgeColor = randStim(5).FaceColor;
+blockStim.noise(1, 1).FaceColor = randStim(5).FaceColor;
+blockStim.noise(1, 1).Size = params.Size;
+blockStim.noise(1, 1).Position = params.leftPos;
+blockStim.noise(1, 1).Angle = randStim(5).Angle;
+% --- left noise 2
+blockStim.noise(1, 2).EdgeColor = randStim(6).FaceColor;
+blockStim.noise(1, 2).FaceColor = randStim(6).FaceColor;
+blockStim.noise(1, 2).Size = params.Size;
+blockStim.noise(1, 2).Position = params.leftPos;
+blockStim.noise(1, 2).Angle = randStim(6).Angle;
+% --- right noise 1
+blockStim.noise(2, 1).EdgeColor = randStim(7).FaceColor;
+blockStim.noise(2, 1).FaceColor = randStim(7).FaceColor;
+blockStim.noise(2, 1).Size = params.Size;
+blockStim.noise(2, 1).Position = params.leftPos;
+blockStim.noise(2, 1).Angle = randStim(7).Angle;
+% --- right noise 2
+blockStim.noise(2, 2).EdgeColor = randStim(8).FaceColor;
+blockStim.noise(2, 2).FaceColor = randStim(8).FaceColor;
+blockStim.noise(2, 2).Size = params.Size;
+blockStim.noise(2, 2).Position = params.leftPos;
+blockStim.noise(2, 2).Angle = randStim(8).Angle;
 
 bob = 1;
 
 
-
-
-% --- SELECT 8 random indices into the feature matrix 
-
-
-
-
-
-% --- Define stim struct
-% Based on input parameters for boxGraphic()
-
-
-
-% --- SET FEATURE DIMENSIONS AND VALUES
-% loop through feature value vectors to produce all combinations
-% omit position which will be controlled outside of this function
-% params.featureDim(1).label = 'Angle';
-% params.featureDim(1).values = [0 45 90 135];
-% params.featureDim(2).label = 'FaceColor';
-% params.featureDim(2).values = [1 0 0; 1 1 0; 1 0.5 0; 0.5 0 1; 0 0 1];  % red, yellow, orange, purple, blue
-
-
-bob = 1;
 
 end
