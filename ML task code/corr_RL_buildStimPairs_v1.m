@@ -1,40 +1,7 @@
 function [stimPairs, noisePairs, ind] = corr_RL_buildStimPairs_v1(stimSpace, params)
 
-% Selects random indices into stimSpace to define stimulus pairs
-
-% 3D stimSpace array, position, angle color
-% stimSpace(d1, d2, d3).Position = params.featureDim(1).values(d1, :); % xy pairs
-% stimSpace(d1, d2, d3).Angle = params.featureDim(2).values(d2); % degrees
-% stimSpace(d1, d2, d3).FaceColor = params.featureDim(3).values(d3, :); % [R G B]
-% stimSpace(d1, d2, d3).EdgeColor = params.featureDim(3).values(d3, :); % [R G B]
-
-% --- RANDOMIZE INDICES IN 2nd and 3rd dimensions of stimSpace
-d2_rndIndx = randperm(size(stimSpace, 2));
-d3_rndIndx = randperm(size(stimSpace, 3));
-
-% --- PERMUTE d2 and d3 random indices to produce a list of random pairings
-% of d2 and d3 features to draw from to produce stim and noise pairs
-randIndComb = [];
-for d2 = 1 : length(d2_rndIndx)
-    for d3 = 1 : length(d3_rndIndx)
-        randIndx_23(d2,d3).d2Ind = d2_rndIndx(d2);
-        randIndx_23(d2,d3).d3Ind = d3_rndIndx(d3);
-    end % d2
-end % d3
-
-% what we want to do is show the same stack of images at the left and right
-% of fixation each trial, just vary the pairing to control correlation
-% strength of target pairs
-
-% We will have 4 target pairs from xPairing
-% We want noise pairs that contain 1 informative stimulus and one
-% noninformative stimulus
-
-
-bob = 1;
-
-
-% --- PICK TWO STIMULI AT RANDOM FOR RIGHT POSITION
+% corr_RL_buildStimPairs establishes the features of stimuli and how
+% stimuli are combined 
 
 
 

@@ -88,21 +88,20 @@ params.rewBox_degPerWin = params.rewBox_width/ params.netWin_criterion;
 params.rewBox_yPos = -15;
 params.rewText_yPos = -20;
 
-% --- SET STIM SPACE
-% --- variable feature dimensions 
-params.Angles = [0 45 90 135];
-params.FaceColors = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
-% --- fixed feature dimensions
-params.Size = [1 4]; % [width height] in degrees
-% --- control angle randomization
-params.randAngle = true;
-params.angleShift = 7;
+% --- SET FEATURE DIMENSIONS AND VALUES FOR STIMULI
+params.variableDim(1).label = 'Angle';
+params.variableDim(1).values = [0 45 90 135];
+params.variableDim(2).label = 'FaceColor';
+params.variableDim(2).values = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
+
+params.fixedDim(1).label = 
+params.fixedDim
 
 % --- LOOP THROUGH VARIABLES DEFINING TRIAL CONDITIONS
 for b = 1 : params.numBlocks
 
     % select feature combinations of stimuli for this block
-    [blockStim] = corr_RL_sampleStimSpace_v1(params);
+    [blockStim, params] = corr_RL_sampleStimSpace(params);
     
     % Define stim and noise pairs by randomly selecting indices into stimSpace
     [stimPairs, noisePairs, ind] = corr_RL_buildStimPairs_v1(stimSpace, params);
