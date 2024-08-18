@@ -1,4 +1,4 @@
-function [cuePairs, noisePairs] = corr_RL_pairStimuli_v1(blockStim, params)
+function [cuePairs_leftResp, cuePairs_rightResp, noisePairs] = corr_RL_pairStimuli_v1(blockStim, params)
 % corr_RL_pairStimuli builds 2 sets of orthogonal pairs from 4 cue stimuli
 % randomly selected within feature space
 
@@ -9,16 +9,16 @@ RIGHT = 2;
 % --- BLOCKSTIM CUE STIM PAIRING SCHEME
 % PAIR ID       LEFT STIM        RIGHT STIM       RESP DIR
 % 1             CUE 1            CUE 1            LEFT
-% 2             CUE 1            CUE 2            RIGHT  
-% 3             CUE 2            CUE 1            LEFT
-% 4             CUE 2            CUE 2            RIGHT
+% 2             CUE 2            CUE 1            LEFT
+% 1             CUE 1            CUE 2            RIGHT  
+% 2             CUE 2            CUE 2            RIGHT
 
 % Indexing for blockStim, is blockStim(screenSide,cueNum)
 
 % CUE PAIR 1: cue 1 left, cue 1 right, LEFT response
-cuePairs(1).left = blockStim.cue(1,1);
-cuePairs(1).right = blockStim.cue(2,1);
-cuePairs(1).respSide = LEFT;
+cuePairs_leftResp(1).left = blockStim.cue(1,1);
+cuePairs_leftResp(1).right = blockStim.cue(2,1);
+
 
 % CUE PAIR 2: cue 1 left, cue 2 right, RIGHT response
 cuePairs(2).left = blockStim.cue(1,1);
@@ -85,186 +85,5 @@ noisePairs(7).respSide = NaN;
 noisePairs(8).left = blockStim.noise(1,2);
 noisePairs(8).right = blockStim.cue(2,2);
 noisePairs(8).respSide = NaN;
-
-
-
-
-
-% % --- left cue 1
-% blockStim.cue(1, 1).EdgeColor = randStim(1).FaceColor;
-% blockStim.cue(1, 1).FaceColor = randStim(1).FaceColor;
-% blockStim.cue(1, 1).Size = params.Size;
-% blockStim.cue(1, 1).Position = params.leftPos;
-% blockStim.cue(1, 1).Angle = randStim(1).Angle;
-% % --- left cue 2
-% blockStim.cue(1, 2).EdgeColor = randStim(2).FaceColor;
-% blockStim.cue(1, 2).FaceColor = randStim(2).FaceColor;
-% blockStim.cue(1, 2).Size = params.Size;
-% blockStim.cue(1, 2).Position = params.leftPos;
-% blockStim.cue(1, 2).Angle = randStim(2).Angle;
-% % --- right cue 1
-% blockStim.cue(2, 1).EdgeColor = randStim(3).FaceColor;
-% blockStim.cue(2, 1).FaceColor = randStim(3).FaceColor;
-% blockStim.cue(2, 1).Size = params.Size;
-% blockStim.cue(2, 1).Position = params.leftPos;
-% blockStim.cue(2, 1).Angle = randStim(3).Angle;
-% % --- right cue 2
-% blockStim.cue(2, 2).EdgeColor = randStim(4).FaceColor;
-% blockStim.cue(2, 2).FaceColor = randStim(4).FaceColor;
-% blockStim.cue(2, 2).Size = params.Size;
-% blockStim.cue(2, 2).Position = params.leftPos;
-% blockStim.cue(2, 2).Angle = randStim(4).Angle;
-% 
-% % --- left noise 1
-% blockStim.noise(1, 1).EdgeColor = randStim(5).FaceColor;
-% blockStim.noise(1, 1).FaceColor = randStim(5).FaceColor;
-% blockStim.noise(1, 1).Size = params.Size;
-% blockStim.noise(1, 1).Position = params.leftPos;
-% blockStim.noise(1, 1).Angle = randStim(5).Angle;
-% % --- left noise 2
-% blockStim.noise(1, 2).EdgeColor = randStim(6).FaceColor;
-% blockStim.noise(1, 2).FaceColor = randStim(6).FaceColor;
-% blockStim.noise(1, 2).Size = params.Size;
-% blockStim.noise(1, 2).Position = params.leftPos;
-% blockStim.noise(1, 2).Angle = randStim(6).Angle;
-% % --- right noise 1
-% blockStim.noise(2, 1).EdgeColor = randStim(7).FaceColor;
-% blockStim.noise(2, 1).FaceColor = randStim(7).FaceColor;
-% blockStim.noise(2, 1).Size = params.Size;
-% blockStim.noise(2, 1).Position = params.leftPos;
-% blockStim.noise(2, 1).Angle = randStim(7).Angle;
-% % --- right noise 2
-% blockStim.noise(2, 2).EdgeColor = randStim(8).FaceColor;
-% blockStim.noise(2, 2).FaceColor = randStim(8).FaceColor;
-% blockStim.noise(2, 2).Size = params.Size;
-% blockStim.noise(2, 2).Position = params.leftPos;
-% blockStim.noise(2, 2).Angle = randStim(8).Angle;
-
-
-% % this code assumes array size = 8
-% if params.stimArraySize ~= 8
-%     error('buildStimPairs assumes array size 8, modify array or code');
-% end
-% 
-% if params.fixedStimLoc
-%     ind.stimIndx = [2 4 6 8];  % diagonal locations
-%     ind.noiseIndx = [1 3 5 7]; % locations on cardinal axes
-%     % now randomize indices to vary assocaition between stim
-%     % location and state
-%     ind.stimIndx = ind.stimIndx(randperm(length(ind.stimIndx)));
-%     ind.noiseIndx = ind.noiseIndx(randperm(length(ind.noiseIndx)));
-% 
-%     % create pairs used fixed stimulus locations
-%     stimPairs(1).stim1_indx = ind.stimIndx(1);
-%     stimPairs(1).stim1_fileName = 'filledCircle.png';
-%     stimPairs(1).stim2_indx = ind.stimIndx(2);
-%     stimPairs(1).stim2_fileName = 'filledCircle.png';
-%     stimPairs(1).pairID = [ind.stimIndx(1), ind.stimIndx(2)];
-% 
-%     stimPairs(2).stim1_indx = ind.stimIndx(3);
-%     stimPairs(2).stim1_fileName = 'filledCircle.png';
-%     stimPairs(2).stim2_indx = ind.stimIndx(4);
-%     stimPairs(2).stim2_fileName = 'filledCircle.png';
-%     stimPairs(2).pairID = [ind.stimIndx(3), ind.stimIndx(4)];
-% 
-%     stimPairs(3).stim1_indx = ind.stimIndx(1);
-%     stimPairs(3).stim1_fileName = 'filledCircle.png';
-%     stimPairs(3).stim2_indx = ind.stimIndx(3);
-%     stimPairs(3).stim2_fileName = 'filledCircle.png';
-%     stimPairs(3).pairID = [ind.stimIndx(1), ind.stimIndx(3)];
-% 
-%     stimPairs(4).stim1_indx = ind.stimIndx(2);
-%     stimPairs(4).stim1_fileName = 'filledCircle.png';
-%     stimPairs(4).stim2_indx = ind.stimIndx(4);
-%     stimPairs(4).stim2_fileName = 'filledCircle.png';
-%     stimPairs(4).pairID = [ind.stimIndx(2), ind.stimIndx(4)];
-% 
-%     % --- generate noise pairs
-%     noisePairs(1).noise1_indx = ind.noiseIndx(1);
-%     noisePairs(1).noise1_fileName = 'filledCircle.png';
-%     noisePairs(1).noise2_indx = ind.noiseIndx(2);
-%     noisePairs(1).noise2_fileName = 'filledCircle.png';
-%     noisePairs(1).pairID = [ind.noiseIndx(1), ind.noiseIndx(2)];
-% 
-%     noisePairs(2).noise1_indx = ind.noiseIndx(3);
-%     noisePairs(2).noise1_fileName = 'filledCircle.png';
-%     noisePairs(2).noise2_indx = ind.noiseIndx(4);
-%     noisePairs(2).noise2_fileName = 'filledCircle.png';
-%     noisePairs(2).pairID = [ind.noiseIndx(3), ind.noiseIndx(4)];
-% 
-%     noisePairs(3).noise1_indx = ind.noiseIndx(1);
-%     noisePairs(3).noise1_fileName = 'filledCircle.png';
-%     noisePairs(3).noise2_indx = ind.noiseIndx(3);
-%     noisePairs(3).noise2_fileName = 'filledCircle.png';
-%     noisePairs(3).pairID = [ind.noiseIndx(1), ind.noiseIndx(3)];
-% 
-%     noisePairs(4).noise1_indx = ind.noiseIndx(2);
-%     noisePairs(4).noise1_fileName = 'filledCircle.png';
-%     noisePairs(4).noise2_indx = ind.noiseIndx(4);
-%     noisePairs(4).noise2_fileName = 'filledCircle.png';
-%     noisePairs(4).pairID = [ind.noiseIndx(2), ind.noiseIndx(4)];
-% 
-% else
-%     % --- select 4 integers within range of stimulus size to select 4 stimulus
-%     % positions from stimArray at random
-%     ind.rndIndx = randperm(params.stimArraySize);
-%     % --- divide the randomized index vector into subsets of indices to use for stim pairs
-%     % (first 4 elements of randomized vector), and remainder of indices to use for noise pairs
-%     ind.stimIndx = ind.rndIndx(1:4);
-%     ind.noiseIndx = ind.rndIndx(5:end);
-% 
-%     % --- use 4 randomly selected stim indices to create 4 crossed pairs
-%     stimPairs(1).stim1_indx = ind.stimIndx(1);
-%     stimPairs(1).stim1_fileName = 'filledCircle.png';
-%     stimPairs(1).stim2_indx = ind.stimIndx(2);
-%     stimPairs(1).stim2_fileName = 'filledCircle.png';
-%     stimPairs(1).pairID = [ind.stimIndx(1), ind.stimIndx(2)];
-% 
-%     stimPairs(2).stim1_indx = ind.stimIndx(3);
-%     stimPairs(2).stim1_fileName = 'filledCircle.png';
-%     stimPairs(2).stim2_indx = ind.stimIndx(4);
-%     stimPairs(2).stim2_fileName = 'filledCircle.png';
-%     stimPairs(2).pairID = [ind.stimIndx(3), ind.stimIndx(4)];
-% 
-%     stimPairs(3).stim1_indx = ind.stimIndx(1);
-%     stimPairs(3).stim1_fileName = 'filledCircle.png';
-%     stimPairs(3).stim2_indx = ind.stimIndx(3);
-%     stimPairs(3).stim2_fileName = 'filledCircle.png';
-%     stimPairs(3).pairID = [ind.stimIndx(1), ind.stimIndx(3)];
-% 
-%     stimPairs(4).stim1_indx = ind.stimIndx(2);
-%     stimPairs(4).stim1_fileName = 'filledCircle.png';
-%     stimPairs(4).stim2_indx = ind.stimIndx(4);
-%     stimPairs(4).stim2_fileName = 'filledCircle.png';
-%     stimPairs(4).pairID = [ind.stimIndx(2), ind.stimIndx(4)];
-% 
-%     % --- generate noise pairs
-%     noisePairs(1).noise1_indx = ind.noiseIndx(1);
-%     noisePairs(1).noise1_fileName = 'filledCircle.png';
-%     noisePairs(1).noise2_indx = ind.noiseIndx(2);
-%     noisePairs(1).noise2_fileName = 'filledCircle.png';
-%     noisePairs(1).pairID = [ind.noiseIndx(1), ind.noiseIndx(2)];
-% 
-%     noisePairs(2).noise1_indx = ind.noiseIndx(3);
-%     noisePairs(2).noise1_fileName = 'filledCircle.png';
-%     noisePairs(2).noise2_indx = ind.noiseIndx(4);
-%     noisePairs(2).noise2_fileName = 'filledCircle.png';
-%     noisePairs(2).pairID = [ind.noiseIndx(3), ind.noiseIndx(4)];
-% 
-%     noisePairs(3).noise1_indx = ind.noiseIndx(1);
-%     noisePairs(3).noise1_fileName = 'filledCircle.png';
-%     noisePairs(3).noise2_indx = ind.noiseIndx(3);
-%     noisePairs(3).noise2_fileName = 'filledCircle.png';
-%     noisePairs(3).pairID = [ind.noiseIndx(1), ind.noiseIndx(3)];
-% 
-%     noisePairs(4).noise1_indx = ind.noiseIndx(2);
-%     noisePairs(4).noise1_fileName = 'filledCircle.png';
-%     noisePairs(4).noise2_indx = ind.noiseIndx(4);
-%     noisePairs(4).noise2_fileName = 'filledCircle.png';
-%     noisePairs(4).pairID = [ind.noiseIndx(2), ind.noiseIndx(4)];
-% 
-% end
-
-
 
 end

@@ -1,4 +1,4 @@
-function [cuePairs, noisePairs] = corr_RL_pairStimuli_v1(blockStim, params)
+function [cuePairs_leftResp, cuePairs_rightResp, noisePairs] = corr_RL_pairStimuli_v1(blockStim, params)
 % corr_RL_pairStimuli builds 2 sets of orthogonal pairs from 4 cue stimuli
 % randomly selected within feature space
 
@@ -8,17 +8,17 @@ RIGHT = 2;
 
 % --- BLOCKSTIM CUE STIM PAIRING SCHEME
 % PAIR ID       LEFT STIM        RIGHT STIM       RESP DIR
-% 1             CUE 1            CUE 1            LEFT
-% 2             CUE 1            CUE 2            RIGHT  
-% 3             CUE 2            CUE 1            LEFT
-% 4             CUE 2            CUE 2            RIGHT
+% LEFT 1        CUE 1            CUE 1            LEFT
+% LEFT 2        CUE 2            CUE 1            LEFT
+% RIGHT 1       CUE 1            CUE 2            RIGHT  
+% RIGHT 2       CUE 2            CUE 2            RIGHT
 
 % Indexing for blockStim, is blockStim(screenSide,cueNum)
 
 % CUE PAIR 1: cue 1 left, cue 1 right, LEFT response
-cuePairs(1).left = blockStim.cue(1,1);
-cuePairs(1).right = blockStim.cue(2,1);
-cuePairs(1).respSide = LEFT;
+cuePairs_leftResp(1).left = blockStim.cue(1,1);
+cuePairs_leftResp(1).right = blockStim.cue(2,1);
+
 
 % CUE PAIR 2: cue 1 left, cue 2 right, RIGHT response
 cuePairs(2).left = blockStim.cue(1,1);
@@ -85,9 +85,5 @@ noisePairs(7).respSide = NaN;
 noisePairs(8).left = blockStim.noise(1,2);
 noisePairs(8).right = blockStim.cue(2,2);
 noisePairs(8).respSide = NaN;
-
-
-
-
 
 end

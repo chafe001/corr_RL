@@ -71,7 +71,7 @@ params.corrStrength_mode = 'noiseMix';
 params.randNoiseLevel = false;
 params.noiseLevels = [0.20 0.30 0.40 0.50];  % for pairMix
 params.noiseLevel_easy = min(params.noiseLevels);
-params.noiseLeve_hard = max(params.noiseLevels);
+params.noiseLevel_hard = max(params.noiseLevels);
 % --- set movie params
 params.moviePairReps = 20;
 % params.movieMode = 'simultaneous';
@@ -103,16 +103,19 @@ params.randAngle = true;
 params.angleShift = 7;
 
 % --- LOOP THROUGH VARIABLES DEFINING TRIAL CONDITIONS
-for b = 1 : params.numBlocks
+for bn = 1 : params.numBlocks
 
-    % -- select feature combinations of stimuli for this block
+    % -- 1. select feature combinations of individual stimuli for this block
     [blockStim] = corr_RL_sampleStimSpace_v1(params);
+
+    % --- 2. map orthogonal stimulus pairs to LEFT and RIGHT responses
+    [cuePairs, noisePairs] = corr_RL_pairStimuli_v1(blockStim, params);
 
     % --- select noise level for this block
     if params.randNoiseLevel
         noiseLevel = params.noiseLevels(randi(size(params.noiseLevels, 2)));
     else
-        if mod(b, 2) == 1 % odd block
+        if mod(bn, 2) == 1 % odd block
             noiseLevel = params.noiseLevel_easy;
         else  % even block
             noiseLevel = params.noiseLevel_hard;
@@ -120,167 +123,19 @@ for b = 1 : params.numBlocks
     end
 
     for rs = LEFT:RIGHT  % 1:2
-        condArrayTemp(b, r).blockNum = b;
-        condArrayTemp(b, r).rewSide = rs;
-        condArrayTemp(b, r).noiseLevel = noiseLevel;
-
-
-
-
-
-
+        condArrayTemp(bn, rs).blockNum = bn;
+        condArrayTemp(bn, rs).rewSide = rs;
+        condArrayTemp(bn, rs).noiseLevel = noiseLevel;
+        condArrayTemp(bn, rs).cuePairs = cuePair_1 = ;
+        condArrayTemp(bn, rs).cuePairs = cuePair_2 = 
+        condArrayTemp(bn, rs).noisePairs = noisePairs;
     end
 
+end
 
+bob = 1;
 
-
-    
-
-
-
-
-
-
-
-
-    for r = 1 : 2 % reward state, whether LEFT or RIGHT RESPONSE will be associated with max reward probability
-
-        % --- add blockNum to condition data
-        condArrayTemp(b, r).blockNum = b;
-
-        % --- add rewState to condition data
-        condArrayTemp(b, r).rewState = r;
-
-        % --- define cue stimulus pairs
-
-        condArrayTemp(b, r).stimPairs(n).stim1 = stimPos(stimPairs(n).stim1_indx); % sets stim1.x and stim1.y
-        condArrayTemp(b, r).stimPairs(n).stim1_fn = 'filledCircle.png';
-        condArrayTemp(b, r).stimPairs(n).stim2 = stimPos(stimPairs(n).stim2_indx); % sets stim2.x and stim2.y
-        condArrayTemp(b, r).stimPairs(n).stim2_fn = 'filledCircle.png';
-        condArrayTemp(b, r).stimPairs(n).stimPairID = stimPairs(n).pairID;
-
-
-
-
-
-        % --- define noise stimulus pairs
-
-
-
-
-
-
-
-        %     % --- set stimulus pair indices, xy positions
-        %     for n = 1 : size(stimPairs, 2)
-        %         condArrayTemp(b, r, c, m).stimPairs(n).stim1 = stimPos(stimPairs(n).stim1_indx); % sets stim1.x and stim1.y
-        %         condArrayTemp(b, r, c, m).stimPairs(n).stim1_fn = 'filledCircle.png';
-        %         condArrayTemp(b, r, c, m).stimPairs(n).stim2 = stimPos(stimPairs(n).stim2_indx); % sets stim2.x and stim2.y
-        %         condArrayTemp(b, r, c, m).stimPairs(n).stim2_fn = 'filledCircle.png';
-        %         condArrayTemp(b, r, c, m).stimPairs(n).stimPairID = stimPairs(n).pairID;
-        %     end
-        %
-        %     % --- set noise pair indices, xy positions
-        %     for n = 1 : size(noisePairs, 2)
-        %         condArrayTemp(b, r, c, m).noisePairs(n).noise1 = stimPos(noisePairs(n).noise1_indx); % sets noise1.x and noise1.y
-        %         condArrayTemp(b, r, c, m).noisePairs(n).noise1_fn = 'filledCircle.png';
-        %         condArrayTemp(b, r, c, m).noisePairs(n).noise2 = stimPos(noisePairs(n).noise2_indx); % sets noise2.x and noise2.y
-        %         condArrayTemp(b, r, c, m).noisePairs(n).noise2_fn = 'filledCircle.png';
-        %         condArrayTemp(b, r, c, m).noisePairs(n).noisePairID = noisePairs(n).pairID;
-        %     end
-        %
-        %     % --- set correlation strength according to corrStrength_mode
-        %     condArrayTemp(b, r, c, m).falsePairProportion = falsePairProportions(m);
-        %
-        %     % --- set reward probabilities based on rewState
-        %     if condArrayTemp(b, r, c, m).rewState == 1
-        %         condArrayTemp(b, r, c, m).choice1_rewProb = params.highRewProb;
-        %         condArrayTemp(b, r, c, m).choice2_rewProb = params.lowRewProb;
-        %     elseif condArrayTemp(b, r, c, m).rewState == 2
-        %         condArrayTemp(b, r, c, m).choice1_rewProb = params.lowRewProb;
-        %         condArrayTemp(b, r, c, m).choice2_rewProb = params.highRewProb;
-        %     end
-        %
-        %     % --- set choice configuration for this condition
-        %     condArrayTemp(b, r, c, m).choiceConfig = c;
-        %     switch c
-        %         case 1  % set choice configuration 1, green right, red left
-        %             % set choice 1
-        %             condArrayTemp(b, r, c, m).choice1_fn = 'greenChoice.png';
-        %             condArrayTemp(b, r, c, m).choice1_x = params.choice_x;
-        %             condArrayTemp(b, r, c, m).choice1_y = params.choice_y;
-        %             condArrayTemp(b, r, c, m).choice1_side = 'right';
-        %             % set choice 2
-        %             condArrayTemp(b, r, c, m).choice2_fn = 'redChoice.png';
-        %             condArrayTemp(b, r, c, m).choice2_x = -params.choice_x;
-        %             condArrayTemp(b, r, c, m).choice2_y = params.choice_y;
-        %             condArrayTemp(b, r, c, m).choice2_side = 'left';
-        %         case 2 % set choice configuration 2, green left, red right
-        %             % set choice 1
-        %             condArrayTemp(b, r, c, m).choice1_fn = 'greenChoice.png';
-        %             condArrayTemp(b, r, c, m).choice1_x = -params.choice_x;
-        %             condArrayTemp(b, r, c, m).choice1_y = params.choice_y;
-        %             condArrayTemp(b, r, c, m).choice1_side = 'left';
-        %             % set choice 2
-        %             condArrayTemp(b, r, c, m).choice2_fn = 'redChoice.png';
-        %             condArrayTemp(b, r, c, m).choice2_x = params.choice_x;
-        %             condArrayTemp(b, r, c, m).choice2_y = params.choice_y;
-        %             condArrayTemp(b, r, c, m).choice2_side = 'right';
-        %     end
-        %
-        % end % next l
-
-    end  % next r
-
-end  % next b
-
-% Dell Inspiron laptop default refresh rate is 120 Hz, 8.33 ms per refresh.
-
-%  NOTES ON STIMULUS TIMING FOR LEARNING EFFECTS
-% McMahon and Leopold (2010) tested effect of stimulus timing and order on
-% plasticity of face perception. Two faces, variable morph levels between
-% them, task to identify morphs as face A or B. Obtain psychophysical
-% thresolds before and after image pairing.  Image pairing paradigm:
-% - each trial, an image pair was presented (face or nonface) at fovea
-% - 120 trials, 100 face pairs, 20 nonface pairs
-% - each image in pair visible for 1 screen refresh (10 ms at 100 Hz)
-% - SOA 10-100 ms
-% - After 1 pair, press button if face, withhold if nonface (attention)
-% - Interpair interval 800-1200 ms (ITI)
-% - Trial length, fix (500 ms), pair (max 120 ms), 1200 ms ITI = ~ 2 s
-% - Plasticity effect peaked at SOA = 20 ms, 100 pairs sufficient
-% - xPairs prototype (based on above):
-% - Single target pair flashed
-% - Choice target array
-% - Response
-% - Don't vary repetition number, vary order and SOA.
-
-% Convert conditions matrix into a one dimensional struct array
-% condArray = [];
-% for b = 1 : params.numBlocks
-%     for r = 1:2
-%         for c = 1:2
-%             for m = 1: size(falsePairProportions, 2)
-%                 thisCond = condArrayTemp(b, r, c, m);
-%                 condArray = [condArray; thisCond];
-%             end
-%         end
-%     end
-% end
-%
-% bob = 1;
-%
-%
-% %% -------- BUILD TRIAL STACK --------
-% % Create a one-dimensional array of rep counters, one for each condition.
-% % This will work because each block has a unique set of conditions, so the
-% % block can be indexed by the condition number
-%
-% for c = 1 : size(condArray, 1)
-%     condReps(c) = params.repsPerCond;
-% end
-%
-% bob = 1;
 
 end
+
 

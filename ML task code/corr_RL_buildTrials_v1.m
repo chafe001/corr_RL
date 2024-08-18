@@ -109,7 +109,7 @@ for bn = 1 : params.numBlocks
     [blockStim] = corr_RL_sampleStimSpace_v1(params);
 
     % --- 2. map orthogonal stimulus pairs to LEFT and RIGHT responses
-    [cuePairs, noisePairs] = corr_RL_pairStimuli(blockStim, params);
+    [cuePairs, noisePairs] = corr_RL_pairStimuli_v1(blockStim, params);
 
     % --- select noise level for this block
     if params.randNoiseLevel
@@ -126,7 +126,8 @@ for bn = 1 : params.numBlocks
         condArrayTemp(bn, rs).blockNum = bn;
         condArrayTemp(bn, rs).rewSide = rs;
         condArrayTemp(bn, rs).noiseLevel = noiseLevel;
-        condArrayTemp(bn, rs).blockStim = blockStim;
+        condArrayTemp(bn, rs).cuePairs = cuePairs;
+        condArrayTemp(bn, rs).noisePairs = noisePairs;
     end
 
 end
