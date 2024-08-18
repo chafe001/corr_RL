@@ -54,6 +54,9 @@ randStim = allStim(randperm(size(allStim, 1)), :);
 % stim.Zorder = 0 (back) by default
 
 % --- SET BLOCKSTIM
+
+% --- set individual ue and noise stimulus parameters
+
 % --- left cue 1
 blockStim.cue(1, 1).EdgeColor = randStim(1).FaceColor;
 blockStim.cue(1, 1).FaceColor = randStim(1).FaceColor;
