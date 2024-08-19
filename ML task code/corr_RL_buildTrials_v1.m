@@ -1,4 +1,4 @@
-function [condArray, condReps, params] = corr_RL_buildTrials_v1()
+function [condArray, params] = corr_RL_buildTrials_v1()
 
 % This utility function builds the condition and condition rep arrays.
 % These supercede the conditions .txt file MonkeyLogic normally reads to specify
@@ -98,11 +98,9 @@ params.FaceColors = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
 params.Size = [1 4]; % [width height] in degrees
 params.leftPos = [-4 0];
 params.rightPos = [4 0];
-% --- control angle randomization
-params.randAngle = true;
-params.angleShift = 7;
 
 % --- LOOP THROUGH VARIABLES DEFINING TRIAL CONDITIONS
+
 for bn = 1 : params.numBlocks
 
     % -- 1. select feature combinations of individual stimuli for this block
@@ -135,8 +133,19 @@ for bn = 1 : params.numBlocks
         condArrayTemp(bn, rs).noisePairs = noisePairs;
     end
 
+end
 
 
+% Convert conditions matrix into a one dimensional struct array
+condArray = [];
+condNo = 1;
+for b = 1 : params.numBlocks
+    for r = LEFT:RIGHT
+        thisCond = condArrayTemp(b, r);
+        thisCond.condNo = condNo;
+        condNo = condNo + 1;
+        condArray = [condArray; thisCond];
+    end
 end
 
 bob = 1;
