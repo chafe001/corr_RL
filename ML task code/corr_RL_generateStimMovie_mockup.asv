@@ -1,6 +1,9 @@
 function [movieFrames, pairSeq] = corr_RL_generateStimMovie_mockup()
-% This function generates the frames of a stimulus movie based on condition
-% number and stimulus parameters specified in condArray
+% This function returns a cell array, movieFrames, that is used to set the
+% 'List' property of a imageChanger() object.  This controls the sequence
+% of images presented in the movie, which controls the proportion of cue
+% and noise pairs included in each movie.
+
 
 % MOCKUP ---
 % run the function outside of ML task context for debugging
@@ -15,12 +18,8 @@ if mockup
 end
 
 % --- GENERATE stimSeq and noiseSeq VECTORS
-% vectors are a sequence of indices into condArray to retrieve stimulus
-% pair information for each movie frame.  Each stimulus pair defines 
-% one left and and one right stimulus. 
-
-% Each condition has 2 cue stim pairs, 
-% and 8 noise pairs available.
+% Build vectors of indices that are used to access and combine cue and
+% noise stimulus 
 
 
 % params.corrStrength_mode = 'pairMix' or 'noiseMix'
