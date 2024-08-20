@@ -46,8 +46,9 @@ randStim = allStim(randperm(size(allStim, 1)), :);
 % stim.Zorder = 0 (back) by default
 
 % --- SET BLOCKSTIM
-
 % --- set individual cue and noise stimulus parameters
+
+% --- CUE STIMULI
 
 % --- left cue 1
 blockStim.cue(1, 1).EdgeColor = randStim(1).FaceColor;
@@ -80,6 +81,8 @@ blockStim.cue(2, 2).Size = params.Size;
 blockStim.cue(2, 2).Position = params.leftPos;
 blockStim.cue(2, 2).Angle = randStim(4).Angle;
 blockStim.cue(2, 2).FileName = findFileName(randStim(4));
+
+% --- NOISE STIMULI
 
 % --- left noise 1
 blockStim.noise(1, 1).EdgeColor = randStim(5).FaceColor;

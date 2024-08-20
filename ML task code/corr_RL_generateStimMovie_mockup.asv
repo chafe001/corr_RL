@@ -4,72 +4,80 @@ function [movieFrames, pairSeq] = corr_RL_generateStimMovie_mockup()
 % of images presented in the movie, which controls the proportion of cue
 % and noise pairs included in each movie.
 
-
 % MOCKUP ---
 % run the function outside of ML task context for debugging
 mockup = true;
 
 if mockup
     [condArray, params] = corr_RL_buildTrials_v1();
-    times = setTimes();
-    codes = setCodes();
-    % set mock condition number, normally set by random draw at runtime
-    c = 12;
+    c = 12; % set mock condition number, normally set by random draw at runtime
+else
+    params = setParams();
 end
 
-% --- GENERATE stimSeq and noiseSeq VECTORS
-% Build vectors of indices that are used to access and combine cue and
-% noise stimulus 
+times = setTimes();
+codes = setCodes();
 
+% --- BUILD PAIRSEQ VECTOR which is a sequence of indicies to access and retrieve 
+% stimulus information from condArray.  Each row of condArray, corresponding to a
+% single trial condition (c), includes an array of cuePairs and noisePairs. The
+% stimulus movie constructed for trials of this condition will be a sequence of pair
+% images selected from these arrays.  To specify specific stimuli in each pair, we
+% need a vector of indices that specify which cue pair to use (1 of 2 pairs for each
+% condition), and which noise pair to use (1 of 8 pairs for each condition).
 
-% params.corrStrength_mode = 'pairMix' or 'noiseMix'
+% Note: new method of introducing visual noise.  Noise pairs include one
+% cue stimuli (one of the initial 4 cue stimuli specified at the beggining of each 
+% block) and one noise stimulus, which is a stimulus with feature
+% combinations other than those of cue stimuli.  This precludes, for now,
+% mixing cue pairs for reward state 1 and 2 in dfferent combinations in the
+% same movie, Newsome/Shadlen-style, which seems a different question about
+% perceptual discrimination than statistical learning which is our current
+% focus
 
-% --- compute number of false and true stimulus pairs
+% --- compute how many cue and noise pairs in this movie
 numNoisePairs = floor(params.moviePairReps * condArray(c).noiseLevel);
-numCuePairs= params.moviePairReps - numNoisePairs;
+numCuePairs = params.moviePairReps - numNoisePairs;
 
-% --- build vector of integers corresponding to pair indices to control 
-% which stimulus or noise pairs are displayed each frame.  Indices are 
-% used to access stimPairs() and noisePairs() arrays that are stored in 
-% condArray. This vector controls which stimui are shown each frame
+% --- compute reps per each cue and noise pair
+repsPerCuePair = floor(numCuePairs/2);
+repsPerNoisePair = floor(numNoisePairs/8);
 
-switch condArray(c).rewState
-    case 1
-        % reward state 1 corresponds to pairs 1 and 2 in each xPair set
-        num1 = floor(numTrue/2);
-        num2 = numTrue - num1;
-        num3 = floor(numFalse/2);
-        num4 = numFalse - num3;
-        vect1 = ones(1, num1);
-        vect2 = ones(1, num2) + 1;
-        if strcmp(params.corrStrength_mode, 'noiseMix')
-            % add 10 to indices to indicate noisePair
-            vect3 = ones(1, num3) + 12;
-            vect4 = ones(1, num4) + 13;
-        else
-            % stimPair
-            vect3 = ones(1, num3) + 2;
-            vect4 = ones(1, num4) + 3;
-        end
+% adjust for rounding errors
+totalReps = (repsPerCuePair * 2) + (repsPerNoisePair * 8);
+remReps = params.moviePairReps - totalReps;
 
-    case 2
-        % reward state 2 corresponds to pairs 3 and 4 in each xPair set
-        num1 = floor(numFalse/2);
-        num2 = numFalse - num1;
-        num3 = floor(numTrue/2);
-        num4 = numTrue - num3;
-        vect3 = ones(1, num3) + 2;
-        vect4 = ones(1, num4) + 3;
-        if strcmp(params.corrStrength_mode, 'noiseMix')
-            % add 10 to indices to indicate noisePair
-            vect1 = ones(1, num1) + 10;
-            vect2 = ones(1, num2) + 11;
-        else
-            % stimPair
-            vect1 = ones(1, num1);
-            vect2 = ones(1, num2) + 1;
-        end
-end
+
+
+
+% add remaining reps to cue pairs
+remReps1 = floor(remReps/2);
+
+
+
+cue1Vect = ones(repsPerCuePair);
+cue2Vect = ones(numCuePairs - repsPerCuePair) + 1;
+
+
+% build vector of elements equal to 1-8 controlling whether to include
+% noise pair 1-8 in each movie frame.  Add 10 to each element to indicate
+% this is an index into the noisePair array.
+
+noise1Vect = ones(repsPerNoisePair);
+noise2Vect = ones(repsPerNoisePair) + 1;
+noise3Vect = ones(repsPerNoisePair) + 2;
+noise4Vect = ones(repsPerNoisePair) + 3;
+noise5Vect = ones(repsPerNoisePair) + 4;
+noise6Vect = ones(repsPerNoisePair) + 5;
+noise7Vect = ones(repsPerNoisePair) + 6;
+noise8Vect = ones(repsPerNoisePair) + 7;
+
+
+bob = 'foggy';
+
+
+
+
 
 % --- concatenate vect1-4 into pairSeq
 pairSeq = [vect1 vect2 vect3 vect4];

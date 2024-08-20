@@ -31,7 +31,6 @@ cuePairs_rightResp(1).rightStim = blockStim.cue(2,1);
 cuePairs_rightResp(2).leftStim = blockStim.cue(1,2);
 cuePairs_rightResp(2).rightStim = blockStim.cue(2,2);
 
-
 % --- BLOCKSTIM NOISE STIM PAIRING SCHEME
 % PAIR ID       LEFT STIM        RIGHT STIM       RESP DIR
 % 1             CUE 1            NOISE 1          N/A
@@ -42,6 +41,11 @@ cuePairs_rightResp(2).rightStim = blockStim.cue(2,2);
 % 6             NOISE 1          CUE 2            N/A
 % 7             NOISE 2          CUE 1            N/A
 % 8             NOISE 2          CUE 2            N/A
+
+% --- NEW NOISE METHOD
+% noise pairs contain 1 cue stimulus, and 1 noise stimulus, this breaks
+% correlation specifically between cue stimuli, by presenting one without
+% its pair 
 
 % NOISE PAIR 1: cue 1 left, noise 1 right
 noisePairs(1).leftStim = blockStim.cue(1,1);
