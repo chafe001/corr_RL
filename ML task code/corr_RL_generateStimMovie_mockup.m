@@ -119,7 +119,7 @@ bob = 'foggy';
 fix_frame = {[], [], times.fixDur, fix_on};
 soa_frame = {[], [], times.soa, img1_off};
 interPair_frame = {[], [], times.interPair, imgPair_off};
-postMoive_frame = {[], [], times.postMovieDur, endMovie};
+postMovie_frame = {[], [], times.postMovieDur, endMovie};
 
 % --- PREALLOCATE FRAME CELL ARRAY
 % --- SET STIM PARAMS FOR imageChanger FUNCTION CALL TO CONTROL MOVIE
@@ -150,17 +150,17 @@ for p = 1 : length(pairs)
 
     % --- RETRIEVE FILENAMES AND XY POSITIONS FOR 2 IMAGES OF THIS PAIR
     % pairs is a 1 by n cell array, looping over 2nd dimension
-    this_leftImg_fn = pairs(p).leftStim.FileName;
-    this_leftImg_x = pairs(p).leftStim.Position(1);
-    this_leftImg_y = pairs(p).leftStim.Position(2);
-    this_rightImg_fn = pairs(p).rightStim.FileName;
-    this_rightImg_x = pairs(p).rightStim.Position(1);
-    this_rightImg_y = pairs(p).rightStim.Position(2);
+    leftImg_fn = pairs(p).leftStim.FileName;
+    leftImg_x = pairs(p).leftStim.Position(1);
+    leftImg_y = pairs(p).leftStim.Position(2);
+    rightImg_fn = pairs(p).rightStim.FileName;
+    rightImg_x = pairs(p).rightStim.Position(1);
+    rightImg_y = pairs(p).rightStim.Position(2);
 
     % --- BUILD SIMULTANEOUS AND SEQUENTIAL STIM FRAMES FOR EACH IMG PAIR
-    pair_frame = {{this_leftImg_fn, this_rightImg_fn}, [this_leftImg_x this_leftImg_y; this_rightImg_x this_rightImg_y], times.stimDur, imgPair_on};
-    leftImg_frame = {{this_leftImg_fn}, [this_leftImg_x this_leftImg_y], times.stimDur, img1_on};
-    rightImg_frame = {{this_rightImg_fn}, [this_rightImg_x this_rightImg_y], times.stimDur, img2_on};
+    pair_frame = {{leftImg_fn, rightImg_fn}, [leftImg_x leftImg_y; rightImg_x rightImg_y], times.stimDur, imgPair_on};
+    leftImg_frame = {{leftImg_fn}, [leftImg_x leftImg_y], times.stimDur, img1_on};
+    rightImg_frame = {{rightImg_fn}, [rightImg_x rightImg_y], times.stimDur, img2_on};
 
     % --- COMBINE FRAMES INTO SEQUENCEg
     switch params.movieMode
@@ -182,10 +182,10 @@ for p = 1 : length(pairs)
             % pr 3 : indx = 9, 1on = 10, 1off = 11, 2on = 12, 2off = 13
             % pr 4 : indx = 13, 1on = 14, 1off = 15, 2on = 16, 2off = 17 ...
             indx = ((p - 1) * 4) + 2;
-            frame{indx + 1} = img1_frame;
+            frame{indx + 1} = leftImg_frame;
             % frame{indx + 2} = soa_frame;
             frame{indx + 2} = pair_frame;
-            frame{indx + 3} = img2_frame;
+            frame{indx + 3} = rightImg_frame;
             frame{indx + 4} = interPair_frame;
 
         otherwise

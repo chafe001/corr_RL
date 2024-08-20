@@ -1,22 +1,13 @@
-function [movieFrames, pairSeq] = corr_RL_generateStimMovie_mockup()
+function [movieFrames, pairSeq] = corr_RL_generateStimMovie(TrialRecord)
 % This function returns a cell array, movieFrames, that is used to set the
 % 'List' property of a imageChanger() object.  This controls the sequence
 % of images presented in the movie, which controls the proportion of cue
 % and noise pairs included in each movie.
 
-% MOCKUP ---
-% run the function in debugger OUTSIDE of ML task context. Should simplify
-% debugging
-mockup = true;
+condArray = TrialRecord.User.condArray;
+c = TrialRecord.CurrentCondition;
+params = setParams();
 
-if mockup
-    [condArray, params] = corr_RL_buildTrials_v1();
-    c = 12; % set mock condition number, normally set by random draw at runtime
-else
-    condArray = TrialRecord.User.condArray;
-    c = TrialRecord.CurrentCondition;
-    params = setParams();
-end
 
 times = setTimes();
 codes = setCodes();
@@ -119,7 +110,7 @@ bob = 'foggy';
 fix_frame = {[], [], times.fixDur, fix_on};
 soa_frame = {[], [], times.soa, img1_off};
 interPair_frame = {[], [], times.interPair, imgPair_off};
-postMoive_frame = {[], [], times.postMovieDur, endMovie};
+postMovie_frame = {[], [], times.postMovieDur, endMovie};
 
 % --- PREALLOCATE FRAME CELL ARRAY
 % --- SET STIM PARAMS FOR imageChanger FUNCTION CALL TO CONTROL MOVIE
@@ -150,17 +141,17 @@ for p = 1 : length(pairs)
 
     % --- RETRIEVE FILENAMES AND XY POSITIONS FOR 2 IMAGES OF THIS PAIR
     % pairs is a 1 by n cell array, looping over 2nd dimension
-    this_leftImg_fn = pairs(p).leftStim.FileName;
-    this_leftImg_x = pairs(p).leftStim.Position(1);
-    this_leftImg_y = pairs(p).leftStim.Position(2);
-    this_rightImg_fn = pairs(p).img2_fn;
-    this_rightImg_x = pairs(p).img2_x;
-    this_rightImg_y = pairs(p).img2_y;
+    leftImg_fn = pairs(p).leftStim.FileName;
+    leftImg_x = pairs(p).leftStim.Position(1);
+    leftImg_y = pairs(p).leftStim.Position(2);
+    rightImg_fn = pairs(p).rightStim.FileName;
+    rightImg_x = pairs(p).rightStim.Position(1);
+    rightImg_y = pairs(p).rightStim.Position(2);
 
     % --- BUILD SIMULTANEOUS AND SEQUENTIAL STIM FRAMES FOR EACH IMG PAIR
-    pair_frame = {{choice1_fn, choice2_fn, this_img1_fn, this_img2_fn}, [choice1_x choice1_y; choice2_x choice2_y; this_img1_x this_img1_y; this_img2_x this_img2_y], times.stimDur, imgPair_on};
-    img1_frame = {{choice1_fn, choice2_fn, this_img1_fn}, [choice1_x choice1_y; choice2_x choice2_y; this_img1_x this_img1_y], times.stimDur, img1_on};
-    img2_frame = {{choice1_fn, choice2_fn, this_img2_fn}, [choice1_x choice1_y; choice2_x choice2_y; this_img2_x this_img2_y], times.stimDur, img2_on};
+    pair_frame = {{leftImg_fn, rightImg_fn}, [leftImg_x leftImg_y; rightImg_x rightImg_y], times.stimDur, imgPair_on};
+    leftImg_frame = {{leftImg_fn}, [leftImg_x leftImg_y], times.stimDur, img1_on};
+    rightImg_frame = {{rightImg_fn}, [rightImg_x rightImg_y], times.stimDur, img2_on};
 
     % --- COMBINE FRAMES INTO SEQUENCEg
     switch params.movieMode
@@ -182,10 +173,10 @@ for p = 1 : length(pairs)
             % pr 3 : indx = 9, 1on = 10, 1off = 11, 2on = 12, 2off = 13
             % pr 4 : indx = 13, 1on = 14, 1off = 15, 2on = 16, 2off = 17 ...
             indx = ((p - 1) * 4) + 2;
-            frame{indx + 1} = img1_frame;
+            frame{indx + 1} = leftImg_frame;
             % frame{indx + 2} = soa_frame;
             frame{indx + 2} = pair_frame;
-            frame{indx + 3} = img2_frame;
+            frame{indx + 3} = rightImg_frame;
             frame{indx + 4} = interPair_frame;
 
         otherwise

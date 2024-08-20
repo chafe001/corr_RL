@@ -376,7 +376,7 @@ end
 % 5. sequential: stimuli presented at longer SOAs to engage sequence
 % prediction error learning mechanisms
 
-[movieFrames, pairSeq] = xPairs_generateStimMovie_mix_v4(TrialRecord);
+[movieFrames, pairSeq] = corr_RL_generateStimMovie(TrialRecord);
 
 % Save movie and pair sequence to TrialRecord
 TrialRecord.User.movieFrames = movieFrames;
@@ -402,31 +402,14 @@ b = TrialRecord.CurrentBlock;
 % ---------------- SET CHOICE AND REWARD PARAMETERS -----------------------
 % -------------------------------------------------------------------------
 
-% set the choice feebback images
-choices.rewImg = 'rewRing.png';
-choices.choiceImg = 'choiceRing.png';
-% set the reward box image parameters
-
 % extract reward state
 choices.rewState = TrialRecord.User.condArray(c).rewState;
-% extract choice 1 (green) parameters
-choices.ch1_side = TrialRecord.User.condArray(c).choice1_side;
-choices.ch1_fn = TrialRecord.User.condArray(c).choice1_fn;
-choices.ch1_x = TrialRecord.User.condArray(c).choice1_x;
-choices.ch1_y = TrialRecord.User.condArray(c).choice1_y;
-choices.ch1_rewProb = TrialRecord.User.condArray(c).choice1_rewProb;
-% extract choice 2 (red) parameters
-choices.ch2_side = TrialRecord.User.condArray(c).choice2_side;
-choices.ch2_fn = TrialRecord.User.condArray(c).choice2_fn;
-choices.ch2_x = TrialRecord.User.condArray(c).choice2_x;
-choices.ch2_y = TrialRecord.User.condArray(c).choice2_y;
-choices.ch2_rewProb = TrialRecord.User.condArray(c).choice2_rewProb;
+
 % init choices (outcome) variables reflecting subject response
 choices.chosenSide = [];
 choices.responseKey = [];
 choices.choiceSelected = [];  % ch1 or ch2, green or red respectively
 choices.selectedHighProb = []; % selected the choice with the higher reward probability
-choices.chosenColor = [];
 choices.chosenX = [];
 choices.chosenY = [];
 choices.madeValidResp = [];
@@ -474,45 +457,23 @@ abortTrial = false;
 % --- reward state info
 switch choices.rewState
     case 1
-        rewStr = '  High rewProb: GREEN';
+        rewStr = '  High rewProb: LEFT';
     case 2
-        rewStr = '  High rewProb: RED';
+        rewStr = '  High rewProb: RIGHT';
 end
-
 
 trlStr = strcat('Trial:',num2str(t));
 blockStr = strcat('  Block:', num2str(b));
-modeStr = strcat('  Mode:', TrialRecord.User.params.corrStrength_mode);
-strengthStr = strcat('  falsePairs: ', num2str(TrialRecord.User.condArray(c).falsePairProportion));
+numCuePairsStr = strcat('  numCuePairs: ', num2str(TrialRecord.User.condArray(c).numCuePairs));
 trlStateStr = ('   Trial Epoch: pretrial');
-outStr1 = strcat(trlStr, blockStr, rewStr, modeStr, strengthStr, trlStateStr);
+outStr1 = strcat(trlStr, blockStr, rewStr, modeStr, numCuePairsStr, trlStateStr);
 dashboard(1, outStr1);
-
-% --- stim pair info
-switch choices.rewState
-    case 1
-        stimPair1_id = TrialRecord.User.condArray(c).stimPairs(1).stimPairID;
-        stimPair2_id = TrialRecord.User.condArray(c).stimPairs(2).stimPairID;
-        pair1Str = strcat('stimPair1: [', num2str(stimPair1_id), '],');
-        pair2Str = strcat('    stimPair2: [', num2str(stimPair2_id), '],');
-        outStr2 = strcat(pair1Str, pair2Str);
-
-    case 2
-        stimPair3_id = TrialRecord.User.condArray(c).stimPairs(3).stimPairID;
-        stimPair4_id = TrialRecord.User.condArray(c).stimPairs(4).stimPairID;
-        pair3Str = strcat('stimPair3: [', num2str(stimPair3_id), '],');
-        pair4Str = strcat('    stimPair4: [', num2str(stimPair4_id), ']');
-        outStr2 = strcat(pair3Str, pair4Str);
-
-end
-
-dashboard(2, outStr2);
 
 % --- block control info
 condsInBlock = strcat('condsInBLock: [', num2str(TrialRecord.ConditionsThisBlock), ']');
-dashboard(3, condsInBlock);
+dashboard(2, condsInBlock);
 repsInBlock = strcat('repsInBlock:    [', num2str(TrialRecord.User.condRepsRem(TrialRecord.ConditionsThisBlock)), ']');
-dashboard(4, repsInBlock);
+dashboard(3, repsInBlock);
 
 % write event codes to store ML condition and trial numbers
 mult256 = floor(TrialRecord.CurrentTrialNumber/256) + 1;
