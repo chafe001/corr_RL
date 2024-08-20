@@ -127,7 +127,7 @@ noisePairs(8).leftStim = blockStim.noise(1,2);
 noisePairs(8).rightStim = blockStim.cue(2,2);
 noisePairs(8).leftStimStr = 'left noise 2';
 noisePairs(8).rightStimStr = 'right cue 2';
-noisePairs(8).pairID = [12 2]; % left noise and right cue array indices
+noisePairs(8).pairID = [11 2]; % left noise and right cue array indices
 noisePairs(8).pairRespSide = NaN;
 
 end

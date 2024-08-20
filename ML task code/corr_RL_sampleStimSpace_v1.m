@@ -70,7 +70,7 @@ blockStim.cue(1, 2).FileName = findFileName(randStim(2));
 blockStim.cue(2, 1).EdgeColor = randStim(3).FaceColor;
 blockStim.cue(2, 1).FaceColor = randStim(3).FaceColor;
 blockStim.cue(2, 1).Size = params.Size;
-blockStim.cue(2, 1).Position = params.leftPos;
+blockStim.cue(2, 1).Position = params.rightPos;
 blockStim.cue(2, 1).Angle = randStim(3).Angle;
 blockStim.cue(2, 1).FileName = findFileName(randStim(3));
 
@@ -78,7 +78,7 @@ blockStim.cue(2, 1).FileName = findFileName(randStim(3));
 blockStim.cue(2, 2).EdgeColor = randStim(4).FaceColor;
 blockStim.cue(2, 2).FaceColor = randStim(4).FaceColor;
 blockStim.cue(2, 2).Size = params.Size;
-blockStim.cue(2, 2).Position = params.leftPos;
+blockStim.cue(2, 2).Position = params.rightPos;
 blockStim.cue(2, 2).Angle = randStim(4).Angle;
 blockStim.cue(2, 2).FileName = findFileName(randStim(4));
 
@@ -104,7 +104,7 @@ blockStim.noise(1, 2).FileName = findFileName(randStim(6));
 blockStim.noise(2, 1).EdgeColor = randStim(7).FaceColor;
 blockStim.noise(2, 1).FaceColor = randStim(7).FaceColor;
 blockStim.noise(2, 1).Size = params.Size;
-blockStim.noise(2, 1).Position = params.leftPos;
+blockStim.noise(2, 1).Position = params.rightPos;
 blockStim.noise(2, 1).Angle = randStim(7).Angle;
 blockStim.noise(2, 1).FileName = findFileName(randStim(7));
 
@@ -112,7 +112,7 @@ blockStim.noise(2, 1).FileName = findFileName(randStim(7));
 blockStim.noise(2, 2).EdgeColor = randStim(8).FaceColor;
 blockStim.noise(2, 2).FaceColor = randStim(8).FaceColor;
 blockStim.noise(2, 2).Size = params.Size;
-blockStim.noise(2, 2).Position = params.leftPos;
+blockStim.noise(2, 2).Position = params.rightPos;
 blockStim.noise(2, 2).Angle = randStim(8).Angle;
 blockStim.noise(2, 2).FileName = findFileName(randStim(8));
 

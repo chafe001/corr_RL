@@ -32,7 +32,7 @@ for bn = 1 : params.numBlocks
     [blockStim] = corr_RL_sampleStimSpace_v1(params);
 
     % --- 2. map orthogonal stimulus pairs to LEFT and RIGHT responses
-    [cuePairs_leftResp, cuePairs_rightResp, noisePairs] = corr_RL_pairStimuli_v1(blockStim, params);
+    [cuePairs, noisePairs] = corr_RL_pairStimuli_v1(blockStim);
 
     % --- 3. select number of cue pairs for this block, and hence degree of
     % visual noise (number of noise pairs) added to the movie
@@ -47,15 +47,17 @@ for bn = 1 : params.numBlocks
         end
     end
 
+    % --- 4. assign each condition, associated with a unique cue movie, to
+    % LEFT and RIGHT reward states
     for rs = LEFT:RIGHT
         condArrayTemp(bn, rs).blockNum = bn;
-        condArrayTemp(bn, rs).rewSide = rs;
+        condArrayTemp(bn, rs).movieRewState = rs;
         condArrayTemp(bn, rs).numCuePairs = numCuePairs;
         switch rs
             case LEFT
-                condArrayTemp(bn, rs).cuePairs = cuePairs_rightResp;
+                condArrayTemp(bn, rs).cuePairs = [cuePairs(1) cuePairs(3)];
             case RIGHT
-                condArrayTemp(bn, rs).cuePairs = cuePairs_leftResp;
+                condArrayTemp(bn, rs).cuePairs = [cuePairs(2) cuePairs(4)];
         end
         condArrayTemp(bn, rs).noisePairs = noisePairs;
     end
