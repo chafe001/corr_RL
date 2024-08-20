@@ -5,13 +5,16 @@ function [movieFrames, pairSeq] = corr_RL_generateStimMovie_mockup()
 % and noise pairs included in each movie.
 
 % MOCKUP ---
-% run the function outside of ML task context for debugging
+% run the function in debugger OUTSIDE of ML task context. Should simplify
+% debugging
 mockup = true;
 
 if mockup
     [condArray, params] = corr_RL_buildTrials_v1();
     c = 12; % set mock condition number, normally set by random draw at runtime
 else
+    condArray = TrialRecord.User.condArray;
+    c = TrialRecord.CurrentCondition;
     params = setParams();
 end
 
@@ -35,37 +38,33 @@ codes = setCodes();
 % perceptual discrimination than statistical learning which is our current
 % focus
 
-
-
-
-cue1Vect = ones(repsPerCuePair);
-cue2Vect = ones(numCuePairs - repsPerCuePair) + 1;
+% --- retrive number of cue pairs for this movie
+numCuePairs = condArray(c).numCuePairs;
+% --- build vector of 1s and 2s indicating which of the two cue pairs
+% associated with each condition to show each frame of the movie. (Note:
+% setParams() checks that numCuePairs is divisible by 2).
+cue1Vect = ones(1, numCuePairs/2);
+cue2Vect = ones(1, numCuePairs/2) + 1;
+cueVect = [cue1Vect cue2Vect];
 
 
 % build vector of elements equal to 1-8 controlling whether to include
 % noise pair 1-8 in each movie frame.  Add 10 to each element to indicate
 % this is an index into the noisePair array.
+numNoisePairs = params.numMoviePairs - numCuePairs;
+noiseVect = [];
+for n = 1 : numNoisePairs
+    randNoiseInd = randi(8);
+    noiseVect = [noiseVect randNoiseInd];
+end
+noiseVect = noiseVect + 10;
 
-noise1Vect = ones(repsPerNoisePair);
-noise2Vect = ones(repsPerNoisePair) + 1;
-noise3Vect = ones(repsPerNoisePair) + 2;
-noise4Vect = ones(repsPerNoisePair) + 3;
-noise5Vect = ones(repsPerNoisePair) + 4;
-noise6Vect = ones(repsPerNoisePair) + 5;
-noise7Vect = ones(repsPerNoisePair) + 6;
-noise8Vect = ones(repsPerNoisePair) + 7;
-
-
-bob = 'foggy';
-
-
-
-
-
-% --- concatenate vect1-4 into pairSeq
-pairSeq = [vect1 vect2 vect3 vect4];
+% concatenate cue and noise vectors into pairSeq
+pairSeq = [cueVect noiseVect];
 % --- randomize order of pairSeq
 pairSeq = pairSeq(randperm(length(pairSeq)));
+
+bob = 'foggy';
 
 % --- build seq of pairs, stim and noise, to control movie frames
 for p = 1 : length(pairSeq)

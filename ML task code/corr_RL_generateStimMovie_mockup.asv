@@ -5,13 +5,16 @@ function [movieFrames, pairSeq] = corr_RL_generateStimMovie_mockup()
 % and noise pairs included in each movie.
 
 % MOCKUP ---
-% run the function outside of ML task context for debugging
+% run the function in debugger OUTSIDE of ML task context. Should simplify
+% debugging
 mockup = true;
 
 if mockup
     [condArray, params] = corr_RL_buildTrials_v1();
     c = 12; % set mock condition number, normally set by random draw at runtime
 else
+    condArray = TrialRecord.User.condArray;
+    c = TrialRecord.CurrentCondition;
     params = setParams();
 end
 
@@ -35,33 +38,28 @@ codes = setCodes();
 % perceptual discrimination than statistical learning which is our current
 % focus
 
-% --- compute how many cue and noise pairs in this movie
-numNoisePairs = floor(params.moviePairReps * condArray(c).noiseLevel);
-numCuePairs = params.moviePairReps - numNoisePairs;
-
-% --- compute reps per each cue and noise pair
-repsPerCuePair = floor(numCuePairs/2);
-repsPerNoisePair = floor(numNoisePairs/8);
-
-% adjust for rounding errors
-totalReps = (repsPerCuePair * 2) + (repsPerNoisePair * 8);
-remReps = params.moviePairReps - totalReps;
-
-
-
-
-% add remaining reps to cue pairs
-remReps1 = floor(remReps/2);
-
-
-
-cue1Vect = ones(repsPerCuePair);
-cue2Vect = ones(numCuePairs - repsPerCuePair) + 1;
+% --- retrive number of cue pairs for this movie
+numCuePairs = condArray(c).numCuePairs;
+% --- build vector of 1s and 2s indicating which of the two cue pairs
+% associated with each condition to show each frame of the movie. (Note:
+% setParams() checks that numCuePairs is divisible by 2).
+cue1Vect = ones(numCuePairs/2);
+cue2Vect = ones(numCuePairs/2) + 1;
 
 
 % build vector of elements equal to 1-8 controlling whether to include
 % noise pair 1-8 in each movie frame.  Add 10 to each element to indicate
 % this is an index into the noisePair array.
+
+numNoisePairs = params.numMoviePairs - numCuePairs;
+for n = 1 : numNoisePairs
+
+
+
+
+end
+
+
 
 noise1Vect = ones(repsPerNoisePair);
 noise2Vect = ones(repsPerNoisePair) + 1;
