@@ -430,7 +430,6 @@ codes.rewRing_on = 140;
 codes.noEye = 150;
 codes.brokeEye = 160;
 
-
 % *************************************************************************************************
 % *************************************************************************************************
 % *********** PERFORM CPU DEMANDING OVERHEAD BELOW (BEFORE RUNNING TRIAL) *************************
@@ -552,6 +551,39 @@ abortTrial = false;
 % built in, and writes event codes. Empty brackets for screen color leaves
 % color unchanged.
 
+% --- PRINT TASK INFO TO USER SCREEN
+switch TrialRecord.User.condArray(c).movieRewState
+    case 1
+        keyStr = 'Correct Key: LEFT';
+    case 2
+        keyStr = 'Correct Key: RIGHT';
+end
+
+trlInfoStr = strcat(keyStr, ...
+    '  Trial:', num2str(t), ...
+    '  Block:', num2str(b), ...
+    '  Cond:', num2str(c), ...
+    '  Cue pairs:', num2str(TrialRecord.User.condArray(c).numCuePairs), ...
+    '  Total pairs: ', num2str(TrialRecord.User.params.numMoviePairs));
+
+pair1_Angles_str = strcat('Pair1 L_ang:', num2str(TrialRecord.User.condArray(c).cuePairs(1).leftStim.Angle), ...
+    '  L_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).leftStim.FaceColor), ...
+    '  L_FN: ', TrialRecord.User.condArray(c).cuePairs(1).leftStim.FileName, ...
+    '  R_ang: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).rightStim.Angle), ...
+    '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).rightStim.FaceColor), ...
+    '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(1).rightStim.FileName);
+
+pair2_Angles_str = strcat('Pair2 L_ang:', num2str(TrialRecord.User.condArray(c).cuePairs(2).leftStim.Angle), ...
+    '  L_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).leftStim.FaceColor), ...
+    '  L_FN: ', TrialRecord.User.condArray(c).cuePairs(2).leftStim.FileName, ...
+    '  R_ang: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.Angle), ...
+    '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.FaceColor), ...
+    '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(2).rightStim.FileName);
+
+
+dashboard(1, trlInfoStr);
+dashboard(2, pair1_Angles_str);
+dashboard(3, pair2_Angles_str);
 
 % write event codes to store ML condition and trial numbers
 mult256 = floor(TrialRecord.CurrentTrialNumber/256) + 1;
@@ -574,9 +606,6 @@ netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
 
 rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 
-% sc1_pt = FrameCounter(rewBox);
-% sc1_pt.NumFrame = times.sc1_pretrial_frames;
-
 sc1_pt = TimeCounter(rewBox);
 sc1_pt.Duration = 100;
 
@@ -589,6 +618,7 @@ scene1_start = run_scene(scene1, codes.startPretrial); %'pretrial'
 
 % -------------------------------------------------------------------------
 % SCENE 2: PRESENT STIM MOVIE, WATCH FOR KEY RESPONSE
+
 % --- MAKE ADAPTOR(S)
 % --- reward box for visual feedback
 rewBox = BoxGraphic(null_);
@@ -667,9 +697,7 @@ if sc2_key1.Success && ~sc2_key2.Success
         % response after movie
         trialerror('lateResp');
     end
-   
-    WHATSUP = 1;
-
+  
     % DECREMENT REP COUNTER FOR THIS CONDITION, c is condition number in
     % % TrialRecord as saved above
     % TrialRecord.User.condRepsRem(c) = TrialRecord.User.condRepsRem(c) - 1;
@@ -707,12 +735,9 @@ end
 % -------------------------------------------------------------------------
 % SCENE 3: GIVE PROBABILISTIC REWARD AND DISPLAY FEEDBACK
 
-
 % --- BUILD ADAPTOR CHAINS
-% --- 1. frame counter adaptor
-% sc3_fc = FrameCounter(null_);
-% sc3_fc.NumFrame = times.sc3_feedback_frames;
-
+% --- 1. TimeCounter adaptor. Not sure why but FrameCounter here slows task
+% down a lot.
 sc3_fc = TimeCounter(null_);
 sc3_fc.Duration = 100;
 
@@ -769,7 +794,6 @@ netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
 
 rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 
-
 if choices.madeValidResp
     if visualFeedback && choices.rewardTrial
         sc3_rewImg = ImageChanger(rewBox);
@@ -781,8 +805,14 @@ if choices.madeValidResp
         sc3_rewImg.List = ...
             {{choices.choiceImg}, [0 0], times.choiceRing_frames, codes.choiceRing_on};
     end
-end
+else
+    % instantiate sc3_rewImg but init to just fix, prevents crash on GUI
+    % quit
+    sc3_rewImg = ImageChanger(rewBox);
+    sc3_rewImg.List = ...
+        {[], [], times.choiceRing_frames, codes.choiceRing_on};
 
+end
 
 % --- COMBINE REW IMG WTH with FEEDBACK
 sc3_probRew = Concurrent(sc3_fc);
@@ -790,9 +820,6 @@ sc3_probRew.add(sc3_rewImg);
 % --- update rewBox width so changes with text feedback
 % netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
 % sc3_probRew.add(rewBox);
-if TrialRecord.User.params.printOutcome
-    sc3_probRew.add(rewText);
-end
 
 % --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
 scene3 = create_scene(sc3_probRew, taskObj_fix);
@@ -811,7 +838,6 @@ scene3_start = run_scene(scene3);
 %     'params', TrialRecord.User.params, ...
 %     'movieFrames', TrialRecord.User.movieFrames, ...
 %     'movieFrameTimes', TrialRecord.User.movieFrameTimes);
-
 
 
 bhv_variable( ...

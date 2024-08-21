@@ -1,4 +1,4 @@
-function [times] = setTimes()
+function [times] = corr_RL_setTimes()
 
 % task pace is heavily dependent on refresh rate and hardware
 COMPUTER = getenv('COMPUTERNAME');

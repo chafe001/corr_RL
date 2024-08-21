@@ -1,9 +1,10 @@
-function [params] = setParams()
+function [params] = corr_RL_setParams()
 
 % --- STIMULUS FEATURE SPACE
 % --- variable feature dimensions
 params.Angles = [0 45 90 135];
-params.FaceColors = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
+% params.FaceColors = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
+params.FaceColors = [0 0 0; 1 1 1];  % black, white
 % --- fixed feature dimensions
 params.Size = [1 4]; % [width height] in degrees
 params.leftPos = [-4 0];
@@ -19,7 +20,8 @@ params.netWin_criterion = 10;  % number of netWins before switching block
 % --- MOVIE CONTROL
 params.randCuePairNum = true;
 params.numMoviePairs = 30;
-params.numCuePairs = [14 18 22 26];
+% params.numCuePairs = [14 18 22 26];
+params.numCuePairs = [30 30 30 30];
 params.numCuePairs_easy = max(params.numCuePairs);
 params.numCuePairs_hard = min(params.numCuePairs);
 % check each cue pair number is divisible by 2, error if not
@@ -35,15 +37,14 @@ params.movieMode = 'stdp';
 % --- CHOICE/REWARD 
 params.choice_x = 4;
 params.choice_y = 0;
-params.highRewProb = 0.8;
-params.lowRewProb = 0.2;
+params.highRewProb = 1.0;
+params.lowRewProb = 0;
 
 % --- FEEDBACK
-params.printOutcome = false;
-params.rewBox_width = 15; % degrees visual angle
-params.rewBox_height = 3;
+params.rewBox_width = 10; % degrees visual angle
+params.rewBox_height = 1;
 params.rewBox_degPerWin = params.rewBox_width/ params.netWin_criterion;
-params.rewBox_yPos = -5;
+params.rewBox_yPos = -10;
 params.rewText_yPos = -20;
 
 end

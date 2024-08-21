@@ -23,7 +23,7 @@ RIGHT = 2;
 % set params in a utility function, makes debugging easier as many
 % functions can be run independently outside of the ML environment which
 % makes debugging easier
-params = setParams();
+params = corr_RL_setParams();
 
 % --- LOOP THROUGH VARIABLES DEFINING TRIAL CONDITIONS
 for bn = 1 : params.numBlocks
@@ -55,9 +55,9 @@ for bn = 1 : params.numBlocks
         condArrayTemp(bn, rs).numCuePairs = numCuePairs;
         switch rs
             case LEFT
-                condArrayTemp(bn, rs).cuePairs = [cuePairs(1) cuePairs(3)];
+                condArrayTemp(bn, rs).cuePairs = [cuePairs(1) cuePairs(4)];
             case RIGHT
-                condArrayTemp(bn, rs).cuePairs = [cuePairs(2) cuePairs(4)];
+                condArrayTemp(bn, rs).cuePairs = [cuePairs(2) cuePairs(3)];
         end
         condArrayTemp(bn, rs).noisePairs = noisePairs;
     end

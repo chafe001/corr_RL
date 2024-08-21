@@ -4,22 +4,11 @@ function [movieFrames, pairSeq] = corr_RL_generateStimMovie_v1(TrialRecord)
 % of images presented in the movie, which controls the proportion of cue
 % and noise pairs included in each movie.
 
-% MOCKUP ---
-% run the function in debugger OUTSIDE of ML task context. Should simplify
-% debugging
-mockup = true;
-
-if mockup
-    [condArray, params] = corr_RL_buildTrials_v1();
-    c = 12; % set mock condition number, normally set by random draw at runtime
-else
-    condArray = TrialRecord.User.condArray;
-    c = TrialRecord.CurrentCondition;
-    params = setParams();
-end
-
-times = setTimes();
-codes = setCodes();
+condArray = TrialRecord.User.condArray;
+c = TrialRecord.CurrentCondition;
+params = corr_RL_setParams();
+times = corr_RL_setTimes();
+codes = corr_RL_setCodes();
 
 % --- BUILD PAIRSEQ VECTOR which is a sequence of indicies to access and retrieve 
 % stimulus information from condArray.  Each row of condArray, corresponding to a
