@@ -43,7 +43,7 @@ params.printOutcome = false;
 params.rewBox_width = 15; % degrees visual angle
 params.rewBox_height = 3;
 params.rewBox_degPerWin = params.rewBox_width/ params.netWin_criterion;
-params.rewBox_yPos = -15;
+params.rewBox_yPos = -5;
 params.rewText_yPos = -20;
 
 end
