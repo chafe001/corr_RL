@@ -455,17 +455,17 @@ codes.brokeEye = 160;
 % each trial
 if TrialRecord.CurrentTrialNumber == 1
 
-    [condArray, params] = corr_RL_buildTrials_v1();
+    [condArray, condReps, params] = corr_RL_buildTrials_v1();
 
     % store output in TrialRecord so variables live (have scope) beyond
     % this trial.  Other variables in script are only defined during the
     % trial.
     TrialRecord.User.condArray = condArray;
-    % TrialRecord.User.condReps = condReps;
+    TrialRecord.User.condReps = condReps;
     TrialRecord.User.params = params;
     % init condition reps remaining counter (condRepRem) to initial
     % condition rep array
-    % TrialRecord.User.condRepsRem = condReps;
+    TrialRecord.User.condRepsRem = condReps;
     TrialRecord.User.times = times;
     TrialRecord.User.codes = codes;
 
@@ -554,6 +554,12 @@ abortTrial = false;
 
 % --- PRINT TRIAL STAGE AND INFO TO USER SCREEN
 % --- reward state info
+switch choices.rewState
+    case 1
+        rewStr = '  High rewProb: GREEN';
+    case 2
+        rewStr = '  High rewProb: RED';
+end
 
 trlStr = strcat('Trial:',num2str(t));
 blockStr = strcat('  Block:', num2str(b));
@@ -563,11 +569,31 @@ trlStateStr = ('   Trial Epoch: pretrial');
 outStr1 = strcat(trlStr, blockStr, rewStr, modeStr, strengthStr, trlStateStr);
 dashboard(1, outStr1);
 
+% --- stim pair info
+switch choices.rewState
+    case 1
+        stimPair1_id = TrialRecord.User.condArray(c).stimPairs(1).stimPairID;
+        stimPair2_id = TrialRecord.User.condArray(c).stimPairs(2).stimPairID;
+        pair1Str = strcat('stimPair1: [', num2str(stimPair1_id), '],');
+        pair2Str = strcat('    stimPair2: [', num2str(stimPair2_id), '],');
+        outStr2 = strcat(pair1Str, pair2Str);
+
+    case 2
+        stimPair3_id = TrialRecord.User.condArray(c).stimPairs(3).stimPairID;
+        stimPair4_id = TrialRecord.User.condArray(c).stimPairs(4).stimPairID;
+        pair3Str = strcat('stimPair3: [', num2str(stimPair3_id), '],');
+        pair4Str = strcat('    stimPair4: [', num2str(stimPair4_id), ']');
+        outStr2 = strcat(pair3Str, pair4Str);
+
+end
+
+dashboard(2, outStr2);
+
 % --- block control info
 condsInBlock = strcat('condsInBLock: [', num2str(TrialRecord.ConditionsThisBlock), ']');
 dashboard(3, condsInBlock);
-% repsInBlock = strcat('repsInBlock:    [', num2str(TrialRecord.User.condRepsRem(TrialRecord.ConditionsThisBlock)), ']');
-% dashboard(4, repsInBlock);
+repsInBlock = strcat('repsInBlock:    [', num2str(TrialRecord.User.condRepsRem(TrialRecord.ConditionsThisBlock)), ']');
+dashboard(4, repsInBlock);
 
 % write event codes to store ML condition and trial numbers
 mult256 = floor(TrialRecord.CurrentTrialNumber/256) + 1;
@@ -691,8 +717,8 @@ if sc2_key1.Success && ~sc2_key2.Success
     WHATSUP = 1;
 
     % DECREMENT REP COUNTER FOR THIS CONDITION, c is condition number in
-    % % TrialRecord as saved above
-    % TrialRecord.User.condRepsRem(c) = TrialRecord.User.condRepsRem(c) - 1;
+    % TrialRecord as saved above
+    TrialRecord.User.condRepsRem(c) = TrialRecord.User.condRepsRem(c) - 1;
 
 elseif sc2_key2.Success && ~sc2_key1.Success
     choices.madeValidResp = true;
@@ -715,7 +741,7 @@ elseif sc2_key2.Success && ~sc2_key1.Success
    
     % DECREMENT REP COUNTER FOR THIS CONDITION, c is condition number in
     % TrialRecord as saved above
-    % TrialRecord.User.condRepsRem(c) = TrialRecord.User.condRepsRem(c) - 1;
+    TrialRecord.User.condRepsRem(c) = TrialRecord.User.condRepsRem(c) - 1;
 elseif ~sc2_key1.Success && ~sc2_key2.Success
     choices.madeValidResp = false;
     trialerror('noResp');  % no response
@@ -838,24 +864,18 @@ scene3_start = run_scene(scene3);
 % format (.mat) works but can't figure out how to control which variables
 % get saved to matlab outfile
 
-% bhv_variable( ...
-%     'TrialRecord', TrialRecord, ...
-%     'choices', choices, ...
-%     'condArray', TrialRecord.User.condArray, ...
-%     'condReps',  TrialRecord.User.condReps, ...
-%     'params', TrialRecord.User.params, ...
-%     'movieFrames', TrialRecord.User.movieFrames, ...
-%     'movieFrameTimes', TrialRecord.User.movieFrameTimes);
-
-
-
 bhv_variable( ...
     'TrialRecord', TrialRecord, ...
     'choices', choices, ...
     'condArray', TrialRecord.User.condArray, ...
+    'condReps',  TrialRecord.User.condReps, ...
     'params', TrialRecord.User.params, ...
     'movieFrames', TrialRecord.User.movieFrames, ...
     'movieFrameTimes', TrialRecord.User.movieFrameTimes);
+
+
+
+
 
 
 
