@@ -725,7 +725,7 @@ choices.rewardTrial = false;
 % associated with the selected key
 if choices.choiceSelected == TrialRecord.User.condArray(c).movieRewState
     choices.selectedHighProb = true;
-    if choices.randNum_rew <=  params.highRewProb
+    if choices.randNum_rew <=  TrialRecord.User.params.highRewProb
         choices.rewardTrial = true;
         TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
         TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
@@ -735,7 +735,7 @@ if choices.choiceSelected == TrialRecord.User.condArray(c).movieRewState
     end
 else
     choices.selectedHighProb = false;  
-    if choices.randNum_rew <=  params.lowRewProb
+    if choices.randNum_rew <=  TrialRecord.User.params.lowRewProb
         choices.rewardTrial = true;
         TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
         TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
@@ -769,15 +769,6 @@ netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
 
 rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 
-if TrialRecord.User.params.printOutcome
-    rewText = TextGraphic(null_);
-    rewText.Position = [0 TrialRecord.User.params.rewText_yPos];
-    rewText.FontSize = 42;
-    rewText.FontColor = [1 1 1];
-    rewText.HorizontalAlignment = 'center';
-    rewText.VerticalAlignment = 'middle';
-    rewText.Text = '';
-end
 
 if choices.madeValidResp
     if visualFeedback && choices.rewardTrial
