@@ -28,7 +28,7 @@
 % increments/decrements in reward probability depend on
 % a. retinotopic location or color of stimulus
 % b. associations between pairs of stimuli (implemented)
-% c. number of stimuli of different color (if 3 red, then rewState = 1)
+% c. number of stimuli of different color (if 3 red, then movieRewState = 1)
 % d. categorical relationships between stimuli (if most large, then green)
 % this will allow us to investigate how learning leads to abstraction, in
 % an synaptically informed learning environment.
@@ -335,17 +335,17 @@ rew.numDrops = 1;
 % each trial
 if TrialRecord.CurrentTrialNumber == 1
 
-    [condArray, condReps, params] = corr_RL_buildTrials_v1();
+    [condArray, params] = corr_RL_buildTrials_v1();
 
     % store output in TrialRecord so variables live (have scope) beyond
     % this trial.  Other variables in script are only defined during the
     % trial.
     TrialRecord.User.condArray = condArray;
-    TrialRecord.User.condReps = condReps;
+
     TrialRecord.User.params = params;
     % init condition reps remaining counter (condRepRem) to initial
     % condition rep array
-    TrialRecord.User.condRepsRem = condReps;
+    % TrialRecord.User.condRepsRem = condReps;
     TrialRecord.User.times = times;
     TrialRecord.User.codes = codes;
 
@@ -403,7 +403,7 @@ b = TrialRecord.CurrentBlock;
 % -------------------------------------------------------------------------
 
 % extract reward state
-choices.rewState = TrialRecord.User.condArray(c).rewState;
+choices.movieRewState = TrialRecord.User.condArray(c).movieRewState;
 
 % init choices (outcome) variables reflecting subject response
 choices.chosenSide = [];
@@ -455,25 +455,25 @@ abortTrial = false;
 
 % --- PRINT TRIAL STAGE AND INFO TO USER SCREEN
 % --- reward state info
-switch choices.rewState
+switch choices.movieRewState
     case 1
         rewStr = '  High rewProb: LEFT';
     case 2
         rewStr = '  High rewProb: RIGHT';
 end
 
-trlStr = strcat('Trial:',num2str(t));
-blockStr = strcat('  Block:', num2str(b));
-numCuePairsStr = strcat('  numCuePairs: ', num2str(TrialRecord.User.condArray(c).numCuePairs));
-trlStateStr = ('   Trial Epoch: pretrial');
-outStr1 = strcat(trlStr, blockStr, rewStr, modeStr, numCuePairsStr, trlStateStr);
-dashboard(1, outStr1);
+% trlStr = strcat('Trial:',num2str(t));
+% blockStr = strcat('  Block:', num2str(b));
+% numCuePairsStr = strcat('  numCuePairs: ', num2str(TrialRecord.User.condArray(c).numCuePairs));
+% trlStateStr = ('   Trial Epoch: pretrial');
+% outStr1 = strcat(trlStr, blockStr,numCuePairsStr, trlStateStr);
+% dashboard(1, outStr1);
 
 % --- block control info
 condsInBlock = strcat('condsInBLock: [', num2str(TrialRecord.ConditionsThisBlock), ']');
 dashboard(2, condsInBlock);
-repsInBlock = strcat('repsInBlock:    [', num2str(TrialRecord.User.condRepsRem(TrialRecord.ConditionsThisBlock)), ']');
-dashboard(3, repsInBlock);
+% repsInBlock = strcat('repsInBlock:    [', num2str(TrialRecord.User.condRepsRem(TrialRecord.ConditionsThisBlock)), ']');
+% dashboard(3, repsInBlock);
 
 % write event codes to store ML condition and trial numbers
 mult256 = floor(TrialRecord.CurrentTrialNumber/256) + 1;
@@ -526,9 +526,9 @@ netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
 
 rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 
-trlStateStr = ('  Trial Epoch: stimMovie');
-outStr1 = strcat(trlStr, blockStr, rewStr, modeStr, strengthStr, trlStateStr);
-dashboard(1, outStr1);
+% trlStateStr = ('  Trial Epoch: stimMovie');
+% outStr1 = strcat(trlStr, blockStr, rewStr, strengthStr, trlStateStr);
+% dashboard(1, outStr1);
 
 % --- 1. frame counter adaptor
 sc2_fc = FrameCounter(null_);
@@ -607,7 +607,7 @@ if sc2_key1.Success && ~sc2_key2.Success
     end
     % DECREMENT REP COUNTER FOR THIS CONDITION, c is condition number in
     % TrialRecord as saved above
-    TrialRecord.User.condRepsRem(c) = TrialRecord.User.condRepsRem(c) - 1;
+    % TrialRecord.User.condRepsRem(c) = TrialRecord.User.condRepsRem(c) - 1;
 
 elseif sc2_key2.Success && ~sc2_key1.Success
     choices.madeValidResp = true;
@@ -641,7 +641,7 @@ elseif sc2_key2.Success && ~sc2_key1.Success
     end
     % DECREMENT REP COUNTER FOR THIS CONDITION, c is condition number in
     % TrialRecord as saved above
-    TrialRecord.User.condRepsRem(c) = TrialRecord.User.condRepsRem(c) - 1;
+    % TrialRecord.User.condRepsRem(c) = TrialRecord.User.condRepsRem(c) - 1;
 elseif ~sc2_key1.Success && ~sc2_key2.Success
     choices.madeValidResp = false;
     trialerror('noResp');  % no response
@@ -653,9 +653,9 @@ end
 % -------------------------------------------------------------------------
 % SCENE 3: GIVE PROBABILISTIC REWARD AND DISPLAY FEEDBACK
 
-trlStateStr = ('  Trial Epoch: feedback');
-outStr1 = strcat(trlStr, blockStr, rewStr, modeStr, strengthStr, trlStateStr);
-dashboard(1, outStr1);
+% trlStateStr = ('  Trial Epoch: feedback');
+% outStr1 = strcat(trlStr, blockStr, rewStr, strengthStr, trlStateStr);
+% dashboard(1, outStr1);
 
 % --- BUILD ADAPTOR CHAINS
 % --- 1. frame counter adaptor
@@ -803,16 +803,25 @@ scene3_start = run_scene(scene3);
 % format (.mat) works but can't figure out how to control which variables
 % get saved to matlab outfile
 
+% bhv_variable( ...
+%     'TrialRecord', TrialRecord, ...
+%     'choices', choices, ...
+%     'condArray', TrialRecord.User.condArray, ...
+%     'condReps',  TrialRecord.User.condReps, ...
+%     'params', TrialRecord.User.params, ...
+%     'movieFrames', TrialRecord.User.movieFrames, ...
+%     'movieFrameTimes', TrialRecord.User.movieFrameTimes);
+
+
+
+
 bhv_variable( ...
     'TrialRecord', TrialRecord, ...
     'choices', choices, ...
     'condArray', TrialRecord.User.condArray, ...
-    'condReps',  TrialRecord.User.condReps, ...
     'params', TrialRecord.User.params, ...
     'movieFrames', TrialRecord.User.movieFrames, ...
     'movieFrameTimes', TrialRecord.User.movieFrameTimes);
-
-
 
 
 
