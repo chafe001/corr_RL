@@ -579,8 +579,8 @@ pair2_Angles_str = strcat('Pair2 L_ang:', num2str(TrialRecord.User.condArray(c).
 
 
 dashboard(1, trlInfoStr);
-dashboard(2, pair1_Angles_str);
-dashboard(3, pair2_Angles_str);
+dashboard(3, pair1_Angles_str);
+dashboard(4, pair2_Angles_str);
 
 % write event codes to store ML condition and trial numbers
 mult256 = floor(TrialRecord.CurrentTrialNumber/256) + 1;
@@ -732,131 +732,84 @@ end
 % -------------------------------------------------------------------------
 % SCENE 3: GIVE PROBABILISTIC REWARD AND DISPLAY FEEDBACK
 
-% --- PRINT RESPONSE INFO TO USER SCREEN
-% switch choices.chosenKey
-%     case 1
-%         keyStr = 'Key Hit: LEFT';
-%
-%
-%
-%     case 2
-%         keyStr = 'Key Hit: RIGHT';
-% end
-%
-%
-%
-% trlInfoStr = strcat(keyStr, ...
-%     '  Trial:', num2str(t), ...
-%     '  Block:', num2str(b), ...
-%     '  Cond:', num2str(c), ...
-%     '  Cue pairs:', num2str(TrialRecord.User.condArray(c).numCuePairs), ...
-%     '  Total pairs: ', num2str(TrialRecord.User.params.numMoviePairs));
-%
-% pair1_Angles_str = strcat('Pair1 L_ang:', num2str(TrialRecord.User.condArray(c).cuePairs(1).leftStim.Angle), ...
-%     '  L_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).leftStim.FaceColor), ...
-%     '  L_FN: ', TrialRecord.User.condArray(c).cuePairs(1).leftStim.FileName, ...
-%     '  R_ang: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).rightStim.Angle), ...
-%     '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).rightStim.FaceColor), ...
-%     '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(1).rightStim.FileName);
-%
-% pair2_Angles_str = strcat('Pair2 L_ang:', num2str(TrialRecord.User.condArray(c).cuePairs(2).leftStim.Angle), ...
-%     '  L_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).leftStim.FaceColor), ...
-%     '  L_FN: ', TrialRecord.User.condArray(c).cuePairs(2).leftStim.FileName, ...
-%     '  R_ang: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.Angle), ...
-%     '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.FaceColor), ...
-%     '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(2).rightStim.FileName);
-%
-%
-% dashboard(1, trlInfoStr);
-% dashboard(2, pair1_Angles_str);
-% dashboard(3, pair2_Angles_str);
-
 % --- BUILD ADAPTOR CHAINS
 % --- 1. TimeCounter adaptor. Not sure why but FrameCounter here slows task
 % down a lot.
 sc3_fc = TimeCounter(null_);
 sc3_fc.Duration = 100;
 
-
-% % extract reward state
-% choices.rewState = TrialRecord.User.condArray(c).rewState;
-% % init choice variables
-% choices.chosenSide = [];
-% choices.responseKey = [];
-% choices.choseCorrect = []; % selected the choice with the higher reward probability
-% choices.madeValidResp = [];
-
-
-% params.highRewProb = 1.0;
-% params.lowRewProb = 0;
-
 % --- DETERMINE WHETHER TO REWARD TRIAL
-
 % select random number between 0 and 1 to determine probabilistic reward
 choices.randNum_rew = rand();
 
-if choices.responseKey == 1
+if choices.madeValidResp
+    if choices.responseKey == 1
+        choices.respStr = 'KEY HIT: LEFT';
+        % determine if correct (high value) choice was selected
+        if TrialRecord.User.condArray(c).movieRewState == 1
+            choices.choseCorrect = true;
+            if choices.randNum_rew < TrialRecord.User.params.highRewProb  % --- WIN, HIGH PROB ---
+                choices.rewardTrial = true;
+                TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
+                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
+                choices.resultStr = '  WIN, SELECTED HIGH PROB';
+            else  % --- LOSS, HIGH PROB ---
+                choices.rewardTrial = false;
+                TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
+                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
+                choices.resultStr = '  LOSS, SELECTED HIGH PROB';
+            end
+        elseif TrialRecord.User.condArray(c).movieRewState == 2
+            choices.choseCorrect = false;
+            if choices.randNum_rew < TrialRecord.User.params.lowRewProb  % --- WIN, LOW PROB ---
+                choices.rewardTrial = true;
+                TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
+                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
+                choices.resultStr = '  WIN, SELECTED LOW PROB';
+            else  % --- LOSS, LOW PROB ---
+                choices.rewardTrial = false;
+                TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
+                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
+                choices.resultStr = '  LOSS, SELECTED LOW PROB';
+            end
+        end
 
-    % determine if correct (high value) choice was selected
-    if TrialRecord.User.condArray(c).movieRewState == 1
-        choices.choseCorrect = true;
-        if choices.randNum_rew < TrialRecord.User.params.highRewProb  % --- WIN, HIGH PROB ---
-            choices.rewardTrial = true;
-            TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
-            TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-            resultStr = 'WIN, SELECTED HIGH PROB';
-        else  % --- LOSS, HIGH PROB ---
-            choices.rewardTrial = false;
-            TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
-            TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-            resultStr = 'LOSS, SELECTED HIGH PROB';
+    elseif choices.responseKey == 2
+        choices.respStr = 'KEY HIT: RIGHT';
+        % determine if correct (high value) choice was selected
+        if TrialRecord.User.condArray(c).movieRewState == 1
+            choices.choseCorrect = false;
+            if choices.randNum_rew < TrialRecord.User.params.lowRewProb  % --- WIN, LOW PROB ---
+                choices.rewardTrial = true;
+                TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
+                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
+                choices.resultStr = '  WIN, SELECTED LOW PROB';
+            else  % --- LOSS, LOW PROB ---
+                choices.rewardTrial = false;
+                TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
+                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
+                choices.resultStr = '  LOSS, SELECTED LOW PROB';
+            end
+        elseif TrialRecord.User.condArray(c).movieRewState == 2
+            choices.choseCorrect = true;
+            if choices.randNum_rew < TrialRecord.User.params.highRewProb  % --- WIN, HIGH PROB ---
+                choices.rewardTrial = true;
+                TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
+                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
+                choices.resultStr = '  WIN, SELECTED HIGH PROB';
+            else  % --- LOSS, HIGH PROB ---
+                choices.rewardTrial = false;
+                TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
+                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
+                choices.resultStr = '  LOSS, SELECTED HIGH PROB';
+            end
         end
-    elseif TrialRecord.User.condArray(c).movieRewState == 2
-        choices.choseCorrect = false;
-        if choices.randNum_rew < TrialRecord.User.params.lowRewProb  % --- WIN, LOW PROB ---
-            choices.rewardTrial = true;
-            TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
-            TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-            resultStr = 'WIN, SELECTED LOW PROB';
-        else  % --- LOSS, LOW PROB ---
-            choices.rewardTrial = false;
-            TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
-            TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-            resultStr = 'LOSS, SELECTED LOW PROB';
-        end
+
     end
 
-elseif choices.responseKey == 2
-
-    % determine if correct (high value) choice was selected
-    if TrialRecord.User.condArray(c).movieRewState == 1
-        choices.choseCorrect = false;
-        if choices.randNum_rew < TrialRecord.User.params.lowRewProb  % --- WIN, LOW PROB ---
-            choices.rewardTrial = true;
-            TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
-            TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-            resultStr = 'WIN, SELECTED LOW PROB';
-        else  % --- LOSS, LOW PROB ---
-            choices.rewardTrial = false;
-            TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
-            TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-            resultStr = 'LOSS, SELECTED LOW PROB';
-        end
-    elseif TrialRecord.User.condArray(c).movieRewState == 2
-        choices.choseCorrect = true;
-        if choices.randNum_rew < TrialRecord.User.params.highRewProb  % --- WIN, HIGH PROB ---
-            choices.rewardTrial = true;
-            TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
-            TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-            resultStr = 'WIN, SELECTED HIGH PROB';
-        else  % --- LOSS, HIGH PROB ---
-            choices.rewardTrial = false;
-            TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
-            TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-            resultStr = 'LOSS, SELECTED HIGH PROB';
-        end
-    end
-
+else  % NO VALID RESPONSE
+    choices.respStr = ' NO RESP';
+    choices.resultStr = ' NO RESULT';
 end
 
 
@@ -871,6 +824,10 @@ end
 
 % --- SAVE CHOICE INFORMATION to TrialRecord
 TrialRecord.User.Choices = choices;
+
+% --- OUTPUT CHOICE REWARD RESULT TO USER SCREEN
+respResStr = strcat(choices.respStr, '  ---  ', choices.resultStr);
+dashboard(2, respResStr)
 
 % --- update rewBox size to reflect this outcome
 netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;

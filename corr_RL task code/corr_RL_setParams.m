@@ -20,8 +20,8 @@ params.netWin_criterion = 10;  % number of netWins before switching block
 % --- MOVIE CONTROL
 params.randCuePairNum = true;
 params.numMoviePairs = 30;
-% params.numCuePairs = [14 18 22 26];
-params.numCuePairs = [30 30 30 30];
+params.numCuePairs = [14 18 22 26];
+% params.numCuePairs = [30 30 30 30];  % NO NOISE, for debugging
 params.numCuePairs_easy = max(params.numCuePairs);
 params.numCuePairs_hard = min(params.numCuePairs);
 % check each cue pair number is divisible by 2, error if not

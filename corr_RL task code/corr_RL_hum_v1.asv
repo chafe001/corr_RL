@@ -579,8 +579,8 @@ pair2_Angles_str = strcat('Pair2 L_ang:', num2str(TrialRecord.User.condArray(c).
 
 
 dashboard(1, trlInfoStr);
-dashboard(2, pair1_Angles_str);
-dashboard(3, pair2_Angles_str);
+dashboard(3, pair1_Angles_str);
+dashboard(4, pair2_Angles_str);
 
 % write event codes to store ML condition and trial numbers
 mult256 = floor(TrialRecord.CurrentTrialNumber/256) + 1;
@@ -732,214 +732,168 @@ end
 % -------------------------------------------------------------------------
 % SCENE 3: GIVE PROBABILISTIC REWARD AND DISPLAY FEEDBACK
 
-% --- PRINT RESPONSE INFO TO USER SCREEN
-% switch choices.chosenKey
-%     case 1
-%         keyStr = 'Key Hit: LEFT';
-%
-%
-%
-%     case 2
-%         keyStr = 'Key Hit: RIGHT';
-% end
-%
-%
-%
-% trlInfoStr = strcat(keyStr, ...
-%     '  Trial:', num2str(t), ...
-%     '  Block:', num2str(b), ...
-%     '  Cond:', num2str(c), ...
-%     '  Cue pairs:', num2str(TrialRecord.User.condArray(c).numCuePairs), ...
-%     '  Total pairs: ', num2str(TrialRecord.User.params.numMoviePairs));
-%
-% pair1_Angles_str = strcat('Pair1 L_ang:', num2str(TrialRecord.User.condArray(c).cuePairs(1).leftStim.Angle), ...
-%     '  L_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).leftStim.FaceColor), ...
-%     '  L_FN: ', TrialRecord.User.condArray(c).cuePairs(1).leftStim.FileName, ...
-%     '  R_ang: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).rightStim.Angle), ...
-%     '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).rightStim.FaceColor), ...
-%     '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(1).rightStim.FileName);
-%
-% pair2_Angles_str = strcat('Pair2 L_ang:', num2str(TrialRecord.User.condArray(c).cuePairs(2).leftStim.Angle), ...
-%     '  L_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).leftStim.FaceColor), ...
-%     '  L_FN: ', TrialRecord.User.condArray(c).cuePairs(2).leftStim.FileName, ...
-%     '  R_ang: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.Angle), ...
-%     '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.FaceColor), ...
-%     '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(2).rightStim.FileName);
-%
-%
-% dashboard(1, trlInfoStr);
-% dashboard(2, pair1_Angles_str);
-% dashboard(3, pair2_Angles_str);
-
 % --- BUILD ADAPTOR CHAINS
 % --- 1. TimeCounter adaptor. Not sure why but FrameCounter here slows task
 % down a lot.
 sc3_fc = TimeCounter(null_);
 sc3_fc.Duration = 100;
 
-
-% % extract reward state
-% choices.rewState = TrialRecord.User.condArray(c).rewState;
-% % init choice variables
-% choices.chosenSide = [];
-% choices.responseKey = [];
-% choices.choseCorrect = []; % selected the choice with the higher reward probability
-% choices.madeValidResp = [];
-
-
-% params.highRewProb = 1.0;
-% params.lowRewProb = 0;
-
 % --- DETERMINE WHETHER TO REWARD TRIAL
-
 % select random number between 0 and 1 to determine probabilistic reward
 choices.randNum_rew = rand();
 
-if choices.responseKey == 1
+if choices.madeValidResp
+    if choices.responseKey == 1
+        choices.respStr = 'KEY HIT: LEFT';
+        % determine if correct (high value) choice was selected
+        if TrialRecord.User.condArray(c).movieRewState == 1
+            choices.choseCorrect = true;
+            if choices.randNum_rew < TrialRecord.User.params.highRewProb  % --- WIN, HIGH PROB ---
+                choices.rewardTrial = true;
+                TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
+                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
+                choices.resultStr = '  WIN, SELECTED HIGH PROB';
+            else  % --- LOSS, HIGH PROB ---
+                choices.rewardTrial = false;
+                TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
+                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
+                choices.resultStr = '  LOSS, SELECTED HIGH PROB';
+            end
+        elseif TrialRecord.User.condArray(c).movieRewState == 2
+            choices.choseCorrect = false;
+            if choices.randNum_rew < TrialRecord.User.params.lowRewProb  % --- WIN, LOW PROB ---
+                choices.rewardTrial = true;
+                TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
+                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
+                choices.resultStr = '  WIN, SELECTED LOW PROB';
+            else  % --- LOSS, LOW PROB ---
+                choices.rewardTrial = false;
+                TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
+                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
+                choices.resultStr = '  LOSS, SELECTED LOW PROB';
+            end
+        end
 
-    % determine if correct (high value) choice was selected
-    if TrialRecord.User.condArray(c).movieRewState == 1
-        choices.choseCorrect = true;
-        if choices.randNum_rew < TrialRecord.User.params.highRewProb  % --- WIN, HIGH PROB ---
-            choice.rewardTrial = true;
-            TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
-            TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-            resultStr = 'WIN, SELECTED HIGH PROB';
-        else  % --- LOSS, HIGH PROB ---
-            choice.rewardTrial = false;
-            TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
-            TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-            resultStr = 'LOSS, SELECTED HIGH PROB';
+    elseif choices.responseKey == 2
+        choices.respStr = 'KEY HIT: RIGHT';
+        % determine if correct (high value) choice was selected
+        if TrialRecord.User.condArray(c).movieRewState == 1
+            choices.choseCorrect = false;
+            if choices.randNum_rew < TrialRecord.User.params.lowRewProb  % --- WIN, LOW PROB ---
+                choices.rewardTrial = true;
+                TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
+                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
+                choices.resultStr = '  WIN, SELECTED LOW PROB';
+            else  % --- LOSS, LOW PROB ---
+                choices.rewardTrial = false;
+                TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
+                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
+                choices.resultStr = '  LOSS, SELECTED LOW PROB';
+            end
+        elseif TrialRecord.User.condArray(c).movieRewState == 2
+            choices.choseCorrect = true;
+            if choices.randNum_rew < TrialRecord.User.params.highRewProb  % --- WIN, HIGH PROB ---
+                choices.rewardTrial = true;
+                TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
+                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
+                choices.resultStr = '  WIN, SELECTED HIGH PROB';
+            else  % --- LOSS, HIGH PROB ---
+                choices.rewardTrial = false;
+                TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
+                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
+                choices.resultStr = '  LOSS, SELECTED HIGH PROB';
+            end
         end
-    elseif TrialRecord.User.condArray(c).movieRewState == 2
-        choices.choseCorrect = false;
-        if choices.randNum_rew < TrialRecord.User.params.lowRewProb  % --- WIN, LOW PROB ---
-            choice.rewardTrial = true;
-            TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
-            TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-            resultStr = 'WIN, SELECTED LOW PROB';
-        else  % --- LOSS, LOW PROB ---
-            choices.rewardTrial = false;
-            TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
-            TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-            resultStr = 'LOSS, SELECTED LOW PROB';
-        end
+
     end
 
-elseif choices.responseKey == 2
-    
-    % determine if correct (high value) choice was selected
-    if TrialRecord.User.condArray(c).movieRewState == 1
-        choices.choseCorrect = true;
-        if choices.randNum_rew < TrialRecord.User.params.highRewProb  % --- WIN, HIGH PROB ---
-            choice.rewardTrial = true;
-            TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
-            TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-            resultStr = 'WIN, SELECTED HIGH PROB';
-        else  % --- LOSS, HIGH PROB ---
-            choice.rewardTrial = false;
-            TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
-            TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-            resultStr = 'LOSS, SELECTED HIGH PROB';
-        end
-    elseif TrialRecord.User.condArray(c).movieRewState == 2
-        choices.choseCorrect = false;
-        if choices.randNum_rew < TrialRecord.User.params.lowRewProb  % --- WIN, LOW PROB ---
-            choice.rewardTrial = true;
-            TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
-            TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-            resultStr = 'WIN, SELECTED LOW PROB';
-        else  % --- LOSS, LOW PROB ---
-            choices.rewardTrial = false;
-            TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
-            TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-            resultStr = 'LOSS, SELECTED LOW PROB';
-        end
-    end
-
+else  % NO VALID RESPONSE
+    choices.respStr = ' NO RESP';
+    choices.resultStr = ' NO RESULT';
 end
 
 
+% --- if blockLosses > blockWins, reset counters to 0 to prevent
+% accumulation of a deficit, don't want a hole subj has to dig out of
+% before display shows accumulation of additional wins
+if TrialRecord.User.netWins < 0
+    TrialRecord.User.blockWins = 0;
+    TrialRecord.User.blockLosses = 0;
+    TrialRecord.User.netWins = 0;
+end
 
+% --- SAVE CHOICE INFORMATION to TrialRecord
+TrialRecord.User.Choices = choices;
 
-    % --- if blockLosses > blockWins, reset counters to 0 to prevent
-    % accumulation of a deficit, don't want a hole subj has to dig out of
-    % before display shows accumulation of additional wins
-    if TrialRecord.User.netWins < 0
-        TrialRecord.User.blockWins = 0;
-        TrialRecord.User.blockLosses = 0;
-        TrialRecord.User.netWins = 0;
-    end
+% --- OUTPUT CHOICE REWARD RESULT TO USER SCREEN
+respResStr = strcat(choices.respStr, '  ---  ', choices.resultStr);
+dashboard(2, respResStr)
 
-    % --- SAVE CHOICE INFORMATION to TrialRecord
-    TrialRecord.User.Choices = choices;
+% --- update rewBox size to reflect this outcome
+netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
 
+% figure out where to print white netWin reward box so it is left aligned
+% with left edge of black maxWin reward box.  X position coordinate
+% specifies screen coordinates of center of rectangle graphic. The center
+% of the white bar is screen center -1/2 black bar width +1/2 white bar
+% width
+netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
 
-    % --- update rewBox size to reflect this outcome
-    netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
+rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 
-    % figure out where to print white netWin reward box so it is left aligned
-    % with left edge of black maxWin reward box.  X position coordinate
-    % specifies screen coordinates of center of rectangle graphic. The center
-    % of the white bar is screen center -1/2 black bar width +1/2 white bar
-    % width
-    netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
-
-    rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
-
-    if choices.madeValidResp
-        if visualFeedback && choices.rewardTrial
-            sc3_rewImg = ImageChanger(rewBox);
-            sc3_rewImg.List = ...
-                {{choices.choiceImg}, [0 0], times.choiceRing_frames, codes.choiceRing_on; ...
-                {choices.rewImg}, [0 0], times.rewRing_frames, codes.rewRing_on};
-        elseif visualFeedback % all other cases
-            sc3_rewImg = ImageChanger(rewBox);
-            sc3_rewImg.List = ...
-                {{choices.choiceImg}, [0 0], times.choiceRing_frames, codes.choiceRing_on};
-        end
-    else
-        % instantiate sc3_rewImg but init to just fix, prevents crash on GUI
-        % quit
+if choices.madeValidResp
+    if visualFeedback && choices.rewardTrial
         sc3_rewImg = ImageChanger(rewBox);
         sc3_rewImg.List = ...
-            {[], [], times.choiceRing_frames, codes.choiceRing_on};
-
+            {{choices.choiceImg}, [0 0], times.choiceRing_frames, codes.choiceRing_on; ...
+            {choices.rewImg}, [0 0], times.rewRing_frames, codes.rewRing_on};
+    elseif visualFeedback % all other cases
+        sc3_rewImg = ImageChanger(rewBox);
+        sc3_rewImg.List = ...
+            {{choices.choiceImg}, [0 0], times.choiceRing_frames, codes.choiceRing_on};
     end
+else
+    % instantiate sc3_rewImg but init to just fix, prevents crash on GUI
+    % quit
+    sc3_rewImg = ImageChanger(rewBox);
+    sc3_rewImg.List = ...
+        {[], [], times.choiceRing_frames, codes.choiceRing_on};
 
-    % --- COMBINE REW IMG WTH with FEEDBACK
-    sc3_probRew = Concurrent(sc3_fc);
-    sc3_probRew.add(sc3_rewImg);
-    % --- update rewBox width so changes with text feedback
-    % netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
-    % sc3_probRew.add(rewBox);
+end
 
-    % --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
-    scene3 = create_scene(sc3_probRew, taskObj_fix);
-    scene3_start = run_scene(scene3);
+% --- COMBINE REW IMG WTH with FEEDBACK
+sc3_probRew = Concurrent(sc3_fc);
+sc3_probRew.add(sc3_rewImg);
+% --- update rewBox width so changes with text feedback
+% netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
+% sc3_probRew.add(rewBox);
 
-    % --- SAVE DATA TO BHV2 FILE
-    % NOTE!!: Make sure 'File type' dropdown in GUI is set to BHV2.  Matlab
-    % format (.mat) works but can't figure out how to control which variables
-    % get saved to matlab outfile
+% --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
+scene3 = create_scene(sc3_probRew, taskObj_fix);
+scene3_start = run_scene(scene3);
 
-    % bhv_variable( ...
-    %     'TrialRecord', TrialRecord, ...
-    %     'choices', choices, ...
-    %     'condArray', TrialRecord.User.condArray, ...
-    %     'condReps',  TrialRecord.User.condReps, ...
-    %     'params', TrialRecord.User.params, ...
-    %     'movieFrames', TrialRecord.User.movieFrames, ...
-    %     'movieFrameTimes', TrialRecord.User.movieFrameTimes);
+% --- SAVE DATA TO BHV2 FILE
+% NOTE!!: Make sure 'File type' dropdown in GUI is set to BHV2.  Matlab
+% format (.mat) works but can't figure out how to control which variables
+% get saved to matlab outfile
+
+% bhv_variable( ...
+%     'TrialRecord', TrialRecord, ...
+%     'choices', choices, ...
+%     'condArray', TrialRecord.User.condArray, ...
+%     'condReps',  TrialRecord.User.condReps, ...
+%     'params', TrialRecord.User.params, ...
+%     'movieFrames', TrialRecord.User.movieFrames, ...
+%     'movieFrameTimes', TrialRecord.User.movieFrameTimes);
 
 
-    bhv_variable( ...
-        'TrialRecord', TrialRecord, ...
-        'choices', choices, ...
-        'condArray', TrialRecord.User.condArray, ...
-        'params', TrialRecord.User.params, ...
-        'movieFrames', TrialRecord.User.movieFrames, ...
-        'movieFrameTimes', TrialRecord.User.movieFrameTimes);
+bhv_variable( ...
+    'TrialRecord', TrialRecord, ...
+    'choices', choices, ...
+    'condArray', TrialRecord.User.condArray, ...
+    'params', TrialRecord.User.params, ...
+    'movieFrames', TrialRecord.User.movieFrames, ...
+    'movieFrameTimes', TrialRecord.User.movieFrameTimes);
 
 
 

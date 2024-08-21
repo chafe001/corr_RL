@@ -76,7 +76,7 @@ for b = 1 : params.numBlocks
     end
 end
 
-bob = 1;
+gbob = 1;
 
 
 end
