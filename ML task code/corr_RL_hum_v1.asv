@@ -552,6 +552,22 @@ abortTrial = false;
 % built in, and writes event codes. Empty brackets for screen color leaves
 % color unchanged.
 
+% --- PRINT TRIAL STAGE AND INFO TO USER SCREEN
+% --- reward state info
+
+trlStr = strcat('Trial:',num2str(t));
+blockStr = strcat('  Block:', num2str(b));
+
+
+trlStateStr = ('   Trial Epoch: pretrial');
+outStr1 = strcat(trlStr, blockStr, rewStr,trlStateStr);
+dashboard(1, outStr1);
+
+% --- block control info
+condsInBlock = strcat('condsInBLock: [', num2str(TrialRecord.ConditionsThisBlock), ']');
+dashboard(3, condsInBlock);
+% repsInBlock = strcat('repsInBlock:    [', num2str(TrialRecord.User.condRepsRem(TrialRecord.ConditionsThisBlock)), ']');
+% dashboard(4, repsInBlock);
 
 % write event codes to store ML condition and trial numbers
 mult256 = floor(TrialRecord.CurrentTrialNumber/256) + 1;
@@ -603,6 +619,10 @@ maxWinBox_width = TrialRecord.User.params.rewBox_width;
 netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
 
 rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
+
+trlStateStr = ('  Trial Epoch: stimMovie');
+outStr1 = strcat(trlStr, blockStr, rewStr, modeStr, strengthStr, trlStateStr);
+dashboard(1, outStr1);
 
 % --- 1. frame counter adaptor
 sc2_fc = FrameCounter(null_);
@@ -707,6 +727,9 @@ end
 % -------------------------------------------------------------------------
 % SCENE 3: GIVE PROBABILISTIC REWARD AND DISPLAY FEEDBACK
 
+trlStateStr = ('  Trial Epoch: feedback');
+outStr1 = strcat(trlStr, blockStr, rewStr, modeStr, strengthStr, trlStateStr);
+dashboard(1, outStr1);
 
 % --- BUILD ADAPTOR CHAINS
 % --- 1. frame counter adaptor
@@ -723,7 +746,7 @@ choices.randNum_rew = rand();
 choices.rewardTrial = false;
 % set rewardTrial to true if randNum is less than or equal to reward probability
 % associated with the selected key
-if choices.choiceSelected == TrialRecord.User.condArray(c).movieRewState
+if choices.choiceSelected == condArrayTemp(bn, rs).movieRewState
     choices.selectedHighProb = true;
     if choices.randNum_rew <=  params.highRewProb
         choices.rewardTrial = true;
@@ -779,7 +802,7 @@ if TrialRecord.User.params.printOutcome
     rewText.Text = '';
 end
 
-if choices.madeValidResp
+if choices.madeValidRespsc
     if visualFeedback && choices.rewardTrial
         sc3_rewImg = ImageChanger(rewBox);
         sc3_rewImg.List = ...
@@ -792,6 +815,9 @@ if choices.madeValidResp
     end
 end
 
+% --- PRINT CHOICE INFO TO USER SCREEN
+outstr5 = ['blockWins: ', num2str(TrialRecord.User.blockWins), '   blockLosses: ', num2str(TrialRecord.User.blockLosses), '   netWins: ', num2str(TrialRecord.User.netWins)];
+dashboard(5, outstr5);
 
 % --- COMBINE REW IMG WTH with FEEDBACK
 sc3_probRew = Concurrent(sc3_fc);
