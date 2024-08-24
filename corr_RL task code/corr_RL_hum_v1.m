@@ -786,7 +786,8 @@ TrialRecord.User.Choices = choices;
 respResStr = strcat(choices.respStr, '  ---  ', choices.resultStr);
 dashboard(2, respResStr)
 
-% --- UPDATE REWARD BOX ACCORDING TO THIS RESULT
+% --- UPDATE REWARD BOX WITH THIS RESULT
+netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
 netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
 rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 
@@ -824,8 +825,4 @@ bhv_variable( ...
     'params', TrialRecord.User.params, ...
     'movieFrames', TrialRecord.User.movieFrames, ...
     'movieFrameTimes', TrialRecord.User.movieFrameTimes);
-
-
-
-
 
