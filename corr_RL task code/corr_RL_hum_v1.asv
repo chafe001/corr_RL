@@ -643,11 +643,17 @@ end
 % SCENE 3: RESPONSE WINDOW
 
 % --- MAKE ADAPTOR(S)
+% --- 1. timeCounter
 sc3_tc = TimeCounter(rewBox);
 sc3_tc.Duration = times.sc3_response_ms;
 
-% make a copy of scene 2 watchKeys
-sc3_watchKeys = sc2_watchKeys;
+% --- 2. key checking adaptor
+sc3_key1 = KeyChecker(mouse_);
+sc3_key1.KeyNum = 1;  % 1st keycode in GUI
+sc3_key2 = KeyChecker(mouse_);
+sc3_key2.KeyNum = 2;  % 2nd keycode in GUI
+sc3_watchKeys = OrAdapter(sc3_key1);
+sc3_watchKeys.add(sc3_key2);
 
 % combine watchKeys and TimeCounter
 sc3_responseWindow = AllContinue(sc3_watchKeys);
@@ -667,14 +673,7 @@ if sc3_key1.Success && ~sc3_key2.Success
     choices.chosenSide = 'left';
     eventmarker(codes.response_key1);
     % --- COMPUTE RT
-    % RT is time from movie on3et to key press. Key time (sc3_key1.Time)
-    % is time elapsed from the start of the scene to key press. Time of the
-    % first frame of the movie (sc2_movie.Time(1)) is time elapsed from the
-    % start of the scene to the first frame.  To find RT, subtract movie
-    % time from key press time, to give time elapsed from start of movie to
-    % key press.  If RT is less than 0, key press occurred before the start
-    % of the movie, trialerror('earlyResp')
-    rt = sc3_key1.Time - sc2_movie.Time(1);
+    rt = sc3_key1.Time - scene3_start;
 
     % DECREMENT REP COUNTER FOR THIS CONDITION, c is condition number in
     % TrialRecord.User.condRepsRem(c) = TrialRecord.User.condRepsRem(c) - 1;
@@ -685,11 +684,11 @@ elseif sc3_key2.Success && ~sc3_key1.Success
     choices.chosenSide = 'right';
     eventmarker(codes.response_key2);
     % --- See comments above for rt
-    rt = sc3_key2.Time - sc2_movie.Time(1);
+    rt = sc3_key2.Time - scene3_start;
    
     % DECREMENT REP COUNTER FOR THIS CONDITION, c is condition number in
     % TrialRecord.User.condRepsRem(c) = TrialRecord.User.condRepsRem(c) - 1;
-    
+
 elseif ~sc3_key1.Success && ~sc3_key2.Success
     choices.madeValidResp = false;
     trialerror('noResp');  % no response
@@ -700,12 +699,6 @@ end
 
 % -------------------------------------------------------------------------
 % SCENE 4: GIVE PROBABILISTIC REWARD AND DISPLAY FEEDBACK
-
-% --- BUILD ADAPTOR CHAINS
-% --- 1. TimeCounter adaptor. Not sure why but FrameCounter here slows task
-% down a lot.
-sc3_fc = TimeCounter(null_);
-sc3_fc.Duration = 100;
 
 % --- DETERMINE WHETHER TO REWARD TRIAL
 % select random number between 0 and 1 to determine probabilistic reward

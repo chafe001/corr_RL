@@ -5,41 +5,40 @@ COMPUTER = getenv('COMPUTERNAME');
 
 switch COMPUTER
     case 'MATTWALLIN'
-        % desktop at 60 Hz
-        times.idle_ms = 100;
-        times.stimDur = 1;
-        times.soa = 1;
-        times.interPair = 5;
+        % laptop at 120 Hz
+        times.stim_frames = 1;
+        times.soa_frames = 1;
+        times.interPair_frames = 5;
         % times below specified in screen refresh units, absolute time depends on
         % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
         % in new laptops, etc
         % scene 1 is pretrial
-        times.fixDur = 30;  % fix targ only
-        times.preMovieDur = 30;  % fix targ and choices
-        times.postMovieDur = 30;
-        times.sc1_pretrial_frames = 30;
-        times.sc2_movie_maxFrames = 1000;
-        times.sc3_feedback_frames = 20; % duration of scene depends on choice ring timing
+        % times.fixDur_ms = 20;  % fix targ only
+        times.preMovie_frames = 20;  % fix targ and choices
+        times.postMovie_frames = 20;
+        times.sc1_pretrial_ms = 20;
+        times.sc3_response_ms = 500;
+        times.sc4_feedback_frames = 20; % duration of scene depends on choice ring timing
         times.choiceRing_frames = 10;
         times.rewRing_frames = 10;
 
     case 'DESKTOP-7CHQEHS'
-        % desktop at 60 Hz
-        times.stimDur = 1;
-        times.soa = 1;
-        times.interPair = 5;
+        % laptop at 120 Hz
+        times.stim_frames = 1;
+        times.soa_frames = 1;
+        times.interPair_frames = 5;
         % times below specified in screen refresh units, absolute time depends on
         % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
         % in new laptops, etc
         % scene 1 is pretrial
-        times.fixDur = 5;  % fix targ only
-        times.preMovieDur = 5;  % fix targ and choices
-        times.postMovieDur = 5;
-        times.sc1_pretrial_frames = 5;
-        times.sc2_movie_maxFrames = 1000;
-        times.sc3_feedback_frames = 20; % duration of scene depends on choice ring timing
-        times.choiceRing_frames = 5;
-        times.rewRing_frames = 5;
+        % times.fixDur_ms = 20;  % fix targ only
+        times.preMovie_frames = 20;  % fix targ and choices
+        times.postMovie_frames = 20;
+        times.sc1_pretrial_ms = 20;
+        times.sc3_response_ms = 500;
+        times.sc4_feedback_frames = 20; % duration of scene depends on choice ring timing
+        times.choiceRing_frames = 10;
+        times.rewRing_frames = 10;
 
     case 'MATT_MICRO'
         % laptop at 120 Hz
@@ -60,20 +59,20 @@ switch COMPUTER
         times.rewRing_frames = 10;
 
     case 'DAVIDLAPTOP'
-        % laptop at 144 Hz
-        times.stimDur = 2;
-        times.soa = 2;
-        times.interPair = 10;
+        % laptop at 120 Hz
+        times.stim_frames = 1;
+        times.soa_frames = 1;
+        times.interPair_frames = 5;
         % times below specified in screen refresh units, absolute time depends on
         % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
         % in new laptops, etc
         % scene 1 is pretrial
-        times.fixDur = 30;  % fix targ only
-        times.preMovieDur = 30;  % fix targ and choices
-        times.postMovieDur = 30;
-        times.sc1_pretrial_frames = 30;
-        times.sc2_movie_maxFrames = 1000;
-        times.sc3_feedback_frames = 500; % duration of scene depends on choice ring timing
+        % times.fixDur_ms = 20;  % fix targ only
+        times.preMovie_frames = 20;  % fix targ and choices
+        times.postMovie_frames = 20;
+        times.sc1_pretrial_ms = 20;
+        times.sc3_response_ms = 500;
+        times.sc4_feedback_frames = 20; % duration of scene depends on choice ring timing
         times.choiceRing_frames = 10;
         times.rewRing_frames = 10;
 
