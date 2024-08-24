@@ -43,18 +43,18 @@ switch COMPUTER
 
     case 'MATT_MICRO'
         % laptop at 120 Hz
-        times.stimDur = 2;
-        times.soa = 2;
-        times.interPair = 20;
+        times.stim_frames = 1;
+        times.soa_frames = 1;
+        times.interPair_frames = 5;
         % times below specified in screen refresh units, absolute time depends on
         % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
         % in new laptops, etc
         % scene 1 is pretrial
-        times.fixDur = 20;  % fix targ only
-        times.preMovieDur = 20;  % fix targ and choices
-        times.postMovieDur = 20;
+        % times.fixDur_ms = 20;  % fix targ only
+        times.preMovie_frames = 20;  % fix targ and choices
+        times.postMovie_frames = 20;
         times.sc1_pretrial_frames = 20;
-        times.sc2_movie_maxFrames = 1000;
+        % times.sc2_movie_maxFrames = 1000;
         times.sc3_feedback_frames = 20; % duration of scene depends on choice ring timing
         times.choiceRing_frames = 10;
         times.rewRing_frames = 10;

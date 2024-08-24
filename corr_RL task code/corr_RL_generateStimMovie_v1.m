@@ -1,5 +1,5 @@
-function [movieFrames, pairSeq] = corr_RL_generateStimMovie_v1(TrialRecord)
-% This function returns a cell array, movieFrames, that is used to set the
+function [movieImages, pairSeq] = corr_RL_generateStimMovie_v1(TrialRecord)
+% This function returns a cell array, movieImages, that is used to set the
 % 'List' property of a imageChanger() object.  This controls the sequence
 % of images presented in the movie, which controls the proportion of cue
 % and noise pairs included in each movie.
@@ -104,11 +104,11 @@ rewRing_on = codes.rewRing_on;
 
 bob = 'foggy';
 
-% --- DEFINE STANDARD FRAMES
-fix_frame = {[], [], times.fixDur, fix_on};
-soa_frame = {[], [], times.soa, img1_off};
-interPair_frame = {[], [], times.interPair, imgPair_off};
-postMovie_frame = {[], [], times.postMovieDur, endMovie};
+% --- DEFINE STANDARD IMAGES
+preMovie_img = {[], [], times.preMovie_frames, fix_on};
+soa_img = {[], [], times.soa_frames, img1_off};
+interPair_img = {[], [], times.interPair_frames, imgPair_off};
+postMovie_img = {[], [], times.postMovie_frames, endMovie};
 
 % --- PREALLOCATE FRAME CELL ARRAY
 % --- SET STIM PARAMS FOR imageChanger FUNCTION CALL TO CONTROL MOVIE
@@ -123,15 +123,15 @@ postMovie_frame = {[], [], times.postMovieDur, endMovie};
 % create structure from which array will be made
 
 % --- init frame variables
-pair_frame = {};
-img1_frame = {};
-img2_frame = {};
-frame = {};
-thisFrame = {};
-movieFrames = {};
+pair_img = {};
+img1 = {};
+img2 = {};
+images = {};
+thisImg = {};
+movieImages = {};
 
 % --- SET FIRST FRAME (irrespective of movieMode)
-frame{1} = fix_frame;
+images{1} = preMovie_img;
 
 % --- use pair sequence fn, x and y to build movie frame seq
 
@@ -147,22 +147,22 @@ for p = 1 : length(pairs)
     rightImg_y = pairs(p).rightStim.Position(2);
 
     % --- BUILD SIMULTANEOUS AND SEQUENTIAL STIM FRAMES FOR EACH IMG PAIR
-    pair_frame = {{leftImg_fn, rightImg_fn}, [leftImg_x leftImg_y; rightImg_x rightImg_y], times.stimDur, imgPair_on};
-    leftImg_frame = {{leftImg_fn}, [leftImg_x leftImg_y], times.stimDur, img1_on};
-    rightImg_frame = {{rightImg_fn}, [rightImg_x rightImg_y], times.stimDur, img2_on};
+    pair_img = {{leftImg_fn, rightImg_fn}, [leftImg_x leftImg_y; rightImg_x rightImg_y], times.stim_frames, imgPair_on};
+    leftImg_frame = {{leftImg_fn}, [leftImg_x leftImg_y], times.stim_frames, img1_on};
+    rightImg_frame = {{rightImg_fn}, [rightImg_x rightImg_y], times.stim_frames, img2_on};
 
     % --- COMBINE FRAMES INTO SEQUENCEg
     switch params.movieMode
 
         case 'simultaneous'
             % p, indx and frame number looping values:
-            % p 1 : indx = 1, pair_frame = 2, interPair_Frame = 3
-            % p 2 : indx = 3, pair_frame = 4, interPair_Frame = 5
-            % p 3 : indx = 5, pair_frame =  6, interPair_Frame = 7
-            % p 4 : indx = 7, pair_frame =  8, interPair_Frame = 9 ...
+            % p 1 : indx = 1, pair_img = 2, interPair_img = 3
+            % p 2 : indx = 3, pair_img = 4, interPair_img = 5
+            % p 3 : indx = 5, pair_img =  6, interPair_img = 7
+            % p 4 : indx = 7, pair_img =  8, interPair_img = 9 ...
             indx = ((p - 1) * 2) + 2;
-            frame{indx + 1} = pair_frame;
-            frame{indx + 2} = interPair_frame;
+            images{indx + 1} = pair_img;
+            images{indx + 2} = interPair_img;
             
         case 'stdp'
             % pr, indx and frame number looping values:
@@ -171,11 +171,11 @@ for p = 1 : length(pairs)
             % pr 3 : indx = 9, 1on = 10, 1off = 11, 2on = 12, 2off = 13
             % pr 4 : indx = 13, 1on = 14, 1off = 15, 2on = 16, 2off = 17 ...
             indx = ((p - 1) * 4) + 2;
-            frame{indx + 1} = leftImg_frame;
-            % frame{indx + 2} = soa_frame;
-            frame{indx + 2} = pair_frame;
-            frame{indx + 3} = rightImg_frame;
-            frame{indx + 4} = interPair_frame;
+            images{indx + 1} = leftImg_frame;
+            % images{indx + 2} = soa_img;
+            images{indx + 2} = pair_img;
+            images{indx + 3} = rightImg_frame;
+            images{indx + 4} = interPair_img;
 
         otherwise
             error('unrecognized movieMode in generateStimMovie');
@@ -186,17 +186,17 @@ end  % next p
 % --- SET LAST FRAME (irrespective of movieMode)
 switch params.movieMode
     case 'simultaneous'
-        frame{indx + 3} = postMovie_frame;
+        images{indx + 3} = postMovie_img;
     case 'stdp'
-        frame{indx + 5} = postMovie_frame;
+        images{indx + 5} = postMovie_img;
 
 end
 
-% --- CONCATENATE VARIABLE FRAMES ARRAY INTO movieFrames
-movieFrames = {};
-for f = 1 : size(frame, 2)
-    thisFrame = frame{1, f};
-    movieFrames = [movieFrames; thisFrame]; 
+% --- CONCATENATE VARIABLE FRAMES ARRAY INTO movieImages
+movieImages = {};
+for f = 1 : size(images, 2)
+    thisImg = images{1, f};
+    movieImages = [movieImages; thisImg]; 
 end
 
 

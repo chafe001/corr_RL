@@ -614,28 +614,10 @@ scene1 = create_scene(sc1_pt);
 scene1_start = run_scene(scene1, codes.startPretrial); %'pretrial'
 
 % -------------------------------------------------------------------------
-% SCENE 2: PRESENT STIM MOVIE, WATCH FOR KEY RESPONSE
+% SCENE 2: PRESENT STIM MOVIE, ERROR IF KEY RESPONSE
 
 % --- MAKE ADAPTOR(S)
-% --- reward box for visual feedback
-% rewBox = BoxGraphic(null_);
-% netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
-% maxWinBox_width = TrialRecord.User.params.rewBox_width;
-
-% figure out where to print white netWin reward box so it is left aligned
-% with left edge of black maxWin reward box.  X position coordinate
-% specifies screen coordinates of center of rectangle graphic. The center
-% of the white bar is screen center -1/2 black bar width +1/2 white bar
-% width
-% netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
-% 
-% rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
-
-% --- 1. frame counter adaptor
-% sc2_fc = FrameCounter(null_);
-% sc2_fc.NumFrame = times.sc2_movie_maxFrames;
-
-% --- 2. key checking adaptor
+% --- 1. key checking adaptor
 sc2_key1 = KeyChecker(mouse_);
 sc2_key1.KeyNum = 1;  % 1st keycode in GUI
 sc2_key2 = KeyChecker(mouse_);
@@ -655,7 +637,8 @@ sc2_movie.Repetition = 1;
 % sc2_fc_key.add(sc2_watchKeys);
 % add choice image using Concurrent, but add sc2_eye_key first so eye fixation /
 % key press controls scene timing
-sc2_movie_key = Concurrent(sc2_watchKeys);
+% sc2_movie_key = Concurrent(sc2_watchKeys);
+sc2_movie_key = AllContinue(sc2_watchKeys);
 sc2_movie_key.add(sc2_movie);
 
 % --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
@@ -669,6 +652,20 @@ TrialRecord.User.movieFrameTimes = sc2_movie.Time;
 % in the list of variables saved to include it in the bhv2 behavioral
 % outfile
 
+if sc2_key1.Success || sc2_key2.Success
+    % requiring response AFTER movie
+    trialerror('earlyResp');
+end
+
+% -------------------------------------------------------------------------
+% SCENE 3: RESPONSE WINDOW
+
+% --- MAKE ADAPTOR(S)
+% make a copy of scene 2 watchKeys
+sc3_watchKeys = sc2_watchKeys;
+
+
+
 % --- ANALYZE SCENE OUTCOME
 if sc2_key1.Success && ~sc2_key2.Success
     choices.madeValidResp = true;
@@ -676,7 +673,7 @@ if sc2_key1.Success && ~sc2_key2.Success
     choices.chosenSide = 'left';
     eventmarker(codes.response_key1);
     % --- COMPUTE RT
-    % RT is time from movie onset to key press. Key time (sc2_key1.Time)
+    % RT is time from movie on3et to key press. Key time (sc2_key1.Time)
     % is time elapsed from the start of the scene to key press. Time of the
     % first frame of the movie (sc2_movie.Time(1)) is time elapsed from the
     % start of the scene to the first frame.  To find RT, subtract movie
