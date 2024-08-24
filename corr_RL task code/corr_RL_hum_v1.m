@@ -374,7 +374,7 @@
 % -------------------------------------------------------------------------
 % ------------------------- ERROR CODES -----------------------------------
 % -------------------------------------------------------------------------
-trialerror(0, 'validResp', 1, 'earlyResp', 2, 'lateResp', 3, 'noResp');
+trialerror(0, 'validResp', 1, 'earlyResp', 2, 'noResp');
 
 % -------------------------------------------------------------------------
 % -------------------------- PARAMETERS -----------------------------------
@@ -382,9 +382,6 @@ trialerror(0, 'validResp', 1, 'earlyResp', 2, 'lateResp', 3, 'noResp');
 dbstop if error;
 showcursor('off');
 taskObj_fix = 1;
-eye_radius = 3;
-rew.duration = 200;
-rew.numDrops = 1;
 
 % -------------------------------------------------------------------------
 % --------------------------- STATE TIMES ---------------------------------
@@ -632,10 +629,6 @@ TrialRecord.User.movieFrameTimes = sc2_movie.Time;
 if sc2_key1.Success || sc2_key2.Success
     % requiring response AFTER movie
     trialerror('earlyResp');
-    % ADD error visual feedback HERE!!
-    trialResult = 'earlyResp_cueMovie';
-else
-    trialResult = 'inTrial';
 end
 
 % -------------------------------------------------------------------------
@@ -659,7 +652,7 @@ sc3_responseWindow = AllContinue(sc3_watchKeys);
 sc3_responseWindow.add(sc3_tc);
 
 % --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
-scene3 = create_scene(sc3_responseWindow);
+scene3 = create_scene(sc3_responseWindow, taskObj_fix);
 % fliptime is time the trialtime in ms at which the first frame of the
 % screen is pressented and is the return value of run_scene.  Logs timing
 % of scene transitions
@@ -673,6 +666,8 @@ if sc3_key1.Success && ~sc3_key2.Success
     eventmarker(codes.response_key1);
     % --- COMPUTE RT
     rt = sc3_key1.Time - scene3_start;
+    % --- LOG CORRECT TRIAL IN TRIALRECORD
+    trialerror('validResp');
 
     % DECREMENT REP COUNTER FOR THIS CONDITION, c is condition number in
     % TrialRecord.User.condRepsRem(c) = TrialRecord.User.condRepsRem(c) - 1;
@@ -684,6 +679,8 @@ elseif sc3_key2.Success && ~sc3_key1.Success
     eventmarker(codes.response_key2);
     % --- See comments above for rt
     rt = sc3_key2.Time - scene3_start;
+    % --- LOG CORRECT TRIAL IN TRIALRECORD
+    trialerror('validResp')
    
     % DECREMENT REP COUNTER FOR THIS CONDITION, c is condition number in
     % TrialRecord.User.condRepsRem(c) = TrialRecord.User.condRepsRem(c) - 1;
