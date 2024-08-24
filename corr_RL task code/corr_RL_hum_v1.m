@@ -292,95 +292,95 @@
 % -------------------------------------------------------------------------
 % task pace is heavily dependent on refresh rate and hardware
 
-COMPUTER = getenv('COMPUTERNAME');
+% COMPUTER = getenv('COMPUTERNAME');
 
-switch COMPUTER
-    case 'MATTWALLIN'
-        % desktop at 60 Hz
-        times.idle_ms = 100;
-        times.stimDur = 1;
-        times.soa = 1;
-        times.interPair = 5;
-        % times below specified in screen refresh units, absolute time depends on
-        % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
-        % in new laptops, etc
-        % scene 1 is pretrial
-        times.fixDur = 30;  % fix targ only
-        times.preMovieDur = 30;  % fix targ and choices
-        times.postMovieDur = 30;
-        times.sc1_pretrial_frames = 30;
-        times.sc2_movie_maxFrames = 1000;
-        times.sc3_feedback_frames = 20; % duration of scene depends on choice ring timing
-        times.choiceRing_frames = 10;
-        times.rewRing_frames = 10;
-
-    case 'DESKTOP-7CHQEHS'
-        % desktop at 60 Hz
-        times.stimDur = 1;
-        times.soa = 1;
-        times.interPair = 5;
-        % times below specified in screen refresh units, absolute time depends on
-        % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
-        % in new laptops, etc
-        % scene 1 is pretrial
-        times.fixDur = 5;  % fix targ only
-        times.preMovieDur = 5;  % fix targ and choices
-        times.postMovieDur = 5;
-        times.sc1_pretrial_frames = 5;
-        times.sc2_movie_maxFrames = 1000;
-        times.sc3_feedback_frames = 20; % duration of scene depends on choice ring timing
-        times.choiceRing_frames = 5;
-        times.rewRing_frames = 5;
-
-    case 'MATT_MICRO'
-        % laptop at 120 Hz
-        times.stimDur = 2;
-        times.soa = 2;
-        times.interPair = 10;
-        % times below specified in screen refresh units, absolute time depends on
-        % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
-        % in new laptops, etc
-        % scene 1 is pretrial
-        times.fixDur = 20;  % fix targ only
-        times.preMovieDur = 20;  % fix targ and choices
-        times.postMovieDur = 20;
-        times.sc1_pretrial_frames = 20;
-        times.sc2_movie_maxFrames = 1000;
-        times.sc3_feedback_frames = 20; % duration of scene depends on choice ring timing
-        times.choiceRing_frames = 10;
-        times.rewRing_frames = 10;
-
-    case 'DAVIDLAPTOP'
-        % laptop at 144 Hz
-        times.stimDur = 2;
-        times.soa = 2;
-        times.interPair = 10;
-        % times below specified in screen refresh units, absolute time depends on
-        % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
-        % in new laptops, etc
-        % scene 1 is pretrial
-        times.fixDur = 30;  % fix targ only
-        times.preMovieDur = 30;  % fix targ and choices
-        times.postMovieDur = 30;
-        times.sc1_pretrial_frames = 30;
-        times.sc2_movie_maxFrames = 1000;
-        times.sc3_feedback_frames = 500; % duration of scene depends on choice ring timing
-        times.choiceRing_frames = 10;
-        times.rewRing_frames = 10;
-
-end
+% switch COMPUTER
+%     case 'MATTWALLIN'
+%         % desktop at 60 Hz
+%         times.idle_ms = 100;
+%         times.stimDur = 1;
+%         times.soa = 1;
+%         times.interPair = 5;
+%         % times below specified in screen refresh units, absolute time depends on
+%         % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
+%         % in new laptops, etc
+%         % scene 1 is pretrial
+%         times.fixDur = 30;  % fix targ only
+%         times.preMovieDur = 30;  % fix targ and choices
+%         times.postMovieDur = 30;
+%         times.sc1_pretrial_frames = 30;
+%         times.sc2_movie_maxFrames = 1000;
+%         times.sc3_feedback_frames = 20; % duration of scene depends on choice ring timing
+%         times.choiceRing_frames = 10;
+%         times.rewRing_frames = 10;
+% 
+%     case 'DESKTOP-7CHQEHS'
+%         % desktop at 60 Hz
+%         times.stimDur = 1;
+%         times.soa = 1;
+%         times.interPair = 5;
+%         % times below specified in screen refresh units, absolute time depends on
+%         % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
+%         % in new laptops, etc
+%         % scene 1 is pretrial
+%         times.fixDur = 5;  % fix targ only
+%         times.preMovieDur = 5;  % fix targ and choices
+%         times.postMovieDur = 5;
+%         times.sc1_pretrial_frames = 5;
+%         times.sc2_movie_maxFrames = 1000;
+%         times.sc3_feedback_frames = 20; % duration of scene depends on choice ring timing
+%         times.choiceRing_frames = 5;
+%         times.rewRing_frames = 5;
+% 
+%     case 'MATT_MICRO'
+%         % laptop at 120 Hz
+%         times.stimDur = 2;
+%         times.soa = 2;
+%         times.interPair = 10;
+%         % times below specified in screen refresh units, absolute time depends on
+%         % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
+%         % in new laptops, etc
+%         % scene 1 is pretrial
+%         times.fixDur = 20;  % fix targ only
+%         times.preMovieDur = 20;  % fix targ and choices
+%         times.postMovieDur = 20;
+%         times.sc1_pretrial_frames = 20;
+%         times.sc2_movie_maxFrames = 1000;
+%         times.sc3_feedback_frames = 20; % duration of scene depends on choice ring timing
+%         times.choiceRing_frames = 10;
+%         times.rewRing_frames = 10;
+% 
+%     case 'DAVIDLAPTOP'
+%         % laptop at 144 Hz
+%         times.stimDur = 2;
+%         times.soa = 2;
+%         times.interPair = 10;
+%         % times below specified in screen refresh units, absolute time depends on
+%         % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
+%         % in new laptops, etc
+%         % scene 1 is pretrial
+%         times.fixDur = 30;  % fix targ only
+%         times.preMovieDur = 30;  % fix targ and choices
+%         times.postMovieDur = 30;
+%         times.sc1_pretrial_frames = 30;
+%         times.sc2_movie_maxFrames = 1000;
+%         times.sc3_feedback_frames = 500; % duration of scene depends on choice ring timing
+%         times.choiceRing_frames = 10;
+%         times.rewRing_frames = 10;
+% 
+% end
 
 
 % -------------------------------------------------------------------------
 % ------------------------- ERROR CODES -----------------------------------
 % -------------------------------------------------------------------------
-trialerror(0, 'correct', 1, 'earlyResp', 2, 'lateResp', 3, 'noResp');
+trialerror(0, 'validResp', 1, 'earlyResp', 2, 'lateResp', 3, 'noResp');
 
 % -------------------------------------------------------------------------
 % -------------------------- PARAMETERS -----------------------------------
 % -------------------------------------------------------------------------
 dbstop if error;
-% showcursor('off');
+showcursor('off');
 taskObj_fix = 1;
 eye_radius = 3;
 visualFeedback = true;
@@ -389,22 +389,10 @@ rew.numDrops = 1;
 
 % -------------------------------------------------------------------------
 % --------------------------- STATE TIMES ---------------------------------
-% -------------------------------------------------------------------------
-times.idle_ms = 100;
-% times below specified in screen refresh units, absolute time depends on
-% graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
-% in new laptops, etc
-% scene 1 is pretrial
+% ------------------------------------------------------------------------
 
-% --- params that control stimulus timing
-times.fixDur = 30;  % fix targ only
-times.preMovieDur = 30;  % fix targ and choices
-times.postMovieDur = 30;
-times.sc1_pretrial_frames = 30;
-times.sc2_movie_maxFrames = 1000;
-times.sc3_feedback_frames = 500; % duration of scene depends on choice ring timing
-times.choiceRing_frames = 10;
-times.rewRing_frames = 10;               % screen refresh units
+% call fx to set trial timing
+times = corr_RL_setTimes();
 
 % save times to TrialRecord
 TrialRecord.User.times = times;
@@ -412,23 +400,13 @@ TrialRecord.User.times = times;
 % -------------------------------------------------------------------------
 % --------------------------- EVENT CODES ---------------------------------
 % -------------------------------------------------------------------------
-% Event codes are time stamps for trial events
-codes.startPretrial = 10;
-codes.fix_on = 20;
-codes.choices_on = 30;
-codes.imgPair_on = 40;
-codes.imgPair_off = 50;
-codes.img1_on = 60;
-codes.img1_off = 70;
-codes.img2_on = 80;
-codes.img2_off = 90;
-codes.endMovie = 100;
-codes.response_key1 = 110;
-codes.response_key2 = 120;
-codes.choiceRing_on = 130;
-codes.rewRing_on = 140;
-codes.noEye = 150;
-codes.brokeEye = 160;
+
+% call fx to set trial event codes
+codes = corr_RL_setCodes();
+
+% save event codes to TrialRecord
+TrialRecord.User.codes = codes;
+
 
 % *************************************************************************************************
 % *************************************************************************************************
@@ -603,15 +581,15 @@ netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
 
 rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 
-sc1_pt = TimeCounter(rewBox);
-sc1_pt.Duration = 100;
+sc1_tc = TimeCounter(rewBox);
+sc1_tc.Duration = times.sc1_pretrial_ms;
 
 % --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
-scene1 = create_scene(sc1_pt);
+scene1 = create_scene(sc1_tc);
 % fliptime is time the trialtime in ms at which the first frame of the
 % screen is pressented and is the return value of run_scene.  Logs timing
 % of scene transitions
-scene1_start = run_scene(scene1, codes.startPretrial); %'pretrial'
+scene1_start = run_scene(scene1, codes.startFix); %'pretrial'
 
 % -------------------------------------------------------------------------
 % SCENE 2: PRESENT STIM MOVIE, ERROR IF KEY RESPONSE
@@ -655,71 +633,63 @@ TrialRecord.User.movieFrameTimes = sc2_movie.Time;
 if sc2_key1.Success || sc2_key2.Success
     % requiring response AFTER movie
     trialerror('earlyResp');
+    % ADD error visual feedback HERE!!
+    trialResult = 'earlyResp_cueMovie';
+else
+    trialResult = 'inTrial';
 end
 
 % -------------------------------------------------------------------------
 % SCENE 3: RESPONSE WINDOW
 
 % --- MAKE ADAPTOR(S)
-% make a copy of scene 2 watchKeys
-sc3_watchKeys = sc2_watchKeys;
+% --- 1. timeCounter
+sc3_tc = TimeCounter(rewBox);
+sc3_tc.Duration = times.sc3_response_ms;
 
+% --- 2. key checking adaptor
+sc3_key1 = KeyChecker(mouse_);
+sc3_key1.KeyNum = 1;  % 1st keycode in GUI
+sc3_key2 = KeyChecker(mouse_);
+sc3_key2.KeyNum = 2;  % 2nd keycode in GUI
+sc3_watchKeys = OrAdapter(sc3_key1);
+sc3_watchKeys.add(sc3_key2);
 
+% combine watchKeys and TimeCounter
+sc3_responseWindow = AllContinue(sc3_watchKeys);
+sc3_responseWindow.add(sc3_tc);
+
+% --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
+scene3 = create_scene(sc3_responseWindow);
+% fliptime is time the trialtime in ms at which the first frame of the
+% screen is pressented and is the return value of run_scene.  Logs timing
+% of scene transitions
+scene3_start = run_scene(scene3, codes.beginRespWindow); %'pretrial'
 
 % --- ANALYZE SCENE OUTCOME
-if sc2_key1.Success && ~sc2_key2.Success
+if sc3_key1.Success && ~sc3_key2.Success
     choices.madeValidResp = true;
     choices.responseKey = 1;
     choices.chosenSide = 'left';
     eventmarker(codes.response_key1);
     % --- COMPUTE RT
-    % RT is time from movie on3et to key press. Key time (sc2_key1.Time)
-    % is time elapsed from the start of the scene to key press. Time of the
-    % first frame of the movie (sc2_movie.Time(1)) is time elapsed from the
-    % start of the scene to the first frame.  To find RT, subtract movie
-    % time from key press time, to give time elapsed from start of movie to
-    % key press.  If RT is less than 0, key press occurred before the start
-    % of the movie, trialerror('earlyResp')
-    rt = sc2_key1.Time - sc2_movie.Time(1);
-    movieDur = sc2_movie.Time(end) - sc2_movie.Time(1);
-    if rt < 0
-        % jumped the gun
-        trialerror('earlyResp');
-    elseif rt > 0 && rt < movieDur
-        % response during movie, valid response
-        trialerror('correct');
-    elseif rt > movieDur
-        % response after movie
-        trialerror('lateResp');
-    end
+    rt = sc3_key1.Time - scene3_start;
 
     % DECREMENT REP COUNTER FOR THIS CONDITION, c is condition number in
-    % % TrialRecord as saved above
     % TrialRecord.User.condRepsRem(c) = TrialRecord.User.condRepsRem(c) - 1;
 
-elseif sc2_key2.Success && ~sc2_key1.Success
+elseif sc3_key2.Success && ~sc3_key1.Success
     choices.madeValidResp = true;
     choices.responseKey = 2;
     choices.chosenSide = 'right';
     eventmarker(codes.response_key2);
     % --- See comments above for rt
-    rt = sc2_key2.Time - sc2_movie.Time(1);
-    movieDur = sc2_movie.Time(end) - sc2_movie.Time(1);
-    if rt < 0
-        % jumped the gun
-        trialerror('earlyResp');
-    elseif rt > 0 && rt < movieDur
-        % response during movie, valid response
-        trialerror('correct');
-    elseif rt > movieDur
-        % response after movie
-        trialerror('lateResp');
-    end
-
+    rt = sc3_key2.Time - scene3_start;
+   
     % DECREMENT REP COUNTER FOR THIS CONDITION, c is condition number in
-    % TrialRecord as saved above
     % TrialRecord.User.condRepsRem(c) = TrialRecord.User.condRepsRem(c) - 1;
-elseif ~sc2_key1.Success && ~sc2_key2.Success
+
+elseif ~sc3_key1.Success && ~sc3_key2.Success
     choices.madeValidResp = false;
     trialerror('noResp');  % no response
     choices.responseKey = 0;
@@ -728,7 +698,7 @@ end
 
 
 % -------------------------------------------------------------------------
-% SCENE 3: GIVE PROBABILISTIC REWARD AND DISPLAY FEEDBACK
+% SCENE 4: GIVE PROBABILISTIC REWARD AND DISPLAY FEEDBACK
 
 % --- BUILD ADAPTOR CHAINS
 % --- 1. TimeCounter adaptor. Not sure why but FrameCounter here slows task

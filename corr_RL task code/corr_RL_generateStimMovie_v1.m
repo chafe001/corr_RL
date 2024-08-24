@@ -86,29 +86,29 @@ for p = 1 : length(pairSeq)
 
 end % next p
 
-% --- RETRIEVE EVENT CODES
-startPretrial = codes.startPretrial;
-fix_on = codes.fix_on;
-choices_on = codes.choices_on;
-imgPair_on = codes.imgPair_on;
-imgPair_off = codes.imgPair_off;
-img1_on = codes.img1_on;
-img1_off = codes.img1_off;
-img2_on = codes.img2_on;
-img2_off = codes.img2_off;
-endMovie = codes.endMovie;
-response_key1 = codes.response_key1;
-response_key2 = codes.response_key2;
-choiceRing_on = codes.choiceRing_on;
-rewRing_on = codes.rewRing_on;
 
-bob = 'foggy';
+% codes.startFix = 10;
+% codes.preMovie = 20;
+% codes.imgPair_on = 30;
+% codes.imgPair_off = 40;
+% codes.img1_on = 50;
+% codes.img1_off = 60;
+% codes.img2_on = 70;
+% codes.img2_off = 80;
+% codes.endMovie = 90;
+% codes.beginRespWindow = 100;
+% codes.response_key1 = 110;
+% codes.response_key2 = 120;
+% codes.choiceRing_on = 130;
+% codes.errorRing_on = 140;
+% codes.rewRing_on = 150;
+
 
 % --- DEFINE STANDARD IMAGES
-preMovie_img = {[], [], times.preMovie_frames, fix_on};
-soa_img = {[], [], times.soa_frames, img1_off};
-interPair_img = {[], [], times.interPair_frames, imgPair_off};
-postMovie_img = {[], [], times.postMovie_frames, endMovie};
+preMovie_img = {[], [], times.preMovie_frames, TrialRecord.User.codes.preMovie};
+soa_img = {[], [], times.soa_frames, TrialRecord.User.codes.img1_off};
+interPair_img = {[], [], times.interPair_frames, TrialRecord.User.codes.imgPair_off};
+postMovie_img = {[], [], times.postMovie_frames, TrialRecord.User.codes.endMovie};
 
 % --- PREALLOCATE FRAME CELL ARRAY
 % --- SET STIM PARAMS FOR imageChanger FUNCTION CALL TO CONTROL MOVIE
@@ -147,9 +147,9 @@ for p = 1 : length(pairs)
     rightImg_y = pairs(p).rightStim.Position(2);
 
     % --- BUILD SIMULTANEOUS AND SEQUENTIAL STIM FRAMES FOR EACH IMG PAIR
-    pair_img = {{leftImg_fn, rightImg_fn}, [leftImg_x leftImg_y; rightImg_x rightImg_y], times.stim_frames, imgPair_on};
-    leftImg_frame = {{leftImg_fn}, [leftImg_x leftImg_y], times.stim_frames, img1_on};
-    rightImg_frame = {{rightImg_fn}, [rightImg_x rightImg_y], times.stim_frames, img2_on};
+    pair_img = {{leftImg_fn, rightImg_fn}, [leftImg_x leftImg_y; rightImg_x rightImg_y], times.stim_frames, TrialRecord.User.codes.imgPair_on};
+    leftImg_frame = {{leftImg_fn}, [leftImg_x leftImg_y], times.stim_frames, TrialRecord.User.codes.img1_on};
+    rightImg_frame = {{rightImg_fn}, [rightImg_x rightImg_y], times.stim_frames, TrialRecord.User.codes.img2_on};
 
     % --- COMBINE FRAMES INTO SEQUENCEg
     switch params.movieMode

@@ -53,9 +53,9 @@ switch COMPUTER
         % times.fixDur_ms = 20;  % fix targ only
         times.preMovie_frames = 20;  % fix targ and choices
         times.postMovie_frames = 20;
-        times.sc1_pretrial_frames = 20;
-        % times.sc2_movie_maxFrames = 1000;
-        times.sc3_feedback_frames = 20; % duration of scene depends on choice ring timing
+        times.sc1_pretrial_ms = 20;
+        times.sc3_response_ms = 500;
+        times.sc4_feedback_frames = 20; % duration of scene depends on choice ring timing
         times.choiceRing_frames = 10;
         times.rewRing_frames = 10;
 
