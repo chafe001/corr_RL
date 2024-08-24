@@ -383,7 +383,6 @@ dbstop if error;
 showcursor('off');
 taskObj_fix = 1;
 eye_radius = 3;
-visualFeedback = true;
 rew.duration = 200;
 rew.numDrops = 1;
 
@@ -696,7 +695,6 @@ elseif ~sc3_key1.Success && ~sc3_key2.Success
     abortTrial = true;
 end
 
-
 % -------------------------------------------------------------------------
 % SCENE 4: GIVE PROBABILISTIC REWARD AND DISPLAY FEEDBACK
 
@@ -796,26 +794,26 @@ netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degP
 rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 
 % --- INSTANTIATE IMAGECHANGER OBJ for FEEDBACK MOVIE
-sc3_rewImg = ImageChanger(rewBox);
+sc4_rewImg = ImageChanger(rewBox);
 
 if choices.madeValidResp
-    if visualFeedback && choices.rewardTrial
-        sc3_rewImg.List = ...
+    if choices.rewardTrial
+        sc4_rewImg.List = ...
             {{choices.choiceImg}, [0 0], times.choiceRing_frames, codes.choiceRing_on; ...
             {choices.rewImg}, [0 0], times.rewRing_frames, codes.rewRing_on};
-    elseif visualFeedback % all other cases
-        sc3_rewImg.List = ...
+    else
+        sc4_rewImg.List = ...
             {{choices.choiceImg}, [0 0], times.choiceRing_frames, codes.choiceRing_on};
     end
 else
-    sc3_rewImg.List = ...
-        {[], [], times.choiceRing_frames, codes.choiceRing_on};
+    sc4_rewImg.List = ...
+        {[], [], times.choiceRing_frames, codes.noResponse};
 
 end
 
 % --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
-scene3 = create_scene(sc3_rewImg, taskObj_fix);
-scene3_start = run_scene(scene3);
+scene4 = create_scene(sc4_rewImg, taskObj_fix);
+scene4_start = run_scene(scene4);
 
 % --- SAVE DATA TO BHV2 FILE
 % NOTE!!: Make sure 'File type' dropdown in GUI is set to BHV2.  Matlab

@@ -16,9 +16,9 @@ codes.endMovie = 90;
 codes.beginRespWindow = 100;
 codes.response_key1 = 110;
 codes.response_key2 = 120;
-codes.choiceRing_on = 130;
-codes.errorRing_on = 140;
-codes.rewRing_on = 150;
-
+codes.noResponse = 130;
+codes.choiceRing_on = 140;
+codes.errorRing_on = 150;
+codes.rewRing_on = 160;
 
 end

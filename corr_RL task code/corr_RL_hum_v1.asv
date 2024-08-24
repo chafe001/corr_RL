@@ -696,7 +696,6 @@ elseif ~sc3_key1.Success && ~sc3_key2.Success
     abortTrial = true;
 end
 
-
 % -------------------------------------------------------------------------
 % SCENE 4: GIVE PROBABILISTIC REWARD AND DISPLAY FEEDBACK
 
@@ -791,63 +790,36 @@ TrialRecord.User.Choices = choices;
 respResStr = strcat(choices.respStr, '  ---  ', choices.resultStr);
 dashboard(2, respResStr)
 
-% --- update rewBox size to reflect this outcome
+% --- UPDATE REWARD BOX ACCORDING TO THIS RESULT
 netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
-
-% figure out where to print white netWin reward box so it is left aligned
-% with left edge of black maxWin reward box.  X position coordinate
-% specifies screen coordinates of center of rectangle graphic. The center
-% of the white bar is screen center -1/2 black bar width +1/2 white bar
-% width
-netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
-
 rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
+
+% --- INSTANTIATE IMAGECHANGER OBJ for FEEDBACK MOVIE
+sc4_rewImg = ImageChanger(rewBox);
 
 if choices.madeValidResp
     if visualFeedback && choices.rewardTrial
-        sc3_rewImg = ImageChanger(rewBox);
-        sc3_rewImg.List = ...
+        sc4_rewImg.List = ...
             {{choices.choiceImg}, [0 0], times.choiceRing_frames, codes.choiceRing_on; ...
             {choices.rewImg}, [0 0], times.rewRing_frames, codes.rewRing_on};
     elseif visualFeedback % all other cases
-        sc3_rewImg = ImageChanger(rewBox);
-        sc3_rewImg.List = ...
+        sc4_rewImg.List = ...
             {{choices.choiceImg}, [0 0], times.choiceRing_frames, codes.choiceRing_on};
     end
 else
-    % instantiate sc3_rewImg but init to just fix, prevents crash on GUI
-    % quit
-    sc3_rewImg = ImageChanger(rewBox);
-    sc3_rewImg.List = ...
+    sc4_rewImg.List = ...
         {[], [], times.choiceRing_frames, codes.choiceRing_on};
 
 end
 
-% --- COMBINE REW IMG WTH with FEEDBACK
-sc3_probRew = Concurrent(sc3_fc);
-sc3_probRew.add(sc3_rewImg);
-% --- update rewBox width so changes with text feedback
-% netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
-% sc3_probRew.add(rewBox);
-
 % --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
-scene3 = create_scene(sc3_probRew, taskObj_fix);
+scene3 = create_scene(sc4_rewImg, taskObj_fix);
 scene3_start = run_scene(scene3);
 
 % --- SAVE DATA TO BHV2 FILE
 % NOTE!!: Make sure 'File type' dropdown in GUI is set to BHV2.  Matlab
 % format (.mat) works but can't figure out how to control which variables
 % get saved to matlab outfile
-
-% bhv_variable( ...
-%     'TrialRecord', TrialRecord, ...
-%     'choices', choices, ...
-%     'condArray', TrialRecord.User.condArray, ...
-%     'condReps',  TrialRecord.User.condReps, ...
-%     'params', TrialRecord.User.params, ...
-%     'movieFrames', TrialRecord.User.movieFrames, ...
-%     'movieFrameTimes', TrialRecord.User.movieFrameTimes);
-
 
 bhv_variable( ...
     'TrialRecord', TrialRecord, ...
