@@ -108,7 +108,6 @@ end % next p
 preMovie_img = {[], [], times.preMovie_frames, TrialRecord.User.codes.preMovie};
 soa_img = {[], [], times.soa_frames, TrialRecord.User.codes.img1_off};
 interPair_img = {[], [], times.interPair_frames, TrialRecord.User.codes.imgPair_off};
-postMovie_img = {[], [], times.postMovie_frames, TrialRecord.User.codes.endMovie};
 
 % --- PREALLOCATE FRAME CELL ARRAY
 % --- SET STIM PARAMS FOR imageChanger FUNCTION CALL TO CONTROL MOVIE
@@ -182,15 +181,6 @@ for p = 1 : length(pairs)
 
     end  % switch movieMode
 end  % next p
-
-% --- SET LAST FRAME (irrespective of movieMode)
-switch params.movieMode
-    case 'simultaneous'
-        images{indx + 3} = postMovie_img;
-    case 'stdp'
-        images{indx + 5} = postMovie_img;
-
-end
 
 % --- CONCATENATE VARIABLE FRAMES ARRAY INTO movieImages
 movieImages = {};

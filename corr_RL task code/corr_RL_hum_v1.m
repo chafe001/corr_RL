@@ -787,8 +787,8 @@ respResStr = strcat(choices.respStr, '  ---  ', choices.resultStr);
 dashboard(2, respResStr)
 
 % --- UPDATE REWARD BOX WITH THIS RESULT
-netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
 netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
+netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
 rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 
 % --- INSTANTIATE IMAGECHANGER OBJ for FEEDBACK MOVIE
