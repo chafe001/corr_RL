@@ -36,14 +36,14 @@ for bn = 1 : params.numBlocks
 
     % --- 3. select number of cue pairs for this block, and hence degree of
     % visual noise (number of noise pairs) added to the movie
-    if params.randCuePairNum
+    if params.randCuePercent
         % select random index into the numCuePairs array and retrieve value
-        numCuePairs = params.numCuePairs(randi(size(params.numCuePairs, 2)));
+        cuePercent = params.cuePercentRange(randi(size(params.cuePercentRange, 2)));
     else
         if mod(bn, 2) == 1 % odd block
-            numCuePairs = params.numCuePairs_easy;
+            cuePercent = params.cuePercent_easy;
         else  % even block
-            numCuePairs = params.numCuePairs_hard;
+            cuePercent = params.cuePercent_hard;
         end
     end
 
@@ -52,7 +52,7 @@ for bn = 1 : params.numBlocks
     for rs = LEFT:RIGHT
         condArrayTemp(bn, rs).blockNum = bn;
         condArrayTemp(bn, rs).movieRewState = rs;
-        condArrayTemp(bn, rs).numCuePairs = numCuePairs;
+        condArrayTemp(bn, rs).cuePercent = cuePercent;
         switch rs
             case LEFT
                 condArrayTemp(bn, rs).cuePairs = [cuePairs(1) cuePairs(4)];
@@ -76,7 +76,7 @@ for b = 1 : params.numBlocks
     end
 end
 
-gbob = 1;
+bob = 1;
 
 
 end

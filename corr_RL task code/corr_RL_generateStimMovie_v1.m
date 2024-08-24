@@ -28,12 +28,12 @@ codes = corr_RL_setCodes();
 % focus
 
 % --- retrive number of cue pairs for this movie
-numCuePairs = condArray(c).numCuePairs;
+numCuePairs = round(condArray(c).cuePercent * params.numMoviePairs);
 % --- build vector of 1s and 2s indicating which of the two cue pairs
 % associated with each condition to show each frame of the movie. (Note:
 % setParams() checks that numCuePairs is divisible by 2).
-cue1Vect = ones(1, numCuePairs/2);
-cue2Vect = ones(1, numCuePairs/2) + 1;
+cue1Vect = ones(1, round(numCuePairs/2));
+cue2Vect = ones(1, round(numCuePairs/2)) + 1;
 cueVect = [cue1Vect cue2Vect];
 
 % build vector of elements equal to 1-8 controlling whether to include

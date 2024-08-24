@@ -560,7 +560,7 @@ trlInfoStr = strcat(keyStr, ...
     '  Trial:', num2str(t), ...
     '  Block:', num2str(b), ...
     '  Cond:', num2str(c), ...
-    '  Cue pairs:', num2str(TrialRecord.User.condArray(c).numCuePairs), ...
+    '  Cue percent:', num2str(TrialRecord.User.condArray(c).cuePercent), ...
     '  Total pairs: ', num2str(TrialRecord.User.params.numMoviePairs));
 
 pair1_Angles_str = strcat('Pair1 L_ang:', num2str(TrialRecord.User.condArray(c).cuePairs(1).leftStim.Angle), ...
@@ -618,22 +618,22 @@ scene1_start = run_scene(scene1, codes.startPretrial); %'pretrial'
 
 % --- MAKE ADAPTOR(S)
 % --- reward box for visual feedback
-rewBox = BoxGraphic(null_);
-netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
-maxWinBox_width = TrialRecord.User.params.rewBox_width;
+% rewBox = BoxGraphic(null_);
+% netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
+% maxWinBox_width = TrialRecord.User.params.rewBox_width;
 
 % figure out where to print white netWin reward box so it is left aligned
 % with left edge of black maxWin reward box.  X position coordinate
 % specifies screen coordinates of center of rectangle graphic. The center
 % of the white bar is screen center -1/2 black bar width +1/2 white bar
 % width
-netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
-
-rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
+% netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
+% 
+% rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 
 % --- 1. frame counter adaptor
-sc2_fc = FrameCounter(null_);
-sc2_fc.NumFrame = times.sc2_movie_maxFrames;
+% sc2_fc = FrameCounter(null_);
+% sc2_fc.NumFrame = times.sc2_movie_maxFrames;
 
 % --- 2. key checking adaptor
 sc2_key1 = KeyChecker(mouse_);
@@ -646,15 +646,16 @@ sc2_watchKeys.add(sc2_key2);
 % --- 3. movie adaptor
 sc2_movie = ImageChanger(rewBox);
 sc2_movie.List = movieFrames;
+sc2_movie.Repetition = 1;
 
 % --- COMBINE ADAPTORS
 % use AllContinue to combine WaitThenHold and KeyChecker, so adaptor
 % terminates if either fixation is broken or key is pressed
-sc2_fc_key = AllContinue(sc2_fc);
-sc2_fc_key.add(sc2_watchKeys);
+% sc2_fc_key = AllContinue(sc2_fc);
+% sc2_fc_key.add(sc2_watchKeys);
 % add choice image using Concurrent, but add sc2_eye_key first so eye fixation /
 % key press controls scene timing
-sc2_movie_key = Concurrent(sc2_fc_key);
+sc2_movie_key = Concurrent(sc2_watchKeys);
 sc2_movie_key.add(sc2_movie);
 
 % --- CREATE AND RUN SCENE USING ADAPTOR CHAINS

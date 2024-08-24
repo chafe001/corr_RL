@@ -18,18 +18,11 @@ params.blockChange = 'netWinsMode';
 params.netWin_criterion = 10;  % number of netWins before switching block
 
 % --- MOVIE CONTROL
-params.randCuePairNum = true;
+params.randCuePercent = true;
 params.numMoviePairs = 10;
-params.numCuePairs = [14 18 22 26];
-% params.numCuePairs = [30 30 30 30];  % NO NOISE, for debugging
-params.numCuePairs_easy = max(params.numCuePairs);
-params.numCuePairs_hard = min(params.numCuePairs);
-% check each cue pair number is divisible by 2, error if not
-for np = 1 : length (params.numCuePairs)
-    if rem(params.numCuePairs(np), 2)
-        error('error in setParams(), number of cue pairs must be divisible by 2');
-    end
-end
+params.cuePercentRange = [0.2 0.3 0.4 0.5];
+params.cuePercent_easy = max(params.cuePercentRange);
+params.cuePercent_hard = min(params.cuePercentRange);
 
 % params.movieMode = 'simultaneous';
 params.movieMode = 'stdp';
