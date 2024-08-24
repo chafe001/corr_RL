@@ -43,9 +43,9 @@ switch COMPUTER
 
     case 'MATT_MICRO'
         % laptop at 120 Hz
-        times.stimDur = 2;
-        times.soa = 2;
-        times.interPair = 10;
+        times.stimDur = 4;
+        times.soa = 4;
+        times.interPair = 30;
         % times below specified in screen refresh units, absolute time depends on
         % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
         % in new laptops, etc
