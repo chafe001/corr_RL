@@ -57,6 +57,7 @@ switch COMPUTER
         times.sc4_feedback_frames = 20; % duration of scene depends on choice ring timing
         times.choiceRing_frames = 10;
         times.rewRing_frames = 10;
+        times.scError_ms = 1000;
 
     case 'DAVIDLAPTOP'
         % laptop at 120 Hz

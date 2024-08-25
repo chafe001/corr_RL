@@ -536,10 +536,27 @@ if sc2_key1.Success || sc2_key2.Success
     trialerror('earlyResp');
     choices.madeValidResp = false;
 
-    % 
-    % % --- CREATE AND RUN ERROR SCENE
-    % scError_tc = TimeCounter(rewBox);
-    % scError_tc.Duration = times.scError_ms;
+
+    % --- CREATE AND RUN ERROR SCENE
+    scError_tc = TimeCounter(rewBox);
+    scError_tc.Duration = times.scError_ms;
+
+    rewText = TextGraphic(null_);
+    rewText.Position = [0 TrialRecord.User.params.rewBox_yPos - 10];
+    rewText.FontSize = 42;
+    rewText.FontColor = [1 1 1];
+    rewText.HorizontalAlignment = 'center';
+    rewText.VerticalAlignment = 'middle';
+    rewText.Text = 'EARLY RESPONSE';
+
+    scError_tc_text = AndAdapter(scError_tc);
+    scError_tc_text.add(rewText);
+
+    errorScene = create_scene(sc)
+
+
+
+
 
     % --- SAVE BEHAVIORAL DATA
     bhv_variable( ...
