@@ -18,7 +18,7 @@ params.sepValue = -111111;
 
 % --- CONTROL NUMBER OF VARIABLES INCLUDED IN OUTFILE
 params.shortOutput = true;
-params.saveMatOut= false;
+params.saveMatOut= true;
 
 % ------------------------ INITIALIZE
 COMPUTER = getenv('COMPUTERNAME');
@@ -105,7 +105,7 @@ toc;
 %% 
 
 
-plot_bData(stdcol, bData);
+% plot_bData(stdcol, bData);
 
 end  
 % -------------------------------------------------------------------------
@@ -141,13 +141,6 @@ switch inTrial.UserVars.params.blockChange
         bcm = 2;
 end
 nwc = inTrial.UserVars.params.netWin_criterion;
-% csb = inTrial.UserVars.params.corrStrength_byBlock;
-% switch inTrial.UserVars.params.corrStrength_mode
-%     case 'noiseMix'
-%         csm = 1;
-%     case 'pairMix'
-%         csm = 2;
-% end
 cp = inTrial.UserVars.condArray(inTrial.Condition).cuePercent;
 cpr = inTrial.UserVars.params.cuePercentRange;
 cp_eb = inTrial.UserVars.params.cuePercent_easy;
