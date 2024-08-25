@@ -629,6 +629,7 @@ TrialRecord.User.movieFrameTimes = sc2_movie.Time;
 if sc2_key1.Success || sc2_key2.Success
     % requiring response AFTER movie
     trialerror('earlyResp');
+    choices.madeValidResp = false;
 end
 
 % -------------------------------------------------------------------------
@@ -805,7 +806,7 @@ if choices.madeValidResp
     end
 else
     sc4_rewImg.List = ...
-        {[], [], times.choiceRing_frames, codes.noResponse};
+        {[choices.errorImg], [0 0], times.choiceRing_frames, codes.noResponse};
 
 end
 
