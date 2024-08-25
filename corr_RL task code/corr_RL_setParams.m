@@ -3,8 +3,8 @@ function [params] = corr_RL_setParams()
 % --- STIMULUS FEATURE SPACE
 % --- variable feature dimensions
 params.Angles = [0 45 90 135];
-params.FaceColors = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
-% params.FaceColors = [0 0 0; 1 1 1];  % black, white
+% params.FaceColors = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
+params.FaceColors = [0 0 0; 1 1 1];  % black, white
 % --- fixed feature dimensions
 params.Size = [1 4]; % [width height] in degrees
 params.leftPos = [-4 0];
@@ -15,7 +15,7 @@ params.numBlocks = 10;  % WARNING: THIS NEEDS TO MATCH NUMBER OF BLOCKS IN CONDI
 params.repsPerCond = 4;
 params.blockChange = 'netWinsMode';
 % params.blockChange = 'condRepsMode';
-params.netWin_criterion = 10;  % number of netWins before switching block
+params.netWin_criterion = 7;  % number of netWins before switching block
 
 % --- MOVIE CONTROL
 params.randCuePercent = true;
