@@ -281,96 +281,6 @@
 % - Have people run this.  Compare performance +/- noise. Fit RL models.
 
 
-% *************************************************************************************************
-% *************************************************************************************************
-% ***************************** SET TASK CONTROLLING PARAMETERS BELOW *****************************
-% *************************************************************************************************
-% *************************************************************************************************
-
-% -------------------------------------------------------------------------
-% ------------------ STIMULUS AND SCENE TIMING ----------------------------
-% -------------------------------------------------------------------------
-% task pace is heavily dependent on refresh rate and hardware
-
-% COMPUTER = getenv('COMPUTERNAME');
-
-% switch COMPUTER
-%     case 'MATTWALLIN'
-%         % desktop at 60 Hz
-%         times.idle_ms = 100;
-%         times.stimDur = 1;
-%         times.soa = 1;
-%         times.interPair = 5;
-%         % times below specified in screen refresh units, absolute time depends on
-%         % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
-%         % in new laptops, etc
-%         % scene 1 is pretrial
-%         times.fixDur = 30;  % fix targ only
-%         times.preMovieDur = 30;  % fix targ and choices
-%         times.postMovieDur = 30;
-%         times.sc1_pretrial_frames = 30;
-%         times.sc2_movie_maxFrames = 1000;
-%         times.sc3_feedback_frames = 20; % duration of scene depends on choice ring timing
-%         times.choiceRing_frames = 10;
-%         times.rewRing_frames = 10;
-% 
-%     case 'DESKTOP-7CHQEHS'
-%         % desktop at 60 Hz
-%         times.stimDur = 1;
-%         times.soa = 1;
-%         times.interPair = 5;
-%         % times below specified in screen refresh units, absolute time depends on
-%         % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
-%         % in new laptops, etc
-%         % scene 1 is pretrial
-%         times.fixDur = 5;  % fix targ only
-%         times.preMovieDur = 5;  % fix targ and choices
-%         times.postMovieDur = 5;
-%         times.sc1_pretrial_frames = 5;
-%         times.sc2_movie_maxFrames = 1000;
-%         times.sc3_feedback_frames = 20; % duration of scene depends on choice ring timing
-%         times.choiceRing_frames = 5;
-%         times.rewRing_frames = 5;
-% 
-%     case 'MATT_MICRO'
-%         % laptop at 120 Hz
-%         times.stimDur = 2;
-%         times.soa = 2;
-%         times.interPair = 10;
-%         % times below specified in screen refresh units, absolute time depends on
-%         % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
-%         % in new laptops, etc
-%         % scene 1 is pretrial
-%         times.fixDur = 20;  % fix targ only
-%         times.preMovieDur = 20;  % fix targ and choices
-%         times.postMovieDur = 20;
-%         times.sc1_pretrial_frames = 20;
-%         times.sc2_movie_maxFrames = 1000;
-%         times.sc3_feedback_frames = 20; % duration of scene depends on choice ring timing
-%         times.choiceRing_frames = 10;
-%         times.rewRing_frames = 10;
-% 
-%     case 'DAVIDLAPTOP'
-%         % laptop at 144 Hz
-%         times.stimDur = 2;
-%         times.soa = 2;
-%         times.interPair = 10;
-%         % times below specified in screen refresh units, absolute time depends on
-%         % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
-%         % in new laptops, etc
-%         % scene 1 is pretrial
-%         times.fixDur = 30;  % fix targ only
-%         times.preMovieDur = 30;  % fix targ and choices
-%         times.postMovieDur = 30;
-%         times.sc1_pretrial_frames = 30;
-%         times.sc2_movie_maxFrames = 1000;
-%         times.sc3_feedback_frames = 500; % duration of scene depends on choice ring timing
-%         times.choiceRing_frames = 10;
-%         times.rewRing_frames = 10;
-% 
-% end
-
-
 % -------------------------------------------------------------------------
 % ------------------------- ERROR CODES -----------------------------------
 % -------------------------------------------------------------------------
@@ -385,7 +295,7 @@ taskObj_fix = 1;
 
 % -------------------------------------------------------------------------
 % --------------------------- STATE TIMES ---------------------------------
-% ------------------------------------------------------------------------
+% -------------------------------------------------------------------------
 
 % call fx to set trial timing
 times = corr_RL_setTimes();
@@ -403,12 +313,6 @@ codes = corr_RL_setCodes();
 % save event codes to TrialRecord
 TrialRecord.User.codes = codes;
 
-
-% *************************************************************************************************
-% *************************************************************************************************
-% *********** PERFORM CPU DEMANDING OVERHEAD BELOW (BEFORE RUNNING TRIAL) *************************
-% *************************************************************************************************
-% *************************************************************************************************
 
 % -------------------------------------------------------------------------
 % -------------- BUILD CONDITION AND TRIAL ARRAYS -------------------------
@@ -626,11 +530,26 @@ TrialRecord.User.movieFrameTimes = sc2_movie.Time;
 % in the list of variables saved to include it in the bhv2 behavioral
 % outfile
 
+% --- TERMINATE TRIAL IF EARLY RESPONSE
 if sc2_key1.Success || sc2_key2.Success
     % requiring response AFTER movie
     trialerror('earlyResp');
     choices.madeValidResp = false;
+
+    % --- SAVE BEHAVIORAL DATA
+    bhv_variable( ...
+    'TrialRecord', TrialRecord, ...
+    'choices', choices, ...
+    'condArray', TrialRecord.User.condArray, ...
+    'params', TrialRecord.User.params, ...
+    'movieFrames', TrialRecord.User.movieFrames, ...
+    'movieFrameTimes', TrialRecord.User.movieFrameTimes);
+
+    % --- 'RETURN' CALL TERMINATES TRIAL EARLY
+    return;
 end
+
+
 
 % -------------------------------------------------------------------------
 % SCENE 3: RESPONSE WINDOW
@@ -690,7 +609,16 @@ elseif ~sc3_key1.Success && ~sc3_key2.Success
     choices.madeValidResp = false;
     trialerror('noResp');  % no response
     choices.responseKey = 0;
-    abortTrial = true;
+    bhv_variable( ...
+    'TrialRecord', TrialRecord, ...
+    'choices', choices, ...
+    'condArray', TrialRecord.User.condArray, ...
+    'params', TrialRecord.User.params, ...
+    'movieFrames', TrialRecord.User.movieFrames, ...
+    'movieFrameTimes', TrialRecord.User.movieFrameTimes);
+
+    % --- 'RETURN' CALL TERMINATES TRIAL EARLY
+    return;
 end
 
 % -------------------------------------------------------------------------
@@ -769,7 +697,6 @@ else  % NO VALID RESPONSE
     choices.respStr = ' NO RESP';
     choices.resultStr = ' NO RESULT';
 end
-
 
 % --- if blockLosses > blockWins, reset counters to 0 to prevent
 % accumulation of a deficit, don't want a hole subj has to dig out of
