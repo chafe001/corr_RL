@@ -536,6 +536,11 @@ if sc2_key1.Success || sc2_key2.Success
     trialerror('earlyResp');
     choices.madeValidResp = false;
 
+    % 
+    % % --- CREATE AND RUN ERROR SCENE
+    % scError_tc = TimeCounter(rewBox);
+    % scError_tc.Duration = times.scError_ms;
+
     % --- SAVE BEHAVIORAL DATA
     bhv_variable( ...
     'TrialRecord', TrialRecord, ...

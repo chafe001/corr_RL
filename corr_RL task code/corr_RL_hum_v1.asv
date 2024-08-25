@@ -303,13 +303,6 @@ times = corr_RL_setTimes();
 % save times to TrialRecord
 TrialRecord.User.times = times;
 
-
-% -------------------------------------------------------------------------
-% ------------------------- TRIAL ABORT FLAG ------------------------------
-% -------------------------------------------------------------------------
-% flag to call 'return' to end trial prematurely if error
-abortTrial = false;
-
 % -------------------------------------------------------------------------
 % --------------------------- EVENT CODES ---------------------------------
 % -------------------------------------------------------------------------
@@ -537,11 +530,31 @@ TrialRecord.User.movieFrameTimes = sc2_movie.Time;
 % in the list of variables saved to include it in the bhv2 behavioral
 % outfile
 
+% --- TERMINATE TRIAL IF EARLY RESPONSE
 if sc2_key1.Success || sc2_key2.Success
     % requiring response AFTER movie
     trialerror('earlyResp');
-    choices.earlyResp = true;
+    choices.madeValidResp = false;
+
+    % 
+    % % --- CREATE AND RUN ERROR SCENE
+    % scError_tc = TimeCounter(rewBox);
+    % scError_tc.Duration = times.scError_ms;
+
+    % --- SAVE BEHAVIORAL DATA
+    bhv_variable( ...
+    'TrialRecord', TrialRecord, ...
+    'choices', choices, ...
+    'condArray', TrialRecord.User.condArray, ...
+    'params', TrialRecord.User.params, ...
+    'movieFrames', TrialRecord.User.movieFrames, ...
+    'movieFrameTimes', TrialRecord.User.movieFrameTimes);
+
+    % --- 'RETURN' CALL TERMINATES TRIAL EARLY
+    return;
 end
+
+
 
 % -------------------------------------------------------------------------
 % SCENE 3: RESPONSE WINDOW
@@ -601,7 +614,16 @@ elseif ~sc3_key1.Success && ~sc3_key2.Success
     choices.madeValidResp = false;
     trialerror('noResp');  % no response
     choices.responseKey = 0;
-    abortTrial = true;
+    bhv_variable( ...
+    'TrialRecord', TrialRecord, ...
+    'choices', choices, ...
+    'condArray', TrialRecord.User.condArray, ...
+    'params', TrialRecord.User.params, ...
+    'movieFrames', TrialRecord.User.movieFrames, ...
+    'movieFrameTimes', TrialRecord.User.movieFrameTimes);
+
+    % --- 'RETURN' CALL TERMINATES TRIAL EARLY
+    return;
 end
 
 % -------------------------------------------------------------------------
@@ -680,7 +702,6 @@ else  % NO VALID RESPONSE
     choices.respStr = ' NO RESP';
     choices.resultStr = ' NO RESULT';
 end
-
 
 % --- if blockLosses > blockWins, reset counters to 0 to prevent
 % accumulation of a deficit, don't want a hole subj has to dig out of
