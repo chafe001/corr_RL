@@ -9,9 +9,9 @@ function [blockStim] = corr_RL_sampleStimSpace_v1(params)
 % - 2 noise stimuli for right screen location
 
 % We will hold feature spacing between the four stimuli at left and right
-% screen locations fixed so that blocks don't vary much in perceptual 
+% screen locations fixed so that blocks don't vary much in perceptual
 % difficulty discriminating the stimuli
-% 
+%
 % Typical feature values, set in buildTrials
 % params.variableDim(1).label = 'Angle';
 % params.variableDim(1).values = [0 45 90 135];
@@ -20,12 +20,14 @@ function [blockStim] = corr_RL_sampleStimSpace_v1(params)
 % params.Size = [1 4]; % [width height] in degrees
 % params.Scale = [1 1]; % Magnification. 1, by default [x_scale y_scale].
 
-% --- PERMUTE angles and colors
+% --- COMPUTE DIMENSIONS OF FEATURE SPACE
 numAngles = size(params.Angles, 2);
 numColors = size(params.FaceColors, 1);
+
+% --- PERMUTE FEATURES
 for a = 1:numAngles
     for c = 1:numColors
-        stim(a, c).Angle = params.Angles(a);     
+        stim(a, c).Angle = params.Angles(a);
         stim(a, c).FaceColor = params.FaceColors(c, :);
     end
 end
@@ -33,8 +35,40 @@ end
 % --- CONVERT 2D to 1D matrix
 allStim = reshape(stim, [(numAngles * numColors), 1]);
 
-% --- RANDOMLY PERMUTE 1D matrix to randomize cue and noise stimuli
-randStim = allStim(randperm(size(allStim, 1)), :);
+if params.easyStim
+
+    
+   % keep angles in their current order, just permute colors.  This ensures
+   % that the 4 stimuli in each block have unique orientations.
+
+
+   for cg = 1 : length(params.FaceColors)
+       
+       thisColorGroup = params.FaceColors(randperm(size(params.FaceColors, 1)), :);
+
+       for a = 1 : length(params.Angles)
+
+           % compute index into allStim using color group and angle
+           % looping vars
+           si = ((cg - 1) * length(params.FaceColors)) + a;
+           % select this random color from color group
+           thisColor = thisColorGroup(a, :);
+           % assign this random color to stimulus in allStim
+           allStim(si).FaceColor = thisColor;
+
+       end
+
+   end
+
+
+   % save color permuted but fixed angle list to randStim
+   randStim = allStim;
+   
+else
+    % --- RANDOMLY PERMUTE 1D matrix to randomize cue and noise stimuli
+    randStim = allStim(randperm(size(allStim, 1)), :);
+
+end
 
 % params required for BoxGraphic
 % stim.EdgeColor = [R G B]

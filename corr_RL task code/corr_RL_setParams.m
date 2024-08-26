@@ -3,8 +3,8 @@ function [params] = corr_RL_setParams()
 % --- STIMULUS FEATURE SPACE
 % --- variable feature dimensions
 params.Angles = [0 45 90 135];
-% params.FaceColors = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
-params.FaceColors = [0 0 0; 1 1 1];  % black, white
+params.FaceColors = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
+% params.FaceColors = [0 0 0; 1 1 1];  % black, white
 % --- fixed feature dimensions
 params.Size = [1 4]; % [width height] in degrees
 params.leftPos = [-4 0];
@@ -20,6 +20,12 @@ params.netWin_criterion = 7;  % number of netWins before switching block
 % --- MOVIE CONTROL
 params.randCuePercent = true;
 params.numMoviePairs = 10;
+% easyStim forces each of the 4 stimuli selected each block to have a
+% unique orientation. This reduces task to 1D feature discrimination on
+% orientation, color is added just as distractor. xPairs logic still works,
+% but multi-dimensional logic does not.
+params.easyStim = true;
+
 % --- VARIABLE NOISE
 params.cuePercentRange = [0.7 0.8 0.9 1];
 % --- NO NOISE
