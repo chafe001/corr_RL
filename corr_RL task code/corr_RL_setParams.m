@@ -27,7 +27,7 @@ params.numMoviePairs = 10;
 params.easyStim = true;
 
 % --- VARIABLE NOISE
-params.cuePercentRange = [0.7 0.8 0.9 1];
+params.cuePercentRange = [0.4 0.6 0.8 1];
 % --- NO NOISE
 % params.cuePercentRange = [1 1 1 1];
 params.cuePercent_easy = max(params.cuePercentRange);

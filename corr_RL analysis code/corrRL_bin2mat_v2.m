@@ -164,7 +164,7 @@ stdcol.blockChangeMode = stdcol.repsPerCond + 1;
 stdcol.netWinCriterion = stdcol.blockChangeMode + 1;
 stdcol.cuePercent = stdcol.netWinCriterion + 1;
 stdcol.cuePercentRangeStart = stdcol.cuePercent + 1;
-stdcol.cuePercentRangeStop = stdcol.cuePercentRangeStart + length(cpr);
+stdcol.cuePercentRangeStop = stdcol.cuePercentRangeStart + length(cpr) - 1;
 stdcol.cuePercent_easy = stdcol.cuePercentRangeStop + 1;
 stdcol.cuePercent_hard = stdcol.cuePercent_easy + 1;
 stdcol.numMoviePairs = stdcol.cuePercent_hard + 1;
@@ -180,13 +180,13 @@ rt = inTrial.ReactionTime;
 bw = inTrial.UserVars.TrialRecord.User.blockWins;
 bl = inTrial.UserVars.TrialRecord.User.blockLosses;
 nw = inTrial.UserVars.TrialRecord.User.netWins;
-shp = inTrial.UserVars.choices.choseCorrect;
+cc = inTrial.UserVars.choices.choseCorrect;
 rk = inTrial.UserVars.choices.responseKey;
 % rnw = random number at runtime to determine whether to reward trial 
 % according to reward state probabilities
 rnw = inTrial.UserVars.choices.randNum_rew; 
 
-rewChoiceData = [rs r_t rt bw bl nw shp rk rnw];
+rewChoiceData = [rs r_t rt bw bl nw cc rk rnw];
 
 % --- add choice and reward vars to stdcol
 stdcol.rewardState = stdcol.endParamData + 1;
@@ -195,12 +195,9 @@ stdcol.reactionTime = stdcol.rewardTrial + 1;
 stdcol.blockWins = stdcol.reactionTime + 1;
 stdcol.blockLosses = stdcol.blockWins + 1;
 stdcol.netWins = stdcol.blockLosses + 1;
-stdcol.chosenColor = stdcol.netWins + 1;
-stdcol.chosenSide = stdcol.chosenColor + 1;
-stdcol.selectedHighProb = stdcol.chosenSide + 1;
-stdcol.responseKey = stdcol.selectedHighProb + 1;
+stdcol.choseCorrect = stdcol.netWins + 1;
+stdcol.responseKey = stdcol.choseCorrect + 1;
 stdcol.randNum_rew = stdcol.responseKey + 1;
-stdcol.ch1_side = stdcol.randNum_rew + 1;
 
 % --- CONCATENATE DATA TO BUILD TRIAL ROW
 sep = params.sepValue;
