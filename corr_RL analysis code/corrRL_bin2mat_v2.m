@@ -18,7 +18,7 @@ params.sepValue = -111111;
 
 % --- CONTROL NUMBER OF VARIABLES INCLUDED IN OUTFILE
 params.shortOutput = true;
-params.saveMatOut= true;
+params.saveMatOut= false;
 
 % ------------------------ INITIALIZE
 COMPUTER = getenv('COMPUTERNAME');
@@ -79,7 +79,7 @@ for thisFile = 1 : numFiles
         % extractTrial are made...
 
         if inTrial.TrialError == 0
-            [thisTrial stdcol] = extractTrial(inTrial, params, thisFile);  % pass in s for set counter in header
+            [thisTrial, stdcol] = extractTrial(inTrial, params, thisFile);  % pass in s for set counter in header
             session_bData = [session_bData; thisTrial];
         end
 
@@ -101,6 +101,29 @@ for thisFile = 1 : numFiles
 end  % for thisFile = 1:numFiles
 
 
+% --- ADD NEW GROUPING VARIABLES
+% cuePercent group, for grpstats
+% hard code cuePercent col = 13 before building stdcol, after inserting
+% additional grouping variable below
+
+% percentVals = unique(bData(:, 13));
+% cpg = zeros(size(bData, 1), 1);
+% cpg_num = 0;
+% for p = 1 : length(percentVals)
+%     % set indicies in logical corresponding to this cuePercent val to 
+%     % the corresponding index number
+%     cpg(bData(:, 13) == percentVals(p)) = cpg_num + p;
+% end
+% 
+% % --- insert new cuePercentGroup var
+% bData = [bData(:, 1:13) cpg  bData(:, 14:end)];
+% 
+% 
+
+
+bob = 1;
+
+
 toc;
 %% 
 
@@ -113,7 +136,7 @@ end
 % -------------------------------------------------------------------------
 
 % EXTRACT TRIAL SHORT -----------------------------------------------------------
-function [thisTrial stdcol] = extractTrial(inTrial, params, thisFile)
+function [thisTrial, stdcol] = extractTrial(inTrial, params, thisFile)
 
 trialData = [];
 eventData = [];
@@ -143,6 +166,8 @@ end
 nwc = inTrial.UserVars.params.netWin_criterion;
 cp = inTrial.UserVars.condArray(inTrial.Condition).cuePercent;
 cpr = inTrial.UserVars.params.cuePercentRange;
+% compute cuePercentGroup based on cuePercent and cuePercentRange
+cpg = find(inTrial.UserVars.params.cuePercentRange == cp);
 cp_eb = inTrial.UserVars.params.cuePercent_easy;
 cp_hb = inTrial.UserVars.params.cuePercent_hard;
 nmp = inTrial.UserVars.params.numMoviePairs;
@@ -155,7 +180,7 @@ end
 hrp = inTrial.UserVars.params.highRewProb;
 lrp = inTrial.UserVars.params.lowRewProb;
 
-paramData = [nb rpc bcm nwc cp cpr cp_eb cp_hb nmp mm hrp lrp];
+paramData = [nb rpc bcm nwc cp cpg cpr cp_eb cp_hb nmp mm hrp lrp];
 
 % --- add parameter vars to stdcol
 stdcol.numBlocks = stdcol.endTrialCountData + 1;
@@ -163,7 +188,8 @@ stdcol.repsPerCond = stdcol.numBlocks + 1;
 stdcol.blockChangeMode = stdcol.repsPerCond + 1;
 stdcol.netWinCriterion = stdcol.blockChangeMode + 1;
 stdcol.cuePercent = stdcol.netWinCriterion + 1;
-stdcol.cuePercentRangeStart = stdcol.cuePercent + 1;
+stdcol.cuePercentGroup = stdcol.cuePercent + 1;
+stdcol.cuePercentRangeStart = stdcol.cuePercentGroup + 1;
 stdcol.cuePercentRangeStop = stdcol.cuePercentRangeStart + length(cpr) - 1;
 stdcol.cuePercent_easy = stdcol.cuePercentRangeStop + 1;
 stdcol.cuePercent_hard = stdcol.cuePercent_easy + 1;
@@ -207,6 +233,7 @@ return;
 
 end
 
+
 % PLOT BDATA -------------------------------------------------------------
 function [] = plot_bData(stdcol, bData)
 
@@ -219,9 +246,9 @@ cc_by_trlBlk = grpstats(bData(:, stdcol.choseCorrect), bData(:, stdcol.trialInBl
 figure;
 plot(cc_by_trlBlk);
 
-cc_by_corr = grpstats(bData(:, stdcol.choseCorrect), bData(:, stdcol.cuePercent));
+[mean, sem] = grpstats(bData(:, stdcol.choseCorrect), bData(:, stdcol.cuePercentGroup), {'mean', 'sem'});
 figure;
-plot(cc_by_corr);
+errorbar(mean, sem);
 
 
 % divide data by corrStrength
@@ -239,6 +266,7 @@ for f = 1 : length(cuePerc_here)
 
 end
 
+bob = 1;
 
 end
 
