@@ -18,7 +18,7 @@ params.sepValue = -111111;
 
 % --- CONTROL NUMBER OF VARIABLES INCLUDED IN OUTFILE
 params.shortOutput = true;
-params.saveMatOut= true;
+params.saveMatOut= false;
 
 % ------------------------ INITIALIZE
 COMPUTER = getenv('COMPUTERNAME');
@@ -105,7 +105,7 @@ toc;
 %% 
 
 
-% plot_bData(stdcol, bData);
+plot_bData(stdcol, bData);
 
 end  
 % -------------------------------------------------------------------------
@@ -215,25 +215,25 @@ bob = 1;
 % plot probability of selecting high value target as a function of trial
 % within block, are we learning yet?
 
-hp_by_trlBlk = grpstats(bData(:, stdcol.selectedHighProb), bData(:, stdcol.trialInBlock));
+cc_by_trlBlk = grpstats(bData(:, stdcol.choseCorrect), bData(:, stdcol.trialInBlock));
 figure;
-plot(hp_by_trlBlk);
+plot(cc_by_trlBlk);
 
-hp_by_corr = grpstats(bData(:, stdcol.selectedHighProb), bData(:, stdcol.thisFalsePairRatio));
+cc_by_corr = grpstats(bData(:, stdcol.choseCorrect), bData(:, stdcol.cuePercent));
 figure;
-plot(hp_by_corr);
+plot(cc_by_corr);
 
 
 % divide data by corrStrength
 
-bd_fpr = unique(bData(:, stdcol.thisFalsePairRatio));
+cuePerc_here = unique(bData(:, stdcol.cuePercent));
 figure;
 hold on;
-for f = 1 : length(bd_fpr)
+for f = 1 : length(cuePerc_here)
 
-    thisLevel = bData(bData(:, stdcol.thisFalsePairRatio) == bd_fpr(f), :);
+    thisLevel = bData(bData(:, stdcol.cuePercent) == cuePerc_here(f), :);
 
-    perf = grpstats(thisLevel(:, stdcol.selectedHighProb), thisLevel(:, stdcol.trialInBlock));
+    perf = grpstats(thisLevel(:, stdcol.choseCorrect), thisLevel(:, stdcol.trialInBlock));
 
     plot(perf);
 

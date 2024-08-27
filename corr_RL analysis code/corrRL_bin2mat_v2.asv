@@ -18,7 +18,7 @@ params.sepValue = -111111;
 
 % --- CONTROL NUMBER OF VARIABLES INCLUDED IN OUTFILE
 params.shortOutput = true;
-params.saveMatOut= true;
+params.saveMatOut= false;
 
 % ------------------------ INITIALIZE
 COMPUTER = getenv('COMPUTERNAME');
@@ -105,7 +105,7 @@ toc;
 %% 
 
 
-% plot_bData(stdcol, bData);
+plot_bData(stdcol, bData);
 
 end  
 % -------------------------------------------------------------------------
@@ -180,13 +180,13 @@ rt = inTrial.ReactionTime;
 bw = inTrial.UserVars.TrialRecord.User.blockWins;
 bl = inTrial.UserVars.TrialRecord.User.blockLosses;
 nw = inTrial.UserVars.TrialRecord.User.netWins;
-shp = inTrial.UserVars.choices.choseCorrect;
+cc = inTrial.UserVars.choices.choseCorrect;
 rk = inTrial.UserVars.choices.responseKey;
 % rnw = random number at runtime to determine whether to reward trial 
 % according to reward state probabilities
 rnw = inTrial.UserVars.choices.randNum_rew; 
 
-rewChoiceData = [rs r_t rt bw bl nw shp rk rnw];
+rewChoiceData = [rs r_t rt bw bl nw cc rk rnw];
 
 % --- add choice and reward vars to stdcol
 stdcol.rewardState = stdcol.endParamData + 1;
@@ -195,8 +195,8 @@ stdcol.reactionTime = stdcol.rewardTrial + 1;
 stdcol.blockWins = stdcol.reactionTime + 1;
 stdcol.blockLosses = stdcol.blockWins + 1;
 stdcol.netWins = stdcol.blockLosses + 1;
-stdcol.ch = stdcol.chosenSide + 1;
-stdcol.responseKey = stdcol.selectedHighProb + 1;
+stdcol.choseCorrect = stdcol.netWins + 1;
+stdcol.responseKey = stdcol.choseCorrect + 1;
 stdcol.randNum_rew = stdcol.responseKey + 1;
 
 % --- CONCATENATE DATA TO BUILD TRIAL ROW
@@ -215,18 +215,18 @@ bob = 1;
 % plot probability of selecting high value target as a function of trial
 % within block, are we learning yet?
 
-hp_by_trlBlk = grpstats(bData(:, stdcol.selectedHighProb), bData(:, stdcol.trialInBlock));
+cc_by_trlBlk = grpstats(bData(:, stdcol.choseCorrect), bData(:, stdcol.trialInBlock));
 figure;
-plot(hp_by_trlBlk);
+plot(c_by_trlBlk);
 
-hp_by_corr = grpstats(bData(:, stdcol.selectedHighProb), bData(:, stdcol.thisFalsePairRatio));
+cc_by_corr = grpstats(bData(:, stdcol.choseCorrect), bData(:, stdcol.cuePercent));
 figure;
 plot(hp_by_corr);
 
 
 % divide data by corrStrength
 
-bd_fpr = unique(bData(:, stdcol.thisFalsePairRatio));
+bd_fpr = unique(bData(:, stdcol.cuePercent));
 figure;
 hold on;
 for f = 1 : length(bd_fpr)
