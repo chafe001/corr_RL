@@ -49,7 +49,7 @@ if params.easyStim
 
     % loop in groups of numAngles, randomly assign each of the available
     % colors and angles to stimuli
-    for group = 1 : numAngles : params.numBlocks
+    for group = 1 : params.numBlocks
 
         thisAngleGroup = params.Angles(randperm(size(params.Angles, 2)));
 
@@ -61,7 +61,7 @@ if params.easyStim
             % if there are fewer colors than angles, draw one color for each angle randomly from color vector
             thisColorGroup = [];
             while size(thisColorGroup, 1) < numAngles
-                thisColor = params.FaceColors(randi(size(params.FaceColors), 1));
+                thisColor = params.FaceColors(randi(size(params.FaceColors, 1)), :);
                 thisColorGroup = [thisColorGroup; thisColor];
             end
         end
