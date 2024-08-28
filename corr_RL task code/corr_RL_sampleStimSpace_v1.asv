@@ -60,7 +60,7 @@ if params.easyStim
         else
             % if there are fewer colors than angles, draw one color for each angle randomly from color vector
             thisColorGroup = [];
-            while size(thisColorGroup, 1) < numAngles
+            while size(thisColorGroup) < numAngles
                 thisColor = params.FaceColors(randi(size(params.FaceColors), 1));
                 thisColorGroup = [thisColorGroup; thisColor];
             end
