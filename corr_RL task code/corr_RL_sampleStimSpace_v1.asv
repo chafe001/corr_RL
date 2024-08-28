@@ -39,26 +39,58 @@ if params.easyStim
 
     % --- check that there are the same number of levels in each feature
     % dimension
+
     if numAngles ~= numColors
         error('error in sampleStimSpace under easyStim, need same number of angles and colors');
     end
 
-    % loop in groups of numAngles, randomly assign each of the available
-    % colors and angles to stimuli
     for group = 1 : numAngles : params.numBlocks
 
         thisColorGroup = params.FaceColors(randperm(size(params.FaceColors, 1)), :);
         thisAngleGroup = params.Angles(randperm(size(params.Angles, 2)));
 
         for a = 1 : length(params.Angles)
+
+
             % compute index into allStim using color group and angle
             % looping vars
             si = ((group - 1) * length(params.Angles)) + a;
-            allStim(si).Angle = thisAngleGroup(a);
-            allStim(si).FaceColor = thisColorGroup(a, :);
+
+            thisColor = thisColorGroup(a, :);
+            thisAngle = thisAngleGroup(a);
+
+            allStim(si).FaceColor = thisColor;
+
+
+
         end
 
+
+
+
     end
+
+
+
+   for cg = 1 : length(params.FaceColors)
+       
+       thisColorGroup = params.FaceColors(randperm(size(params.FaceColors, 1)), :);
+       
+
+       for a = 1 : length(params.Angles)
+
+           % compute index into allStim using color group and angle
+           % looping vars
+           si = ((cg - 1) * length(params.FaceColors)) + a;
+           % select this random color from color group
+           thisColor = thisColorGroup(a, :);
+           % assign this random color to stimulus in allStim
+           allStim(si).FaceColor = thisColor;
+
+       end
+
+   end
+
 
    % save color permuted but fixed angle list to randStim
    randStim = allStim;

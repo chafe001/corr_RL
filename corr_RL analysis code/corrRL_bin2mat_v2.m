@@ -18,7 +18,7 @@ params.sepValue = -111111;
 
 % --- CONTROL NUMBER OF VARIABLES INCLUDED IN OUTFILE
 params.shortOutput = true;
-params.saveMatOut= false;
+params.saveMatOut= true;
 
 % ------------------------ INITIALIZE
 COMPUTER = getenv('COMPUTERNAME');
