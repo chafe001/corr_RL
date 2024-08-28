@@ -3,7 +3,8 @@ function [params] = corr_RL_setParams()
 % --- STIMULUS FEATURE SPACE
 % --- variable feature dimensions
 params.Angles = [0 45 90 135];
-params.FaceColors = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
+% params.FaceColors = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
+params.FaceColors = [0 0 0; 0 0 0; 1 1 1; 1 1 1];  % red, blue, black, white
 % params.FaceColors = [0 0 0; 1 1 1];  % black, white
 % --- fixed feature dimensions
 params.Size = [1 4]; % [width height] in degrees
@@ -27,7 +28,7 @@ params.numMoviePairs = 10;
 params.easyStim = true;
 
 % --- VARIABLE NOISE
-params.cuePercentRange = [0.4 0.6 0.8 1];
+params.cuePercentRange = [0.7 0.8 0.9 1.0];
 % --- NO NOISE
 % params.cuePercentRange = [1 1 1 1];
 params.cuePercent_easy = max(params.cuePercentRange);

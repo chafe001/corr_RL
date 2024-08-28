@@ -41,12 +41,8 @@ if params.easyStim
     % colors and angles to stimuli
     for group = 1 : numAngles : params.numBlocks
 
-        thisAngleGroup = params.Angles(randperm(size(params.Angles, 2)));
-
-        % need to randomize colors such that the number of colors equals
-        % the number of angles in this group
-
         thisColorGroup = params.FaceColors(randperm(size(params.FaceColors, 1)), :);
+        thisAngleGroup = params.Angles(randperm(size(params.Angles, 2)));
 
         for a = 1 : length(params.Angles)
             % compute index into allStim using color group and angle
