@@ -17,10 +17,11 @@ switch COMPUTER
         times.preMovie_frames = 20;  % fix targ and choices
         times.postMovie_frames = 20;
         times.sc1_pretrial_ms = 20;
-        times.sc3_response_ms = 500;
+        times.sc3_response_ms = 2500;
         times.sc4_feedback_frames = 20; % duration of scene depends on choice ring timing
         times.choiceRing_frames = 10;
         times.rewRing_frames = 10;
+        times.scError_ms = 1000;
 
     case 'DESKTOP-7CHQEHS'
         % laptop at 120 Hz
