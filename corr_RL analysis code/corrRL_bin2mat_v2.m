@@ -1,8 +1,8 @@
 function corrRL_bin2mat_v2()
-%% 
+%%
 
 % This function opens monkeyLogic bhv2 output files, converts to a matlab
-% matrix and saves 
+% matrix and saves
 
 % Version history
 % V1: built to work with xPairs (dot design)\
@@ -58,7 +58,7 @@ rtData= [];
 disp('accumulating bData...');
 
 for thisFile = 1 : numFiles
-    
+
     % ------------ INITIALIZE ENS LEVEL VARIABLES IN LOOP
     session_bData = [];
 
@@ -90,47 +90,26 @@ for thisFile = 1 : numFiles
     % --- AGGREGATE BDATA OVER SESSIONS
     bData = [bData; session_bData];
 
-    if params.saveMatOut
-        % --- SAVE THIS SUBJECTS BDATA in case of crash, takes forever to read
-        % the binary files
-        fn = thisFileName(1:strfind(thisFileName, '.'));
-        outFileName = strcat(fn, 'mat');
-        save(outFileName, "bData", "stdcol");
-    end
-
 end  % for thisFile = 1:numFiles
 
-
-% --- ADD NEW GROUPING VARIABLES
-% cuePercent group, for grpstats
-% hard code cuePercent col = 13 before building stdcol, after inserting
-% additional grouping variable below
-
-% percentVals = unique(bData(:, 13));
-% cpg = zeros(size(bData, 1), 1);
-% cpg_num = 0;
-% for p = 1 : length(percentVals)
-%     % set indicies in logical corresponding to this cuePercent val to 
-%     % the corresponding index number
-%     cpg(bData(:, 13) == percentVals(p)) = cpg_num + p;
-% end
-% 
-% % --- insert new cuePercentGroup var
-% bData = [bData(:, 1:13) cpg  bData(:, 14:end)];
-% 
-% 
+if params.saveMatOut
+    % --- SAVE THIS SUBJECTS BDATA in case of crash, takes forever to read
+    % the binary files
+    outFileName = 'all_bData.mat';
+    save(outFileName, "bData", "stdcol");
+end
 
 
 bob = 1;
 
 
 toc;
-%% 
+%%
 
 
 plot_bData(stdcol, bData);
 
-end  
+end
 % -------------------------------------------------------------------------
 % ------------------------- UTILITY FUNCTIONS -----------------------------
 % -------------------------------------------------------------------------
@@ -201,16 +180,16 @@ stdcol.endParamData = stdcol.lowRewProb + 1;
 
 % --- AGGREGATE CHOICE REWARD DATA
 rs = inTrial.UserVars.condArray(inTrial.Condition).movieRewState;
-r_t = inTrial.UserVars.choices.rewardTrial; 
+r_t = inTrial.UserVars.choices.rewardTrial;
 rt = inTrial.ReactionTime;
 bw = inTrial.UserVars.TrialRecord.User.blockWins;
 bl = inTrial.UserVars.TrialRecord.User.blockLosses;
 nw = inTrial.UserVars.TrialRecord.User.netWins;
 cc = inTrial.UserVars.choices.choseCorrect;
 rk = inTrial.UserVars.choices.responseKey;
-% rnw = random number at runtime to determine whether to reward trial 
+% rnw = random number at runtime to determine whether to reward trial
 % according to reward state probabilities
-rnw = inTrial.UserVars.choices.randNum_rew; 
+rnw = inTrial.UserVars.choices.randNum_rew;
 
 rewChoiceData = [rs r_t rt bw bl nw cc rk rnw];
 
@@ -273,9 +252,9 @@ end
 
 % % ANALYZE BDATA -----------------------------------------------------------
 % function [] = analyze_bData(bData, stdcol, params)
-% 
+%
 % keepData = [];
-% 
+%
 % % --- create consecutive trial numbers for each file/set
 % filesHere = unique(bData(:, stdcol.fileNum));
 % for f = 1 : numel(filesHere)
@@ -287,7 +266,7 @@ end
 %     end
 %     keepData = [keepData; fileMat];
 % end
-% 
+%
 % % ---- Plot stim choice (A, B or C) on same axes, per file (day) in the
 % % aggregated data
 % left = 2.0;
@@ -297,27 +276,27 @@ end
 % trialStart = 0;
 % % trialStop = 600;
 % trialStop = size(bData, 1);
-% 
+%
 % filesHere = unique(keepData(:, stdcol.fileNum));
-% 
+%
 % for f = 1 : numel(filesHere)
 %     thisFile = keepData(keepData(:, stdcol.fileNum) == filesHere(f), :);
-% 
+%
 %     % --- RUN BECKET'S HMM CODE
 %     [states,stateProbs,LL,nParams,Tall,Eall] = find3States(thisFile(:, stdcol.choseStim)');
-% 
+%
 %     state1 = (states(:) == 1);
 %     state2 = (states(:) == 2);
 %     state3 = (states(:) == 3);
 %     state4 = (states(:) == 4);
-% 
+%
 %     explore = (states(:) == 1);
 %     exploit = (states(:) ~= 1);
-% 
+%
 %     % --- shift explore/exploit values up for plotting with choices on same axes
 %     explore = explore + 3.0;
 %     exploit = exploit + 3.0;
-% 
+%
 %     % --- PLOT explore/exploit
 %     figure;
 %     pExplore = plot(explore);
@@ -327,37 +306,37 @@ end
 %     pExploit = plot(exploit);
 %     pExploit.Color = "black";
 %     pExploit.LineWidth = 1.5;
-% 
+%
 %     % --- ADD choice L, R, U (left, right, up)
 %     plotL = plot(thisFile(:, stdcol.choseLeft) + 1.5);
 %     plotL.Color = [0.4940 0.1840 0.5560];  % purple
 %     plotL.LineWidth = 1.5;
-% 
+%
 %     plotR = plot(thisFile(:, stdcol.choseRight) + 1.5);
 %     plotR.Color = [0.9290 0.6940 0.1250];  % orange
 %     plotR.LineWidth = 1.5;
-% 
+%
 %     plotR = plot(thisFile(:, stdcol.choseUp) + 1.5);
 %     plotR.Color = [0 0.4470 0.7410];  % blue
 %     plotR.LineWidth = 1.5;
-% 
+%
 %     % --- ADD choice A, B, C (greenpentagon, bluetriangle, orangerectangle)
 %     plotA = plot(thisFile(:, stdcol.choseA));
 %     plotA.Color = "green";
 %     plotA.LineWidth = 1.5;
-% 
+%
 %     hold on;
 %     plotB = plot(thisFile(:, stdcol.choseB));
 %     plotB.Color = "blue";
 %     plotB.LineWidth = 1.5;
-% 
+%
 %     plotC = plot(thisFile(:, stdcol.choseC));
 %     plotC.Color = [1 0.6 0];  % orange
 %     plotC.LineWidth = 1.5;
-% 
+%
 %     % --- add title, use cell array for multiple lines
 %     title({"STATE (top) Explore=Magenta Exploit=Black", "DIRECTION (middle) chose Left=Purple, Right=Orange, Up=Dk Blue", "OBJECT (bottom) chose A=Green(pentagon) B=Blue(triangle) C=Orange(rectangle)"});
-% 
+%
 %     % reformat plot
 %     axis([trialStart, trialStop, -0.5, 5.0]);  %  reset ranges for x and y axes
 %     set(gca, 'Units', 'centimeters');
@@ -369,9 +348,9 @@ end
 %     set(gca, 'Position', [left bottom width height]);
 %     set(gca, 'TickLength', [0.01 0.01]);
 %     set(gca, 'xTick', trialStart:20:trialStop);
-% 
+%
 % end
-% 
+%
 % % --- plot response probability as a function of reward probability
 % left = 2.0;
 % bottom = 2.0;
@@ -389,10 +368,10 @@ end
 % set(gca, 'TickLength', [0.03 0.03]);
 % set(gca, 'xTick', 0:0.1:1);
 % set(gca, 'yTick', 0:250:1500);
-% 
+%
 % bob = 1;
-% 
+%
 % return;
-% 
+%
 % end
 
