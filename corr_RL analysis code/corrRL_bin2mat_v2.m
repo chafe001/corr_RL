@@ -300,9 +300,11 @@ title('choseCorrect by cuePerc, first 20 trials in block', 'FontSize', 9, 'FontW
 figure;
 hist(bData(:, stdcol.trialInBlock));
 set(gca, 'box', 'off');
-set(gca, 'TickDir', 'out');   
-set(gca, 'XTick', xSpan(1):1:xSpan(2));
-set(gca, 'YTick', perfMin:perfTick:perfMax);
+set(gca, 'TickDir', 'out');  
+% xSpan = xlim;
+% ySpan = ylim;
+% % set(gca, 'XTick', xSpan(1):1:xSpan(2));
+% set(gca, 'YTick', perfMin:perfTick:perfMax);
 set(gca, 'TickLength', [tickLength tickLength]);            %  this in proportion of x axis
 set(gca, 'FontName', 'Arial');
 set(gca, 'FontSize', 9);  
