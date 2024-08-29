@@ -61,10 +61,10 @@ switch COMPUTER
         times.scError_ms = 1000;
 
     case 'DAVIDLAPTOP'
-        % laptop at 120 Hz
-        times.stim_frames = 1;
-        times.soa_frames = 1;
-        times.interPair_frames = 5;
+        % laptop at 144 Hz
+        times.stim_frames = 3;
+        times.soa_frames = 2;
+        times.interPair_frames = 12;
         % times below specified in screen refresh units, absolute time depends on
         % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
         % in new laptops, etc
@@ -73,10 +73,11 @@ switch COMPUTER
         times.preMovie_frames = 20;  % fix targ and choices
         times.postMovie_frames = 20;
         times.sc1_pretrial_ms = 20;
-        times.sc3_response_ms = 500;
+        times.sc3_response_ms = 2500;
         times.sc4_feedback_frames = 20; % duration of scene depends on choice ring timing
         times.choiceRing_frames = 10;
         times.rewRing_frames = 10;
+        times.scError_ms = 1000;
 
 end
 
