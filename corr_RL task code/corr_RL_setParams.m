@@ -21,11 +21,8 @@ params.netWin_criterion = 7;  % number of netWins before switching block
 % --- MOVIE CONTROL
 params.randCuePercent = true;
 params.numMoviePairs = 10;
-% easyStim forces each of the 4 stimuli selected each block to have a
-% unique orientation. This reduces task to 1D feature discrimination on
-% orientation, color is added just as distractor. xPairs logic still works,
-% but multi-dimensional logic does not.
-params.easyStim = true;
+params.noiseMask = true;
+params.onePairPerMovie = true;
 
 % --- VARIABLE NOISE
 params.cuePercentRange = [0.6 0.7 0.8 0.9];
