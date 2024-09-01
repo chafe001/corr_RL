@@ -117,6 +117,13 @@ preMovie = {[], [], times.preMovie_frames, codes.preMovie};
 soa = {[], [], times.soa_frames, codes.img1_off};
 interPair = {[], [], times.interPair_frames, codes.imgPair_off};
 
+preMovie_mask = {{'mask.png', 'mask.png'}, [params.leftPos(1), params.leftPos(2); params.rightPos(1), params.rightPos(2)], times.preMovie_frames, codes.preMovie};
+soa_mask = {{'mask.png', 'mask.png'}, [params.leftPos(1), params.leftPos(2); params.rightPos(1), params.rightPos(2)], times.soa_frames, codes.img1_off};
+interPair_mask = {{'mask.png', 'mask.png'}, [params.leftPos(1), params.leftPos(2); params.rightPos(1), params.rightPos(2)], times.interPair_frames, codes.imgPair_off};
+
+params.leftPos = [-4 0];
+params.rightPos = [4 0];
+
 % --- SET STIM PARAMS FOR imageChanger FUNCTION CALL TO CONTROL MOVIE
 % FROM ML DOCUMENTATION on imageChanger
 % Input Properties:
@@ -134,7 +141,7 @@ thisFrame = {};
 movieFrame = {};
 
 % --- SET FIRST FRAME (irrespective of movieMode)
-pairFrames{1} = preMovie;
+pairFrames{1} = preMovie_mask;
 
 for p = 1 : length(pairs)
 
@@ -155,9 +162,9 @@ for p = 1 : length(pairs)
     
     % --- combine with soa and interpair frames
     pairFrames{frameIndx} = leftStim;
-    pairFrames{frameIndx + 1} = soa;
+    pairFrames{frameIndx + 1} = soa_mask;
     pairFrames{frameIndx + 2} = rightStim;
-    pairFrames{frameIndx + 3} = interPair;
+    pairFrames{frameIndx + 3} = interPair_mask;
 
 end  % next p
 
