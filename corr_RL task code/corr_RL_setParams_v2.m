@@ -20,16 +20,33 @@ params.netWin_criterion = 7;  % number of netWins before switching block
 
 % --- MOVIE CONTROL
 params.randCuePercent = false;
-params.numMovieTriplets = 10;  % groups of 3 frames to accomodate pairs with soa
+params.moviePairSlots = 10;  % Each pairSlot is a group of 3 frames to accomodate pairs with soa
 params.movieStimReps = 5; % number of time each individual stimulus shown per movie
 
+% --- NOISE CONTEONTL
+% --- variable noise, optimal values vary with noiseMode, below
+% params.cuePercentRange = [0 0.3 0.6 1];
+params.cuePercentRange = [0.5 0.6 0.7 0.8];
 
-% --- VARIABLE NOISE
-params.cuePercentRange = [0 0.3 0.6 1];
-% --- NO NOISE
+% --- no noise
 % params.cuePercentRange = [1 1 1 1];
 params.cuePercent_easy = max(params.cuePercentRange);
 params.cuePercent_hard = min(params.cuePercentRange);
+% --- noise type
+% singletonNoise: fixed reps left and right stimuli in each movie, vary the
+% number of times the two stimuli are showed in a STDP left-right sequence,
+% versus showing them as singletons.
+% Challenge: working memory accumulates singleton stimuli into perceptual
+% pairs, potentially weak noise manipulation
+
+% params.noiseMode = 'singleton';
+
+% invertedNoise: noise pairs are spatially inverted cue pairs, so same two
+% stimuli, but left/right screen positions swapped.  The key is that the
+% inverted pairs are not related to state, they are equally mixed in each
+% state 1 and 2 movie
+
+params.noiseMode = 'invertedPairs';
 
 % --- CHOICE/REWARD 
 params.choice_x = 4;

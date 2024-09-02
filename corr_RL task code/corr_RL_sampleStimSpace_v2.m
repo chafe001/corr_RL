@@ -35,36 +35,32 @@ allStim = reshape(stim, [(numAngles * numColors), 1]);
 randStim = allStim(randperm(size(allStim, 1)), :);
 
 % --- left cue 1
-blockStim.cue(1, 1).EdgeColor = randStim(1).FaceColor;
-blockStim.cue(1, 1).FaceColor = randStim(1).FaceColor;
-blockStim.cue(1, 1).Size = params.Size;
-blockStim.cue(1, 1).Position = params.leftPos;
-blockStim.cue(1, 1).Angle = randStim(1).Angle;
-blockStim.cue(1, 1).FileName = findFileName(randStim(1));
+blockStim.cue(1).EdgeColor = randStim(1).FaceColor;
+blockStim.cue(1).FaceColor = randStim(1).FaceColor;
+blockStim.cue(1).Size = params.Size;
+blockStim.cue(1).Angle = randStim(1).Angle;
+blockStim.cue(1).FileName = findFileName(randStim(1));
 
 % --- left cue 2
-blockStim.cue(1, 2).EdgeColor = randStim(2).FaceColor;
-blockStim.cue(1, 2).FaceColor = randStim(2).FaceColor;
-blockStim.cue(1, 2).Size = params.Size;
-blockStim.cue(1, 2).Position = params.leftPos;
-blockStim.cue(1, 2).Angle = randStim(2).Angle;
-blockStim.cue(1, 2).FileName = findFileName(randStim(2));
+blockStim.cue(2).EdgeColor = randStim(2).FaceColor;
+blockStim.cue(2).FaceColor = randStim(2).FaceColor;
+blockStim.cue(2).Size = params.Size;
+blockStim.cue(2).Angle = randStim(2).Angle;
+blockStim.cue(2).FileName = findFileName(randStim(2));
 
 % --- right cue 1
-blockStim.cue(2, 1).EdgeColor = randStim(3).FaceColor;
-blockStim.cue(2, 1).FaceColor = randStim(3).FaceColor;
-blockStim.cue(2, 1).Size = params.Size;
-blockStim.cue(2, 1).Position = params.rightPos;
-blockStim.cue(2, 1).Angle = randStim(3).Angle;
-blockStim.cue(2, 1).FileName = findFileName(randStim(3));
+blockStim.cue(3).EdgeColor = randStim(3).FaceColor;
+blockStim.cue(3).FaceColor = randStim(3).FaceColor;
+blockStim.cue(3).Size = params.Size;
+blockStim.cue(3).Angle = randStim(3).Angle;
+blockStim.cue(3).FileName = findFileName(randStim(3));
 
 % --- right cue 2
-blockStim.cue(2, 2).EdgeColor = randStim(4).FaceColor;
-blockStim.cue(2, 2).FaceColor = randStim(4).FaceColor;
-blockStim.cue(2, 2).Size = params.Size;
-blockStim.cue(2, 2).Position = params.rightPos;
-blockStim.cue(2, 2).Angle = randStim(4).Angle;
-blockStim.cue(2, 2).FileName = findFileName(randStim(4));
+blockStim.cue(4).EdgeColor = randStim(4).FaceColor;
+blockStim.cue(4).FaceColor = randStim(4).FaceColor;
+blockStim.cue(4).Size = params.Size;
+blockStim.cue(4).Angle = randStim(4).Angle;
+blockStim.cue(4).FileName = findFileName(randStim(4));
 
 
 bob = 1;

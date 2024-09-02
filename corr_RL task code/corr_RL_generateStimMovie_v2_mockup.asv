@@ -14,16 +14,13 @@ function [movieFrames, pairSeq] = corr_RL_generateStimMovie_v2_mockup()
 % in terms of which stimuli are shown or how many times they are shown.
 % They will vary only in correlation between the two stimuli in the pair.
 
-% if real fx, uncomment the following three lines
-condArray = TrialRecord.User.condArray;
-c = TrialRecord.CurrentCondition;
-params = corr_RL_setParams_v2();
+% condArray = TrialRecord.User.condArray;
+% c = TrialRecord.CurrentCondition;
 
-% if mockup, uncomment the following two lines
-% [condArray, params] = corr_RL_buildTrials_v2();
-% c = 4;
+[condArray, params] = corr_RL_buildTrials_v2();
+c = 4;
 
-
+% params = corr_RL_setParams_v2();
 times = corr_RL_setTimes();
 codes = corr_RL_setCodes();
 
@@ -215,8 +212,8 @@ for p = 1 : length(pairs)
 
     % --- define right stimulus frame
     rightStim_fn = pairs(p).rightStim.FileName;
-    rightStim_x = params.params.rightPos(1);
-    rightStim_y = params.params.rightPos(2);
+    rightStim_x = pairs(p).rightStim.Position(1);
+    rightStim_y = pairs(p).rightStim.Position(2);
     rightStim = {rightStim_fn, [rightStim_x rightStim_y], times.stim_frames, codes.img2_on};
 
     % --- compute frame index counter based on 4 frames per pair
