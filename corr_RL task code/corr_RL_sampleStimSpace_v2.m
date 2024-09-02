@@ -20,14 +20,6 @@ function [blockStim] = corr_RL_sampleStimSpace_v2(params)
 numAngles = size(params.Angles, 2);
 numColors = size(params.FaceColors, 1);
 
-% if length(unique(params.Angles)) < length(params.Angles)
-%     error('Error in sampleStimSpace, redundant values in params.Angles');
-% end
-% 
-% if size(unique(params.FaceColors, 'rows'), 1) < size(params.FaceColors, 1)
-%     error('Error in sampleStimSpace, redundant values in params.FaceColors');
-% end
-
 % --- PERMUTE FEATURES
 for a = 1:numAngles
     for c = 1:numColors
@@ -41,21 +33,6 @@ allStim = reshape(stim, [(numAngles * numColors), 1]);
 
 % --- RANDOMLY PERMUTE 1D matrix to randomize cue and noise stimuli
 randStim = allStim(randperm(size(allStim, 1)), :);
-
-
-% params required for BoxGraphic
-% stim.EdgeColor = [R G B]
-% stim.FaceColor = [R G B]
-% stim.size = [WIDTH HEIGHT]
-% stim.Position = [X Y]
-% stim.Scale = [xScale, yScale], 1 by default
-% stim.Angle = Rotation in degrees
-% stim.Zorder = 0 (back) by default
-
-% --- SET BLOCKSTIM
-% --- set individual cue and mask stimulus parameters
-
-% --- CUE STIMULI
 
 % --- left cue 1
 blockStim.cue(1, 1).EdgeColor = randStim(1).FaceColor;

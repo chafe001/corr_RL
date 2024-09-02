@@ -43,9 +43,9 @@ switch COMPUTER
 
     case 'MATT_MICRO'
         % laptop at 120 Hz
-        times.stim_frames = 3;
-        times.soa_frames = 2;
-        times.interPair_frames = 12;
+        times.stim_frames = 2;
+        times.soa_frames = 4;
+        times.interPair_frames = 15;
         % times below specified in screen refresh units, absolute time depends on
         % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
         % in new laptops, etc

@@ -74,7 +74,7 @@ end
 condArray = [];
 condNo = 1;
 for b = 1 : params.numBlocks
-    for r = LEFT:RIGHT
+    for r = 1:4
         thisCond = condArrayTemp(b, r);
         thisCond.condNo = condNo;
         condNo = condNo + 1;

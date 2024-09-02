@@ -21,7 +21,7 @@ params.netWin_criterion = 7;  % number of netWins before switching block
 % --- MOVIE CONTROL
 params.randCuePercent = true;
 params.numMovieTriplets = 20;  % groups of 3 frames to accomodate pairs with soa
-params.movieStimReps = 10; % number of time each individual stimulus shown per movie
+params.movieStimReps = 5; % number of time each individual stimulus shown per movie
 
 
 % --- VARIABLE NOISE
