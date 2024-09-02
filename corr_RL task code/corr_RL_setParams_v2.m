@@ -19,13 +19,13 @@ params.blockChange = 'netWinsMode';
 params.netWin_criterion = 7;  % number of netWins before switching block
 
 % --- MOVIE CONTROL
-params.randCuePercent = true;
-params.numMovieTriplets = 20;  % groups of 3 frames to accomodate pairs with soa
+params.randCuePercent = false;
+params.numMovieTriplets = 10;  % groups of 3 frames to accomodate pairs with soa
 params.movieStimReps = 5; % number of time each individual stimulus shown per movie
 
 
 % --- VARIABLE NOISE
-params.cuePercentRange = [0.2 0.4 0.6 0.8];
+params.cuePercentRange = [0 0.3 0.6 1];
 % --- NO NOISE
 % params.cuePercentRange = [1 1 1 1];
 params.cuePercent_easy = max(params.cuePercentRange);

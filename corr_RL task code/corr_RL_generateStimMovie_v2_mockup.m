@@ -14,9 +14,13 @@ function [movieFrames, pairSeq] = corr_RL_generateStimMovie_v2_mockup()
 % in terms of which stimuli are shown or how many times they are shown.
 % They will vary only in correlation between the two stimuli in the pair.
 
-condArray = TrialRecord.User.condArray;
-c = TrialRecord.CurrentCondition;
-params = corr_RL_setParams();
+% condArray = TrialRecord.User.condArray;
+% c = TrialRecord.CurrentCondition;
+
+[condArray, params] = corr_RL_buildTrials_v2();
+c = 4;
+
+% params = corr_RL_setParams_v2();
 times = corr_RL_setTimes();
 codes = corr_RL_setCodes();
 
@@ -34,7 +38,6 @@ rightMask.Size = NaN;
 rightMask.Position = params.rightPos;
 rightMask.Angle = NaN;
 rightMask.FileName = 'mask.png';
-
 
 % --- compute number of cue stimulus pairs to display
 pairReps = round(condArray(c).cuePercent * params.movieStimReps);
@@ -117,6 +120,13 @@ preMovie = {[], [], times.preMovie_frames, codes.preMovie};
 soa = {[], [], times.soa_frames, codes.img1_off};
 interPair = {[], [], times.interPair_frames, codes.imgPair_off};
 
+preMovie_mask = {{'mask.png', 'mask.png'}, [params.leftPos(1), params.leftPos(2); params.rightPos(1), params.rightPos(2)], times.preMovie_frames, codes.preMovie};
+soa_mask = {{'mask.png', 'mask.png'}, [params.leftPos(1), params.leftPos(2); params.rightPos(1), params.rightPos(2)], times.soa_frames, codes.img1_off};
+interPair_mask = {{'mask.png', 'mask.png'}, [params.leftPos(1), params.leftPos(2); params.rightPos(1), params.rightPos(2)], times.interPair_frames, codes.imgPair_off};
+
+params.leftPos = [-4 0];
+params.rightPos = [4 0];
+
 % --- SET STIM PARAMS FOR imageChanger FUNCTION CALL TO CONTROL MOVIE
 % FROM ML DOCUMENTATION on imageChanger
 % Input Properties:
@@ -134,7 +144,7 @@ thisFrame = {};
 movieFrame = {};
 
 % --- SET FIRST FRAME (irrespective of movieMode)
-pairFrames{1} = preMovie;
+pairFrames{1} = preMovie_mask;
 
 for p = 1 : length(pairs)
 
@@ -155,9 +165,9 @@ for p = 1 : length(pairs)
     
     % --- combine with soa and interpair frames
     pairFrames{frameIndx} = leftStim;
-    pairFrames{frameIndx + 1} = soa;
+    pairFrames{frameIndx + 1} = soa_mask;
     pairFrames{frameIndx + 2} = rightStim;
-    pairFrames{frameIndx + 3} = interPair;
+    pairFrames{frameIndx + 3} = interPair_mask;
 
 end  % next p
 
