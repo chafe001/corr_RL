@@ -1,4 +1,4 @@
-function [movieFrames, pairSeq] = corr_RL_generateStimMovie_v2_mockup()
+function [movieFrames, pairSeq] = corr_RL_generateStimMovie_v2(TrialRecord)
 % This function returns a cell array, movieImages, that is used to set the
 % 'List' property of a imageChanger() object.  This controls the sequence
 % of images presented in the movie, which controls the proportion of cue
@@ -132,7 +132,6 @@ switch params.noiseMode
         % --- randomize order of pairSeq
         pairSeq = pairSeq(randperm(length(pairSeq)));
 
-
         % --- assign stimuli to pairs
         for p = 1 : length(pairSeq)
 
@@ -153,12 +152,10 @@ switch params.noiseMode
                     pairs(p).leftStim = condArray(c).noisePairs(2).leftStim;
                     pairs(p).rightStim = condArray(c).noisePairs(2).rightStim;
 
-
                 case 13  % noise pair 3
                     pairs(p).pairID = condArray(c).noisePairs(3).pairID;
                     pairs(p).leftStim = condArray(c).noisePairs(3).leftStim;
                     pairs(p).rightStim = condArray(c).noisePairs(3).rightStim;
-
 
                 case 14  % noise pair 4
                     pairs(p).pairID = condArray(c).noisePairs(4).pairID;
@@ -209,14 +206,14 @@ for p = 1 : length(pairs)
 
     % --- define left stimulus frame
     leftStim_fn = pairs(p).leftStim.FileName;
-    leftStim_x = params.params.leftPos(1);
-    leftStim_y = params.params.leftPos(2);
+    leftStim_x = params.leftPos(1);
+    leftStim_y = params.leftPos(2);
     leftStim = {leftStim_fn, [leftStim_x leftStim_y], times.stim_frames, codes.img1_on};
 
     % --- define right stimulus frame
     rightStim_fn = pairs(p).rightStim.FileName;
-    rightStim_x = params.params.rightPos(1);
-    rightStim_y = params.params.rightPos(2);
+    rightStim_x = params.rightPos(1);
+    rightStim_y = params.rightPos(2);
     rightStim = {rightStim_fn, [rightStim_x rightStim_y], times.stim_frames, codes.img2_on};
 
     % --- compute frame index counter based on 4 frames per pair

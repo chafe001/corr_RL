@@ -26,7 +26,7 @@ params.movieStimReps = 5; % number of time each individual stimulus shown per mo
 % --- NOISE CONTEONTL
 % --- variable noise, optimal values vary with noiseMode, below
 % params.cuePercentRange = [0 0.3 0.6 1];
-params.cuePercentRange = [0.5 0.6 0.7 0.8];
+params.cuePercentRange = [0.2 0.4 0.6 0.8];
 
 % --- no noise
 % params.cuePercentRange = [1 1 1 1];
