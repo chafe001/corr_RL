@@ -46,7 +46,7 @@ switch params.noiseMode
 
     case 'singleton'
         % --- compute number of cue stimulus pairs to display
-        pairReps = round(condArray(c).cuePercent * params.movieStimReps);
+        pairReps = floor(condArray(c).cuePercent * params.movieStimReps);
 
         % --- compute number of cue stimulus singletons to display
         singletonReps = params.movieStimReps - pairReps;
@@ -105,7 +105,7 @@ switch params.noiseMode
 
     case 'invertedPairs'
         % --- compute number of cue stimulus pairs to display
-        pairReps = round(condArray(c).cuePercent * params.moviePairSlots);
+        pairReps = floor(condArray(c).cuePercent * params.moviePairSlots);
 
         % --- compute noise reps
         noiseReps = params.moviePairSlots - pairReps;
