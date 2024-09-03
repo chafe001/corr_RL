@@ -1,4 +1,4 @@
-function [params] = corr_RL_setParams()
+function [params] = corr_RL_setParams_v1()
 
 % --- STIMULUS FEATURE SPACE
 % --- variable feature dimensions
