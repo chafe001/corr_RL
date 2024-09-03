@@ -26,7 +26,9 @@ params.movieStimReps = 5; % number of time each individual stimulus shown per mo
 % --- NOISE CONTEONTL
 % --- variable noise, optimal values vary with noiseMode, below
 % params.cuePercentRange = [0 0.3 0.6 1];
-params.cuePercentRange = [0.2 0.4 0.6 0.8];
+% params.cuePercentRange = [0.2 0.4 0.6 0.8];
+% params.cuePercentRange = [0.6 0.7 0.8 0.9];
+params.cuePercentRange = [0.8 0.85 0.9 1];
 
 % --- no noise
 % params.cuePercentRange = [1 1 1 1];
@@ -39,7 +41,7 @@ params.cuePercent_hard = min(params.cuePercentRange);
 % Challenge: working memory accumulates singleton stimuli into perceptual
 % pairs, potentially weak noise manipulation
 
-% params.noiseMode = 'singleton';
+% params.noiseMode = 'singleton';`
 
 % invertedNoise: noise pairs are spatially inverted cue pairs, so same two
 % stimuli, but left/right screen positions swapped.  The key is that the
