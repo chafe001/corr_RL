@@ -216,34 +216,101 @@ end
 % PLOT BDATA -------------------------------------------------------------
 function [] = plot_bData(stdcol, bData)
 
-bob = 1;
+trialMin = 0;
+trialMax = 40;
+trialTick = 5;
+tickLength = 0.03;
+left = 1.0;
+bottom = 1.0;
+width = 4.0;
+height = 3.0;
+perfMin = 0.0;
+perfMax = 1.0;
+perfTick = 0.10;
 
-% plot probability of selecting high value target as a function of trial
-% within block, are we learning yet?
-
+% proportion choseCorrect by trialInBlock, learning curve in block
 cc_by_trlBlk = grpstats(bData(:, stdcol.choseCorrect), bData(:, stdcol.trialInBlock));
 figure;
 plot(cc_by_trlBlk);
+axis([trialMin, trialMax, perfMin, perfMax]);  %  reset ranges for x and y axes
+set(gca, 'box', 'off');
+set(gca, 'TickDir', 'out');   
+set(gca, 'XTick', trialMin:trialTick:trialMax);
+set(gca, 'YTick', perfMin:perfTick:perfMax);
+set(gca, 'TickLength', [tickLength tickLength]);            %  this in proportion of x axis
+set(gca, 'FontName', 'Arial');
+set(gca, 'FontSize', 9);  
+set(gca, 'Units', 'centimeters');
+set(gca, 'Position', [left bottom width height]);
+title('choseCorrect by trialInBlock', 'FontSize', 9, 'FontWeight', 'normal');
 
+minCuePerc = 1;
+maxCuePerc = 4;
+cuePercTick = 1;
+
+% proportion choseCorrect by cuePercent, effect of noise
 [mean, sem] = grpstats(bData(:, stdcol.choseCorrect), bData(:, stdcol.cuePercentGroup), {'mean', 'sem'});
 figure;
 errorbar(mean, sem);
-
+xSpan = xlim;
+ySpan = ylim;
+axis([xSpan(1) - 0.5, xSpan(2) + 0.5, ySpan(1), ySpan(2)]);
+set(gca, 'box', 'off');
+set(gca, 'TickDir', 'out');   
+set(gca, 'XTick', xSpan(1):1:xSpan(2));
+set(gca, 'YTick', perfMin:perfTick:perfMax);
+set(gca, 'TickLength', [tickLength tickLength]);            %  this in proportion of x axis
+set(gca, 'FontName', 'Arial');
+set(gca, 'FontSize', 9);  
+set(gca, 'Units', 'centimeters');
+set(gca, 'Position', [left bottom width height]);
+title('choseCorrect by cuePerc, all trials', 'FontSize', 9, 'FontWeight', 'normal');
 
 % divide data by corrStrength
+% cuePerc_here = unique(bData(:, stdcol.cuePercent));
+% figure;
+% hold on;
+% for f = 1 : length(cuePerc_here)
+% 
+%     thisLevel = bData(bData(:, stdcol.cuePercent) == cuePerc_here(f), :);
+% 
+%     perf = grpstats(thisLevel(:, stdcol.choseCorrect), thisLevel(:, stdcol.trialInBlock));
+% 
+%     plot(perf);
+% end
 
-cuePerc_here = unique(bData(:, stdcol.cuePercent));
+earlyBlock = bData(bData(:, stdcol.trialInBlock) < 20, :);
+[mean, sem] = grpstats(earlyBlock(:, stdcol.choseCorrect), earlyBlock(:, stdcol.cuePercent));
 figure;
-hold on;
-for f = 1 : length(cuePerc_here)
+errorbar(mean, sem);
+xSpan = xlim;
+ySpan = ylim;
+axis([xSpan(1) - 0.5, xSpan(2) + 0.5, ySpan(1), ySpan(2)]);
+set(gca, 'box', 'off');
+set(gca, 'TickDir', 'out');   
+set(gca, 'XTick', xSpan(1):1:xSpan(2));
+set(gca, 'YTick', perfMin:perfTick:perfMax);
+set(gca, 'TickLength', [tickLength tickLength]);            %  this in proportion of x axis
+set(gca, 'FontName', 'Arial');
+set(gca, 'FontSize', 9);  
+set(gca, 'Units', 'centimeters');
+set(gca, 'Position', [left bottom width height]);
+title('choseCorrect by cuePerc, first 20 trials in block', 'FontSize', 9, 'FontWeight', 'normal');
 
-    thisLevel = bData(bData(:, stdcol.cuePercent) == cuePerc_here(f), :);
-
-    perf = grpstats(thisLevel(:, stdcol.choseCorrect), thisLevel(:, stdcol.trialInBlock));
-
-    plot(perf);
-
-end
+figure;
+hist(bData(:, stdcol.trialInBlock));
+set(gca, 'box', 'off');
+set(gca, 'TickDir', 'out');  
+% xSpan = xlim;
+% ySpan = ylim;
+% % set(gca, 'XTick', xSpan(1):1:xSpan(2));
+% set(gca, 'YTick', perfMin:perfTick:perfMax);
+set(gca, 'TickLength', [tickLength tickLength]);            %  this in proportion of x axis
+set(gca, 'FontName', 'Arial');
+set(gca, 'FontSize', 9);  
+set(gca, 'Units', 'centimeters');
+set(gca, 'Position', [left bottom width height]);
+title('choseCorrect by cuePerc, first 20 trials in block', 'FontSize', 9, 'FontWeight', 'normal');
 
 bob = 1;
 

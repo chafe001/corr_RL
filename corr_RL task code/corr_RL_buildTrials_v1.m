@@ -23,7 +23,7 @@ RIGHT = 2;
 % set params in a utility function, makes debugging easier as many
 % functions can be run independently outside of the ML environment which
 % makes debugging easier
-params = corr_RL_setParams();
+params = corr_RL_setParams_v1();
 
 % --- LOOP THROUGH VARIABLES DEFINING TRIAL CONDITIONS
 for bn = 1 : params.numBlocks
