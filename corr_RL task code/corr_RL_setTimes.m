@@ -72,17 +72,6 @@ switch COMPUTER
         % Triplet + interPair duration = 59 + 100 ms = 159 ms
         % Movie duration (10 pairs) = 1590 ms
 
-
-        % times.stim_frames = 1;  % 8 ms
-        % times.soa_frames = 2; % 17 ms
-        % times.interPair_frames = 12; % 100 ms
-        % Triplet duration (8 + 17 + 8 ms) = 33 ms
-        % Triplet + interPair duration = 33 + 10 ms = 130 ms
-        % Movie duration (10 pairs) = 1300 ms
-
-
-
-
         times.preMovie_frames = 20;  % fix targ and choices
         times.postMovie_frames = 20;
         times.sc1_pretrial_ms = 20;

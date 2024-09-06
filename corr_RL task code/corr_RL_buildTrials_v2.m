@@ -66,10 +66,17 @@ for bn = 1 : params.numBlocks
         condArrayTemp(bn, bc).cuePercent = cuePercent;
         % allocate one cue pair to this condition
         condArrayTemp(bn, bc).cuePair = cuePairs(bc);
+        % adding these redundant variables to make it easier to see
+        % condArray structure in data viewer with clicking down levels of
+        % nested structure array
+        condArrayTemp(bn, bc).cuePair1_L_ang = cuePairs(bc).leftStim.Angle;
+        condArrayTemp(bn, bc).cuePair1_L_color = cuePairs(bc).leftStim.FaceColor;
+        condArrayTemp(bn, bc).cuePair1_R_ang = cuePairs(bc).rightStim.Angle;
+        condArrayTemp(bn, bc).cuePair1_R_color = cuePairs(bc).rightStim.FaceColor;
         % allocate all noise pairs to each condition
         condArrayTemp(bn, bc).noisePairs = noisePairs;
         condArrayTemp(bn, bc).state = cuePairs(bc).pairState;
-        
+
     end
 end
 

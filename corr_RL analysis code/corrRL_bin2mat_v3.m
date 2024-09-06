@@ -5,7 +5,7 @@ function corrRL_bin2mat_v3()
 % matrix and saves
 
 % Version history
-% V1: built to work with xPairs (dot design)\
+% V1: built to work with xPairs (dot design)
 % V2: adapted to work with corr_RL
 
 dbstop if error
