@@ -1,5 +1,5 @@
 
-function [] = genCurves()
+function [curve_A, curve_B] = genCurves()
 %%
 
 % Version history
@@ -123,13 +123,13 @@ if params.save_png
         for n = 1:params.N
             % subplot(3, params.N, (i-1)*params.N + n);
             if i == 1
-                f = figure;
+                figure;
                 plot(smooth_sequence(n, :, 1), smooth_sequence(n, :, 2));
             elseif i == 2
-                f = figure;
+                figure;
                 plot(rough_sequence(n, :, 1), rough_sequence(n, :, 2));
             else
-                f = figure;
+                figure;
                 plot((rough_sequence(n, :, 1) + smooth_sequence(n, :, 1))/2, ...
                     (rough_sequence(n, :, 2) + smooth_sequence(n, :, 2))/2);
             end
@@ -140,11 +140,7 @@ if params.save_png
 
             % --- SAVE PNG
             fn = buildFilename(params, i, n);
-            cd blockstim
-            % f is figure object, if not included in print command, prints 
-            % last ML screen changed, eg user, as png file
-            print(f, fn, '-dpng');
-            cd ..
+            print(fn, '-dpng');
 
         end
     end

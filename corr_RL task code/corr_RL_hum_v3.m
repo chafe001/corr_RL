@@ -376,6 +376,9 @@ if TrialRecord.CurrentTrialWithinBlock == 1
     TrialRecord.User.blockWins = 0;
     TrialRecord.User.blockLosses = 0;
     TrialRecord.User.netWins = 0;
+
+    % test call Dave's curve drawing funciton from within ML
+    genCurves();
 end
 
 % -------------------------------------------------------------------------
