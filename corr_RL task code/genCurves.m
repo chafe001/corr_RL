@@ -144,10 +144,13 @@ if params.save_png
             % f is figure object, if not included in print command, prints 
             % last ML screen changed, eg user, as png file
             print(f, fn, '-dpng');
+            close;
             cd ..
 
         end
     end
+
+
 
 
 
