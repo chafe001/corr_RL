@@ -81,6 +81,46 @@ switch COMPUTER
         times.rewRing_frames = 10;
         times.scError_ms = 1000;
 
+case 'LAPTOP-42DLT8TH'
+        % laptop at 120 Hz, 8.33 ms per frame
+        % durations, frames:ms
+        % 2 frames - 17 ms
+        % 3 frames - 25 ms
+        % 4 frames - 33 ms
+        % 5 frames - 42 ms
+        % 6 frames - 50 ms
+        % 2012 McMahon and Leopold, maximal STDP perceptual shifts with 10
+        % ms stimulus duration, and 20 ms SOA, 1 and 3 frames respectively
+        % at 120 Hz. 
+        % Pairing protocol:
+        % - 120 trials
+        % - Each trial 1 pair of images quickly flashed at screen center
+        % - 100 trials of face pairs
+        % - 20 trials of nonface pairs
+        % - Subjects responded whether face (press) or nonface (withhold)
+        % - So they really didn't have movies, one response per pair
+        % - one pair every 800-1200 ms. 
+        % - SOA 10-100 ms
+        % - stimulus duration 10 ms
+        % - SOA and stimulus order A->B, B->A, held constant in ea session
+
+        times.stim_frames = 2;  % 17 ms
+        times.soa_frames = 3; % 25 ms
+        times.interPair_frames = 12; % 100 ms
+        % MOVIE DURATION with these parameters
+        % Triplet duration (17 + 25 + 17 ms) = 59 ms
+        % Triplet + interPair duration = 59 + 100 ms = 159 ms
+        % Movie duration (10 pairs) = 1590 ms
+
+        times.preMovie_frames = 20;  % fix targ and choices
+        times.postMovie_frames = 20;
+        times.sc1_pretrial_ms = 20;
+        times.sc3_response_ms = 2500;
+        times.sc4_feedback_frames = 20; % duration of scene depends on choice ring timing
+        times.choiceRing_frames = 10;
+        times.rewRing_frames = 10;
+        times.scError_ms = 1000;
+
     case 'DAVIDLAPTOP'
         % laptop at 144 Hz
         times.stim_frames = 3;
