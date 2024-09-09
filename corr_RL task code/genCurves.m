@@ -45,6 +45,7 @@ params.n_knot_points = 5;
 % params.n_knot_points = 2;
 
 params.nBlocks = 10;
+params.curvesPerBlock = 2;
 
 % Specify the "curve of origin"
 curve_of_origin = zeros(params.D, 2);
@@ -59,169 +60,113 @@ curve_of_origin = curve_of_origin * radius;
 
 for b = 1:params.nBlocks
 
-    % --- curves for A state
-    % endcurve_A
-    knots = sample_knots(knot_grid, params.n_knot_points, false);
-    [endcurve_A, ~] = upsample(knots, params.D);
+    for c = 1:params.curvesPerBlock
 
-    % orthocurve_A
-    el = sum(sum(endcurve_A .* endcurve_A));
-    knots = sample_knots(knot_grid, params.n_knot_points, false);
-    [other_curve_A, ~] = upsample(knots, params.D);
-    orthocurve_A = sum(sum(other_curve_A .* endcurve_A)) * endcurve_A / el - other_curve_A;
-    fprintf('check: %.2f\n', sum(sum(orthocurve_A .* endcurve_A))); % ??
+        % --- curves for A state
+        % endcurve
+        knots = sample_knots(knot_grid, params.n_knot_points, false);
+        [endcurve, ~] = upsample(knots, params.D);
 
-    % Generate one sequence and look at it
-    scale_lim = 1;
+        % orthocurve
+        el = sum(sum(endcurve .* endcurve));
+        knots = sample_knots(knot_grid, params.n_knot_points, false);
+        [other_curve, ~] = upsample(knots, params.D);
+        orthocurve = sum(sum(other_curve .* endcurve)) * endcurve / el - other_curve;
+        fprintf('check: %.2f\n', sum(sum(orthocurve .* endcurve))); % ??
 
-    % Travel smoothly along manifold, sample a curve at each point
-    smooth_sequence_A = zeros(params.N, params.D, 2);
-    for i = 1:params.N
-        t = interp1([1, params.N], [-scale_lim, scale_lim], i);
-        smooth_sequence_A(i, :, :) = curve_of_origin + t * endcurve_A;
-    end
+        % Generate one sequence and look at it
+        scale_lim = 1;
 
-    % Random samples of curves along an orthogonal manifold: this is the "noise"
-    rough_sequence_A = zeros(params.N, params.D, 2);
-    for n = 1:params.N
-        t = max(min(randn, scale_lim), -scale_lim);
-        rough_sequence_A(n, :, :) = curve_of_origin + t * orthocurve_A;
-    end
+        % Travel smoothly along manifold, sample a curve at each point
+        smooth_sequence = zeros(params.N, params.D, 2);
+        for i = 1:params.N
+            t = interp1([1, params.N], [-scale_lim, scale_lim], i);
+            smooth_sequence(i, :, :) = curve_of_origin + t * endcurve;
+        end
 
-    % --- curves for B state
-    % endcurve_B
-    knots = sample_knots(knot_grid, params.n_knot_points, false);
-    [endcurve_B, ~] = upsample(knots, params.D);
+        % Random samples of curves along an orthogonal manifold: this is the "noise"
+        rough_sequence = zeros(params.N, params.D, 2);
+        for n = 1:params.N
+            t = max(min(randn, scale_lim), -scale_lim);
+            rough_sequence(n, :, :) = curve_of_origin + t * orthocurve;
+        end
 
-    % orthocurve_B
-    el = sum(sum(endcurve_B .* endcurve_B));
-    knots = sample_knots(knot_grid, params.n_knot_points, false);
-    [other_curve_B, ~] = upsample(knots, params.D);
-    orthocurve_B = sum(sum(other_curve_B .* endcurve_B)) * endcurve_B / el - other_curve_B;
-    fprintf('check: %.2f\n', sum(sum(orthocurve_B .* endcurve_B))); % ??
+     
 
-    % Generate one sequence and look at it
-    scale_lim = 1;
-
-    % Travel smoothly along manifold, sample a curve at each point
-    smooth_sequence_B = zeros(params.N, params.D, 2);
-    for i = 1:params.N
-        t = interp1([1, params.N], [-scale_lim, scale_lim], i);
-        smooth_sequence_B(i, :, :) = curve_of_origin + t * endcurve_B;
-    end
-
-    % Random samples of curves along an orthogonal manifold: this is the "noise"
-    rough_sequence_B = zeros(params.N, params.D, 2);
-    for n = 1:params.N
-        t = max(min(randn, scale_lim), -scale_lim);
-        rough_sequence_B(n, :, :) = curve_of_origin + t * orthocurve_B;
-    end
-
-
-    %%
-
-    % Plotting
-    figure;
-    plot(endcurve_A(:, 1), endcurve_A(:, 2));
-    hold on;
-    plot(orthocurve_A(:, 1), orthocurve_A(:, 2), 'r');
-
-    figure;
-    plot(endcurve_B(:, 1), endcurve_B(:, 2));
-    hold on;
-    plot(orthocurve_B(:, 1), orthocurve_B(:, 2), 'r');
-
-
-    %%
-
-    if params.plotCurveSeq
-        % lim = 1.75;
-        lim = 1.5;
-        limx = [-lim, lim];
-        limy = [-lim, lim];
-
+        %%
+        % Plotting
         figure;
-        for i = 1:3
-            for n = 1:params.N
-                subplot(3, params.N, (i-1)*params.N + n);
-                if i == 1
-                    plot(smooth_sequence_A(n, :, 1), smooth_sequence_A(n, :, 2));
-                elseif i == 2
-                    plot(rough_sequence_A(n, :, 1), rough_sequence_A(n, :, 2));
-                else
-                    plot((rough_sequence_A(n, :, 1) + smooth_sequence_A(n, :, 1))/2, ...
-                        (rough_sequence_A(n, :, 2) + smooth_sequence_A(n, :, 2))/2);
+        plot(endcurve(:, 1), endcurve(:, 2));
+        hold on;
+        plot(orthocurve(:, 1), orthocurve(:, 2), 'r');
+
+        %%
+
+        if params.plotCurveSeq
+            % lim = 1.75;
+            lim = 1.5;
+            limx = [-lim, lim];
+            limy = [-lim, lim];
+
+            figure;
+            for i = 1:3
+                for n = 1:params.N
+                    subplot(3, params.N, (i-1)*params.N + n);
+                    if i == 1
+                        plot(smooth_sequence(n, :, 1), smooth_sequence(n, :, 2));
+                    elseif i == 2
+                        plot(rough_sequence(n, :, 1), rough_sequence(n, :, 2));
+                    else
+                        plot((rough_sequence(n, :, 1) + smooth_sequence(n, :, 1))/2, ...
+                            (rough_sequence(n, :, 2) + smooth_sequence(n, :, 2))/2);
+                    end
+                    xlim(limx);
+                    ylim(limy);
+                    axis off;
+                    axis equal;
                 end
-                xlim(limx);
-                ylim(limy);
-                axis off;
-                axis equal;
             end
+
         end
 
-        figure;
-        for i = 1:3
-            for n = 1:params.N
-                subplot(3, params.N, (i-1)*params.N + n);
-                if i == 1
-                    plot(smooth_sequence_B(n, :, 1), smooth_sequence_B(n, :, 2));
-                elseif i == 2
-                    plot(rough_sequence_B(n, :, 1), rough_sequence_B(n, :, 2));
-                else
-                    plot((rough_sequence_B(n, :, 1) + smooth_sequence_B(n, :, 1))/2, ...
-                        (rough_sequence_B(n, :, 2) + smooth_sequence_B(n, :, 2))/2);
+        %%
+        if params.save_png
+
+            for i = 1:3
+                for n = 1:params.N
+                    % subplot(3, params.N, (i-1)*params.N + n);
+                    if i == 1
+                        f = figure;
+                        plot(smooth_sequence(n, :, 1), smooth_sequence(n, :, 2));
+                    elseif i == 2
+                        f = figure;
+                        plot(rough_sequence(n, :, 1), rough_sequence(n, :, 2));
+                    else
+                        f = figure;
+                        plot((rough_sequence(n, :, 1) + smooth_sequence(n, :, 1))/2, ...
+                            (rough_sequence(n, :, 2) + smooth_sequence(n, :, 2))/2);
+                    end
+                    xlim(limx);
+                    ylim(limy);
+                    axis off;
+                    axis equal;
+
+                    % --- SAVE PNG
+                    state = 'A';
+                    fn = buildFilename(params, i, n, b, c);
+                    cd blockstim
+                    % f is figure object, if not included in print command, prints
+                    % last ML screen changed, eg user, as png file
+                    print(f, fn, '-dpng');
+                    close;
+                    cd ..
+
                 end
-                xlim(limx);
-                ylim(limy);
-                axis off;
-                axis equal;
             end
-        end
 
+        end % save_png
 
-
-
-
-
-
-    end
-
-    %%
-    if params.save_png
-
-        for i = 1:3
-            for n = 1:params.N
-                % subplot(3, params.N, (i-1)*params.N + n);
-                if i == 1
-                    f = figure;
-                    plot(smooth_sequence_A(n, :, 1), smooth_sequence_A(n, :, 2));
-                elseif i == 2
-                    f = figure;
-                    plot(rough_sequence_A(n, :, 1), rough_sequence_A(n, :, 2));
-                else
-                    f = figure;
-                    plot((rough_sequence_A(n, :, 1) + smooth_sequence_A(n, :, 1))/2, ...
-                        (rough_sequence_A(n, :, 2) + smooth_sequence_A(n, :, 2))/2);
-                end
-                xlim(limx);
-                ylim(limy);
-                axis off;
-                axis equal;
-
-                % --- SAVE PNG
-                fn = buildFilename(params, i, n);
-                cd blockstim
-                % f is figure object, if not included in print command, prints
-                % last ML screen changed, eg user, as png file
-                print(f, fn, '-dpng');
-                close;
-                cd ..
-
-            end
-        end
-
-
-    end
+    end % curvesPerBlock
 
 end  % nBlocks
 
@@ -232,7 +177,10 @@ end  % nBlocks
 %%
 % Utilities for generating curves
 
-    function fn = buildFilename(params, i, n)
+    function fn = buildFilename(params, i, n, b, c)
+
+        blockstr = strcat ('b', num2str(b), '_');
+        curvestr = strcat ('c', num2str(c), '_');
 
         switch i
 
@@ -247,9 +195,9 @@ end  % nBlocks
 
         end
 
-        sampStr = strcat('samp', num2str(n));
+        sampStr = strcat('s', num2str(n));
 
-        fn = strcat(typeStr, sampStr);
+        fn = strcat(typeStr, blockstr, curvestr, sampStr);
 
         bob = 1;
 
