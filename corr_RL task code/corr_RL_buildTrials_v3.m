@@ -68,42 +68,49 @@ switch params.stimulusType
 
         end
 
-        % Convert conditions matrix into a one dimensional struct array
-        condArray = [];
-        condNo = 1;
-        for b = 1 : params.numBlocks
-            for r = LEFT:RIGHT
-                thisCond = condArrayTemp(b, r);
-                thisCond.condNo = condNo;
-                condNo = condNo + 1;
-                condArray = [condArray; thisCond];
-            end
-        end
 
         bob = 1;
 
 
     case 'curves'
-        
-        
+
+
         for bn = 1 : params.numBlocks
 
+            for rs = LEFT : RIGHT  % reward state
 
+                condArrayTemp(bn, rs).blockNum = bn;
 
-            
+                if mod(bn, 2) == 1 % odd block
+                    condArrayTemp(bn, rs).smoothCurve = true;
+                else  % even block
+                    condArrayTemp(bn, rs).smoothCurve = false;
+                end
 
+                condArrayTemp(bn, rs).movieRewState = rs;
 
+            end % for rs
+        end % for bn
 
-        end
-
-
+        bob = 2;
 
 
 end
 
+% Convert conditions matrix into a one dimensional struct array
+condArray = [];
+condNo = 1;
+for b = 1 : params.numBlocks
+    for r = LEFT:RIGHT
+        thisCond = condArrayTemp(b, r);
+        thisCond.condNo = condNo;
+        condNo = condNo + 1;
+        condArray = [condArray; thisCond];
+    end
+end
 
 
-
+bob = 3;
 
 
 end
