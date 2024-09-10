@@ -313,16 +313,6 @@ times = corr_RL_setTimes_v3();
 % save times to TrialRecord
 TrialRecord.User.times = times;
 
-% -------------------------------------------------------------------------
-% --------------------------- EVENT CODES ---------------------------------
-% -------------------------------------------------------------------------
-
-% call fx to set trial event codes
-codes = corr_RL_setCodes_v3();
-
-% save event codes to TrialRecord
-TrialRecord.User.codes = codes;
-
 
 % -------------------------------------------------------------------------
 % -------------- BUILD CONDITION AND TRIAL ARRAYS -------------------------
@@ -354,7 +344,13 @@ if TrialRecord.CurrentTrialNumber == 1
     % condition rep array
     % TrialRecord.User.condRepsRem = condReps;
     TrialRecord.User.times = times;
-    TrialRecord.User.codes = codes;
+
+    switch TrialRecord.User.params.stimulusType
+        case 'bars'
+            TrialRecord.User.codes = corr_RL_setBarCodes_v3();
+        case 'curves'
+            TrialRecord.User.codes = corr_RL_setCurveCodes_v3();
+    end
 
 end
 
@@ -366,15 +362,14 @@ switch TrialRecord.User.params.stimulusType
 
     case 'bars'
         [movieFrames, pairSeq] = corr_RL_generateStimMovie_v1(TrialRecord);
+        TrialRecord.User.movieFrames = movieFrames;
+        TrialRecord.User.pairSeq = pairSeq;
 
     case 'curves'
-        [movieFrames, pairSeq] = corr_RL_generateCurveMovie_v3(TrialRecord);
-
+        [movieFrames] = corr_RL_generateCurveMovie_v1(TrialRecord);
+        TrialRecord.User.movieFrames = movieFrames;
 end
 
-% Save movie and pair sequence to TrialRecord
-TrialRecord.User.movieFrames = movieFrames;
-TrialRecord.User.pairSeq = pairSeq;
 
 % -------------------------------------------------------------------------
 % ----------------- INIT WITHIN BLOCK RESULT COUNTERS -----------------------
@@ -453,31 +448,43 @@ switch TrialRecord.User.condArray(c).movieRewState
         keyStr = 'Correct Key: RIGHT';
 end
 
-trlInfoStr = strcat(keyStr, ...
-    '  Trial:', num2str(t), ...
-    '  Block:', num2str(b), ...
-    '  Cond:', num2str(c), ...
-    '  Cue percent:', num2str(TrialRecord.User.condArray(c).cuePercent), ...
-    '  Total pairs: ', num2str(TrialRecord.User.params.numMoviePairs));
 
-pair1_Angles_str = strcat('Pair1 L_ang:', num2str(TrialRecord.User.condArray(c).cuePairs(1).leftStim.Angle), ...
-    '  L_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).leftStim.FaceColor), ...
-    '  L_FN: ', TrialRecord.User.condArray(c).cuePairs(1).leftStim.FileName, ...
-    '  R_ang: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).rightStim.Angle), ...
-    '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).rightStim.FaceColor), ...
-    '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(1).rightStim.FileName);
-
-pair2_Angles_str = strcat('Pair2 L_ang:', num2str(TrialRecord.User.condArray(c).cuePairs(2).leftStim.Angle), ...
-    '  L_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).leftStim.FaceColor), ...
-    '  L_FN: ', TrialRecord.User.condArray(c).cuePairs(2).leftStim.FileName, ...
-    '  R_ang: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.Angle), ...
-    '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.FaceColor), ...
-    '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(2).rightStim.FileName);
+switch TrialRecord.User.params.stimulusType
 
 
-dashboard(1, trlInfoStr);
-dashboard(3, pair1_Angles_str);
-dashboard(4, pair2_Angles_str);
+    case 'bars'
+        trlInfoStr = strcat(keyStr, ...
+            '  Trial:', num2str(t), ...
+            '  Block:', num2str(b), ...
+            '  Cond:', num2str(c), ...
+            '  Cue percent:', num2str(TrialRecord.User.condArray(c).cuePercent), ...
+            '  Total pairs: ', num2str(TrialRecord.User.params.numMoviePairs));
+
+        pair1_Angles_str = strcat('Pair1 L_ang:', num2str(TrialRecord.User.condArray(c).cuePairs(1).leftStim.Angle), ...
+            '  L_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).leftStim.FaceColor), ...
+            '  L_FN: ', TrialRecord.User.condArray(c).cuePairs(1).leftStim.FileName, ...
+            '  R_ang: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).rightStim.Angle), ...
+            '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).rightStim.FaceColor), ...
+            '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(1).rightStim.FileName);
+
+        pair2_Angles_str = strcat('Pair2 L_ang:', num2str(TrialRecord.User.condArray(c).cuePairs(2).leftStim.Angle), ...
+            '  L_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).leftStim.FaceColor), ...
+            '  L_FN: ', TrialRecord.User.condArray(c).cuePairs(2).leftStim.FileName, ...
+            '  R_ang: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.Angle), ...
+            '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.FaceColor), ...
+            '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(2).rightStim.FileName);
+
+        dashboard(1, trlInfoStr);
+        dashboard(3, pair1_Angles_str);
+        dashboard(4, pair2_Angles_str);
+
+    case 'curves'
+
+
+
+end
+
+
 
 % write event codes to store ML condition and trial numbers
 mult256 = floor(TrialRecord.CurrentTrialNumber/256) + 1;
@@ -508,7 +515,7 @@ scene1 = create_scene(sc1_tc);
 % fliptime is time the trialtime in ms at which the first frame of the
 % screen is pressented and is the return value of run_scene.  Logs timing
 % of scene transitions
-scene1_start = run_scene(scene1, codes.startFix); %'pretrial'
+scene1_start = run_scene(scene1, TrialRecord.User.codes.startFix); %'pretrial'
 
 % -------------------------------------------------------------------------
 % SCENE 2: PRESENT STIM MOVIE, ERROR IF KEY RESPONSE
@@ -614,14 +621,14 @@ scene3 = create_scene(sc3_responseWindow, taskObj_fix);
 % fliptime is time the trialtime in ms at which the first frame of the
 % screen is pressented and is the return value of run_scene.  Logs timing
 % of scene transitions
-scene3_start = run_scene(scene3, codes.beginRespWindow); %'pretrial'
+scene3_start = run_scene(scene3, TrialRecord.User.codes.beginRespWindow); %'pretrial'
 
 % --- ANALYZE SCENE OUTCOME
 if sc3_key1.Success && ~sc3_key2.Success
     choices.madeValidResp = true;
     choices.responseKey = 1;
     choices.chosenSide = 'left';
-    eventmarker(codes.response_key1);
+    eventmarker(TrialRecord.User.codes.response_key1);
     % --- COMPUTE RT
     rt = sc3_key1.Time - scene3_start;
     % --- LOG CORRECT TRIAL IN TRIALRECORD
@@ -634,7 +641,7 @@ elseif sc3_key2.Success && ~sc3_key1.Success
     choices.madeValidResp = true;
     choices.responseKey = 2;
     choices.chosenSide = 'right';
-    eventmarker(codes.response_key2);
+    eventmarker(TrialRecord.User.codes.response_key2);
     % --- See comments above for rt
     rt = sc3_key2.Time - scene3_start;
     % --- LOG CORRECT TRIAL IN TRIALRECORD
@@ -763,15 +770,15 @@ sc4_rewImg = ImageChanger(rewBox);
 if choices.madeValidResp
     if choices.rewardTrial
         sc4_rewImg.List = ...
-            {{choices.choiceImg}, [0 0], times.choiceRing_frames, codes.choiceRing_on; ...
-            {choices.rewImg}, [0 0], times.rewRing_frames, codes.rewRing_on};
+            {{choices.choiceImg}, [0 0], times.choiceRing_frames, TrialRecord.User.codes.choiceRing_on; ...
+            {choices.rewImg}, [0 0], times.rewRing_frames, TrialRecord.User.codes.rewRing_on};
     else
         sc4_rewImg.List = ...
-            {{choices.choiceImg}, [0 0], times.choiceRing_frames, codes.choiceRing_on};
+            {{choices.choiceImg}, [0 0], times.choiceRing_frames, TrialRecord.User.codes.choiceRing_on};
     end
 else
     sc4_rewImg.List = ...
-        {[choices.errorImg], [0 0], times.choiceRing_frames, codes.noResponse};
+        {[choices.errorImg], [0 0], times.choiceRing_frames, TrialRecord.User.codes.noResponse};
 
 end
 

@@ -85,9 +85,9 @@ switch params.stimulusType
                 condArrayTemp(bn, rs).blockNum = bn;
 
                 if mod(bn, 2) == 1 % odd block
-                    condArrayTemp(bn, rs).smoothCurve = true;
+                    condArrayTemp(bn, rs).curveType = 'smooth';
                 else  % even block
-                    condArrayTemp(bn, rs).smoothCurve = false;
+                    condArrayTemp(bn, rs).curveType = 'comb';
                 end
 
                 condArrayTemp(bn, rs).movieRewState = rs;

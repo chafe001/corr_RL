@@ -32,6 +32,7 @@ params.easyStim = true;
 % curve generating code and Thomas' algorithm
 % params.stimulusType = 'bars';
 params.stimulusType = 'curves';
+params.nCurveSamples = 12;
 
 % --- VARIABLE NOISE
 params.cuePercentRange = [0.6 0.7 0.8 0.9];

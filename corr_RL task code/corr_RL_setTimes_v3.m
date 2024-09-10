@@ -9,6 +9,10 @@ switch COMPUTER
         times.stim_frames = 1;
         times.soa_frames = 1;
         times.interPair_frames = 5;
+
+        % times for curve stimuli
+        times.curve_frames = 3;
+
         % times below specified in screen refresh units, absolute time depends on
         % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
         % in new laptops, etc
@@ -71,6 +75,10 @@ switch COMPUTER
         % Triplet duration (17 + 25 + 17 ms) = 59 ms
         % Triplet + interPair duration = 59 + 100 ms = 159 ms
         % Movie duration (10 pairs) = 1590 ms
+
+        % times for curve stimuli
+        times.curve_frames = 3;
+
 
         times.preMovie_frames = 20;  % fix targ and choices
         times.postMovie_frames = 20;
