@@ -30,8 +30,8 @@ params.easyStim = true;
 % --- STIMULUS CONTROL
 % determine whether to use bars with xPairs algorithm or curves with Dave's
 % curve generating code and Thomas' algorithm
-params.stimulusType = 'bars';
-% params.stimulusType = 'curves';
+% params.stimulusType = 'bars';
+params.stimulusType = 'curves';
 
 % --- VARIABLE NOISE
 params.cuePercentRange = [0.6 0.7 0.8 0.9];

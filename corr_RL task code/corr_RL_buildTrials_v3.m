@@ -29,7 +29,6 @@ RIGHT = 2;
 % -------- SET PARAMS
 params = corr_RL_setParams_v3();
 
-
 switch params.stimulusType
 
     case 'bars'

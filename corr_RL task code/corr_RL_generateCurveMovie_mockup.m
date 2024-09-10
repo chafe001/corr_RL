@@ -17,22 +17,7 @@ c = 4;
 times = corr_RL_setTimes_v3();
 codes = corr_RL_setCodes_v3();
 
-% --- BUILD PAIRSEQ VECTOR which is a sequence of indicies to access and retrieve 
-% stimulus information from condArray.  Each row of condArray, corresponding to a
-% single trial condition (c), includes an array of cuePairs and noisePairs. The
-% stimulus movie constructed for trials of this condition will be a sequence of pair
-% images selected from these arrays.  To specify specific stimuli in each pair, we
-% need a vector of indices that specify which cue pair to use (1 of 2 pairs for each
-% condition), and which noise pair to use (1 of 8 pairs for each condition).
-
-% Note: new method of introducing visual noise.  Noise pairs include one
-% cue stimuli (one of the initial 4 cue stimuli specified at the beggining of each 
-% block) and one noise stimulus, which is a stimulus with feature
-% combinations other than those of cue stimuli.  This precludes, for now,
-% mixing cue pairs for reward state 1 and 2 in dfferent combinations in the
-% same movie, Newsome/Shadlen-style, which seems a different question about
-% perceptual discrimination than statistical learning which is our current
-% focus
+bob = 1;
 
 % --- retrive number of cue pairs for this movie
 numCuePairs = round(condArray(c).cuePercent * params.numMoviePairs);
