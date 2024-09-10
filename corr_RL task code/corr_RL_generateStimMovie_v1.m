@@ -6,9 +6,9 @@ function [movieImages, pairSeq] = corr_RL_generateStimMovie_v1(TrialRecord)
 
 condArray = TrialRecord.User.condArray;
 c = TrialRecord.CurrentCondition;
-params = corr_RL_setParams_v1();
-times = corr_RL_setTimes();
-codes = corr_RL_setCodes();
+params = corr_RL_setParams_v3();
+times = corr_RL_setTimes_v3();
+codes = corr_RL_setCodes_v3();
 
 % --- BUILD PAIRSEQ VECTOR which is a sequence of indicies to access and retrieve 
 % stimulus information from condArray.  Each row of condArray, corresponding to a

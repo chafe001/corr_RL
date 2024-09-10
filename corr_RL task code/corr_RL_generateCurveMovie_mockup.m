@@ -14,8 +14,8 @@ function [movieImages, pairSeq] = corr_RL_generateCurveMovie_mockup()
 [condArray, params] = corr_RL_buildTrials_v3();
 c = 4;
 
-times = corr_RL_setTimes();
-codes = corr_RL_setCodes();
+times = corr_RL_setTimes_v3();
+codes = corr_RL_setCodes_v3();
 
 % --- BUILD PAIRSEQ VECTOR which is a sequence of indicies to access and retrieve 
 % stimulus information from condArray.  Each row of condArray, corresponding to a
@@ -157,7 +157,7 @@ for p = 1 : length(pairs)
     leftImg_frame = {{leftImg_fn}, [leftImg_x leftImg_y], times.stim_frames, codes.img1_on};
     rightImg_frame = {{rightImg_fn}, [rightImg_x rightImg_y], times.stim_frames, codes.img2_on};
 
-    % --- COMBINE FRAMES INTO SEQUENCEg
+    % --- COMBINE FRAMES INTO SEQUENCE
     switch params.movieMode
 
         case 'simultaneous'
