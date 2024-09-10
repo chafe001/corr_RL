@@ -27,9 +27,11 @@ params.numMoviePairs = 10;
 % but multi-dimensional logic does not.
 params.easyStim = true;
 
-% if stimMode = 'curves', program loads png files created by Dave's line generation
-% code per Thomas's algorithm
-params.stimulusType = 'curves';
+% --- STIMULUS CONTROL
+% determine whether to use bars with xPairs algorithm or curves with Dave's
+% curve generating code and Thomas' algorithm
+params.stimulusType = 'bars';
+% params.stimulusType = 'curves';
 
 % --- VARIABLE NOISE
 params.cuePercentRange = [0.6 0.7 0.8 0.9];

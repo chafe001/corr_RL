@@ -362,13 +362,13 @@ end
 % --------------------- GENERATE STIMULUS MOVIE ---------------------------
 % -------------------------------------------------------------------------
 
-switch params.stimulusType
+switch TrialRecord.User.params.stimulusType
 
     case 'bars'
         [movieFrames, pairSeq] = corr_RL_generateStimMovie_v1(TrialRecord);
 
     case 'curves'
-        [movieFrames, pairSeq] = corr_RL_generateCurveMovie_v1(TrialRecord);
+        [movieFrames, pairSeq] = corr_RL_generateCurveMovie_v3(TrialRecord);
 
 end
 

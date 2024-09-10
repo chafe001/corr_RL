@@ -6,7 +6,7 @@ function [movieImages, pairSeq] = corr_RL_generateStimMovie_v1(TrialRecord)
 
 condArray = TrialRecord.User.condArray;
 c = TrialRecord.CurrentCondition;
-params = corr_RL_setParams();
+params = corr_RL_setParams_v1();
 times = corr_RL_setTimes();
 codes = corr_RL_setCodes();
 

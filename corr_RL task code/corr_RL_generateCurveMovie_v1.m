@@ -7,8 +7,19 @@ function [movieImages, pairSeq] = corr_RL_generateCurveMovie_v1(TrialRecord)
 condArray = TrialRecord.User.condArray;
 c = TrialRecord.CurrentCondition;
 params = corr_RL_setParams_();
+
+% if real fx, uncomment the following three lines
+condArray = TrialRecord.User.condArray;
+c = TrialRecord.CurrentCondition;
+params = corr_RL_setParams_v2();
+
+% if mockup, uncomment the following two lines
+% [condArray, params] = corr_RL_buildTrials_v2();
+% c = 4;
+
 times = corr_RL_setTimes();
 codes = corr_RL_setCodes();
+
 
 % --- BUILD PAIRSEQ VECTOR which is a sequence of indicies to access and retrieve 
 % stimulus information from condArray.  Each row of condArray, corresponding to a
