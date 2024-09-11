@@ -27,15 +27,7 @@ bn = TrialRecord.CurrentBlock;
 % bn = 2; % hard code block number
 
 times = corr_RL_setTimes_v3();
-
-switch params.stimulusType
-    case 'bars'
-        codes = corr_RL_setBarCodes_v3();
-
-    case 'curves'
-        codes = corr_RL_setCurveCodes_v3();
-
-end
+codes = corr_RL_setCurveCodes_v3();
 
 % --- DEFINE STANDARD IMAGES
 preMovie_img = {[], [], times.preMovie_frames, codes.preMovie};

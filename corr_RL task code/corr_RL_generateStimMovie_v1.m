@@ -8,7 +8,7 @@ condArray = TrialRecord.User.condArray;
 c = TrialRecord.CurrentCondition;
 params = corr_RL_setParams_v3();
 times = corr_RL_setTimes_v3();
-codes = corr_RL_setCodes_v3();
+codes = corr_RL_setBarCodes_v3();
 
 % --- BUILD PAIRSEQ VECTOR which is a sequence of indicies to access and retrieve 
 % stimulus information from condArray.  Each row of condArray, corresponding to a

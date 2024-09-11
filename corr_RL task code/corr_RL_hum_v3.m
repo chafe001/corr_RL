@@ -498,8 +498,13 @@ rewBox = BoxGraphic(null_);
 netWinBox_height = TrialRecord.User.params.rewBox_height;
 netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
 maxWinBox_width = TrialRecord.User.params.rewBox_width;
-netWinBox_edgeColor = [0 0 1];
-netWinBox_faceColor = [0 0 1];
+% orange
+% netWinBox_edgeColor = [0.9290 0.6940 0.1250];
+% netWinBox_faceColor = [0.9290 0.6940 0.1250];
+% light blue
+netWinBox_edgeColor = [0.3010 0.7459 0.9330];
+netWinBox_faceColor = [0.3010 0.7459 0.9330];
+
 % figure out where to print white netWin reward box so it is left aligned
 % with left edge of black maxWin reward box.  X position coordinate
 % specifies screen coordinates of center of rectangle graphic. The center
@@ -572,9 +577,9 @@ if sc2_key1.Success || sc2_key2.Success
     scError_tc.Duration = times.scError_ms;
 
     rewText = TextGraphic(null_);
-    rewText.Position = [0 TrialRecord.User.params.rewBox_yPos - 10];
+    rewText.Position = [0 TrialRecord.User.params.rewBox_yPos - 5];
     rewText.FontSize = 42;
-    rewText.FontColor = [1 1 1];
+    rewText.FontColor = [0 0 0];
     rewText.HorizontalAlignment = 'center';
     rewText.VerticalAlignment = 'middle';
     rewText.Text = 'EARLY RESPONSE';
