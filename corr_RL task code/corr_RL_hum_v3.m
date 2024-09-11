@@ -498,6 +498,8 @@ rewBox = BoxGraphic(null_);
 netWinBox_height = TrialRecord.User.params.rewBox_height;
 netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
 maxWinBox_width = TrialRecord.User.params.rewBox_width;
+netWinBox_edgeColor = [0 0 1];
+netWinBox_faceColor = [0 0 1];
 % figure out where to print white netWin reward box so it is left aligned
 % with left edge of black maxWin reward box.  X position coordinate
 % specifies screen coordinates of center of rectangle graphic. The center
@@ -505,7 +507,9 @@ maxWinBox_width = TrialRecord.User.params.rewBox_width;
 % width
 netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
 
-rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
+% rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
+rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
+
 
 sc1_tc = TimeCounter(rewBox);
 sc1_tc.Duration = times.sc1_pretrial_ms;
@@ -762,7 +766,9 @@ dashboard(2, respResStr)
 % --- UPDATE REWARD BOX WITH THIS RESULT
 netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
 netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
-rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
+% rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
+rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
+
 
 % --- INSTANTIATE IMAGECHANGER OBJ for FEEDBACK MOVIE
 sc4_rewImg = ImageChanger(rewBox);
