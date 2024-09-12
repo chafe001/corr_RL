@@ -187,9 +187,10 @@ for b = 1:params.nBlocks
 
 
         if params.save_png
+
             for ec = 1: length(endcurve_t)
                 for oc = 1: length(orthocurve_t)
-                    figure;
+                    f = figure;
                     x = state_curves(ec,oc,:,1);
                     x = squeeze(x);
                     y = state_curves(ec,oc,:,2);
@@ -199,90 +200,25 @@ for b = 1:params.nBlocks
                     ylim(limy);
                     axis off;
                     axis equal;
-
-                    --- SAVE PNG
-                    state = 'A';
-                    fn = buildFilename(params, i, n, b, c);
+                    %--- SAVE PNG
                     cd blockstim
+                    fn = buildFilename(params, b, s, ec, oc);
                     % f is figure object, if not included in print command, prints
                     % last ML screen changed, eg user, as png file
                     print(f, fn, '-dpng');
                     close;
+                    % changedir back to working directory
                     cd ..
-
                 end
             end
 
         end
 
-
-
-
-
-
-    end
-
-
-
-    bob = 1;
-
-
-
-
-
-
-
-
+    end  % nStates
+end  % nBlocks
 
 
 end
-
-
-end
-
-
-
-%
-% %%
-% if params.save_png
-%
-%     for i = 1:3
-%         for n = 1:params.N
-%             % subplot(3, params.N, (i-1)*params.N + n);
-%             if i == 1
-%                 f = figure;
-%                 plot(smooth_sequence(n, :, 1), smooth_sequence(n, :, 2));
-%             elseif i == 2
-%                 f = figure;
-%                 plot(rough_sequence(n, :, 1), rough_sequence(n, :, 2));
-%             else
-%                 f = figure;
-%                 plot((rough_sequence(n, :, 1) + smooth_sequence(n, :, 1))/2, ...
-%                     (rough_sequence(n, :, 2) + smooth_sequence(n, :, 2))/2);
-%             end
-%             xlim(limx);
-%             ylim(limy);
-%             axis off;
-%             axis equal;
-%
-%             % --- SAVE PNG
-%             state = 'A';
-%             fn = buildFilename(params, i, n, b, c);
-%             cd blockstim
-%             % f is figure object, if not included in print command, prints
-%             % last ML screen changed, eg user, as png file
-%             print(f, fn, '-dpng');
-%             close;
-%             cd ..
-%
-%         end
-%     end
-%
-% end % save_png
-
-
-
-
 
 
 
@@ -290,27 +226,14 @@ end
 %%
 % Utilities for generating curves
 
-function fn = buildFilename(params, i, n, b, c)
+function fn = buildFilename(params, b, s, ec, oc);
 
-blockstr = strcat ('b', num2str(b), '_');
-curvestr = strcat ('c', num2str(c), '_');
+blockstr = strcat('b', num2str(b), '_');
+statestr = strcat('s', num2str(s), '_');
+mainstr = strcat('ec_', num2str(ec), '_');
+orthostr = strcat('oc_', num2str(oc), '_');
 
-switch i
-
-    case 1
-        typeStr = 'smooth_';
-
-    case 2
-        typeStr = 'rough_';
-
-    case 3
-        typeStr = 'comb_';
-
-end
-
-sampStr = strcat('s', num2str(n));
-
-fn = strcat(typeStr, blockstr, curvestr, sampStr);
+fn = strcat(blockstr, statestr, mainstr, orthostr);
 
 bob = 1;
 
@@ -458,4 +381,3 @@ xy = [fx', fy'];
 end
 
 
-end
