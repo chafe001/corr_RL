@@ -25,12 +25,41 @@ function [] = genCurves_v2()
 % 4. repeat steps 2 and 3 to generate a second curve
 % 5. invoke secrete mathematical incantations to make the second curve
 % orthogonal to the first, 'orthocurve'
-% 7. 
+% 7. Sample curves along a 'manifold' (line through the feature space).
+% Method for sampling manifold:
+% a. Generate a vector of scaling values (t) from -1 to +1
+% b. Loop through 't', each iter multiply endcurve by t (scale endcurve)
+% c. Add scaled endcurve to curve_of_origin
+% d. This produces a smooth_sequence of 'samples' along the manifold
+% e. Add this sequence to an image stack to make a movie
+% e. To examine effect of correlation on learning, generate rough_sequence
+% f. Create random vector of scaling values 't'
+% g. Multiple random t's by orthocurve to sample noise manifold
+% h. Collect these into image stack, produces a jumpy movie
 
-% Each movie is a series of 'samples',
-% which are parametrically incremental mixtures of the base curve (circle)
-% and varying weights of 'endcurve'.  Weighting is controlled by 't'
-% paramter that scales from -1 to +1. 
+% Embedding curves in task context:
+% 1. Generate two curves for each block
+% 2. Associate one curve with L key, the other with R key
+% 3. Subjects learn to map curves to keys
+% 4. Vary curve complexity over blocks by alternately showing
+% smooth_sequence and rough_sequence movies.
+
+% This first version of the task is trivial, almost no learning.
+% Perceptual system immediately discriminates curves (visually distinct)
+% and with very little trial and error learns to map curves to keys
+
+% Next steps, after speaking with Thomas
+% 1. Associate L and R keys (states) with opposite halves of the continuum
+% of curves along a single manifold.
+% 2. Never show the same curve twice, need to learn the manifold rather
+% than any individual visual pattern.
+% 3. Do this by discretizing manifold segments on each side of the middle
+% point (decision boundary), and build a movie only out of that segment
+% 4. This is all single manifold
+% 5. Use ortho manifold to dissociate reward state from feature correlation
+% 6. Do this by adding in varying amounts of ortho curve, and using this
+% amount t
+
 
 % Task is trivial as states are
 % associated with unique, fixed curves, which pop out (little to no
