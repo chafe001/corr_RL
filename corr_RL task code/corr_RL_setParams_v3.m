@@ -18,7 +18,7 @@ params.blockChange = 'netWinsMode';
 % params.blockChange = 'condRepsMode';
 params.netWin_criterion = 7;  % number of netWins before switching block
 
-% --- MOVIE CONTROL
+% --- BAR CONTROL
 params.randCuePercent = true;
 params.numMoviePairs = 10;
 % easyStim forces each of the 4 stimuli selected each block to have a
@@ -26,23 +26,20 @@ params.numMoviePairs = 10;
 % orientation, color is added just as distractor. xPairs logic still works,
 % but multi-dimensional logic does not.
 params.easyStim = true;
+params.cuePercentRange = [0.6 0.7 0.8 0.9];
+% params.cuePercentRange = [1 1 1 1];  % no noise
+params.cuePercent_easy = max(params.cuePercentRange);
+params.cuePercent_hard = min(params.cuePercentRange);
+params.movieMode = 'stdp';
 
-% --- STIMULUS CONTROL
+% --- CURVE CONTROL
 % determine whether to use bars with xPairs algorithm or curves with Dave's
 % curve generating code and Thomas' algorithm
 % params.stimulusType = 'bars';
 params.stimulusType = 'curves';
-params.nCurveSamples = 12;
-
-% --- VARIABLE NOISE
-params.cuePercentRange = [0.6 0.7 0.8 0.9];
-% --- NO NOISE
-% params.cuePercentRange = [1 1 1 1];
-params.cuePercent_easy = max(params.cuePercentRange);
-params.cuePercent_hard = min(params.cuePercentRange);
-
-% params.movieMode = 'simultaneous';
-params.movieMode = 'stdp';
+params.nCurvesPerMovie = 5;
+params.curveMovieDir = 'forward';
+% params.curveMovieDir = 'random';
 
 % --- CHOICE/REWARD 
 params.choice_x = 4;

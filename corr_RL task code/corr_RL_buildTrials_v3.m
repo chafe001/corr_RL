@@ -77,23 +77,47 @@ switch params.stimulusType
 
     case 'curves'
 
+        % --- open curveParams file specifying how curves were generated,
+        % this has blockNum and state information also
+        cd blockstim
+        load('curveParams.mat');
+        cd ..
 
-        for bn = 1 : params.numBlocks
+        % --- update params with curveParams info, OK to do here because
+        % buildTrials will return the updated params
+        params.numBlocks = curveParams.nBlocks;
+        params.numStates = curveParams.nStates;
+        params.n_tvals_main = curveParams.n_tvals_main;
+        params.n_tvals_ortho = curveParams.n_tvals_ortho;
+        params.size_of_knot_grid = curveParams.size_of_knot_grid;
+        params.low = curveParams.low;
+        params.high = curveParams.high;
+        params.max_knot_number = curveParams.max_knot_number;
+        params.D = curveParams.D;
+        params.K = curveParams.K;
+        params.n_knot_points = curveParams.n_knot_points;
 
-            for rs = LEFT : RIGHT  % reward state
+        for b = 1 : params.numBlocks
+            for s = 1 : params.numStates
+                condArrayTemp(b, s).blockNum = b;
+                condArrayTemp(b, s).state = s;
 
-                condArrayTemp(bn, rs).blockNum = bn;
-
-                if mod(bn, 2) == 1 % odd block
-                    condArrayTemp(bn, rs).curveType = 'smooth';
+                % vary movie params by block to see which if
+                % any influence learning
+                if mod(b, 2) == 1 % odd block
+                    condArrayTemp(b, s).curveMovieType = 'smooth';
+                    condArrayTemp(b, s).curveMovieNoise = 'low';
+                    condArrayTemp(b, s).curveMovieOrder = 'forward';
+                    condArrayTemp(b, s).curveMovieGeometry = 'oneD';
                 else  % even block
-                    condArrayTemp(bn, rs).curveType = 'comb';
+                    condArrayTemp(b, s).curveMovieType = 'rough';
+                    condArrayTemp(b, s).curveMovieNoise = 'high';
+                    condArrayTemp(b, s).curveMovieOrder = 'forward_reverse';
+                    condArrayTemp(b, s).curveMovieGeometry = 'twoD';
                 end
 
-                condArrayTemp(bn, rs).movieRewState = rs;
-
-            end % for rs
-        end % for bn
+            end % for s
+        end % for b
 
         bob = 2;
 
