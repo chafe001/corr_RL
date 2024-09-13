@@ -366,7 +366,8 @@ switch TrialRecord.User.params.stimulusType
         TrialRecord.User.pairSeq = pairSeq;
 
     case 'curves'
-        [movieFrames] = corr_RL_generateCurveMovie_v1(TrialRecord);
+        % [movieFrames] = corr_RL_generateCurveMovie_v1(TrialRecord);
+        [movieFrames] = corr_RL_generateCurveMovie_v2(TrialRecord);
         TrialRecord.User.movieFrames = movieFrames;
 end
 

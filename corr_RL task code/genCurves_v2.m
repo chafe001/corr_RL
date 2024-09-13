@@ -68,9 +68,9 @@ function [] = genCurves_v2()
 
 % set params structure
 
-params.nBlocks = 10;
+params.nBlocks = 2;
 params.nStates = 2;
-params.n_tvals_ = 50;
+params.n_tvals_ = 25;
 
 
 params.n_tvals_main = 20;
