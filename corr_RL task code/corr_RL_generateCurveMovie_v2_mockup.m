@@ -1,4 +1,4 @@
-function [movieImages] = corr_RL_generateCurveMovie_v2_mockup(TrialRecord)
+function [movieImages] = corr_RL_generateCurveMovie_v2_mockup()
 % This function returns a cell array, movieImages, that is used to set the
 % 'List' property of a imageChanger() object.  This controls the sequence
 % of images presented in the movie, which controls the proportion of cue
@@ -28,8 +28,8 @@ function [movieImages] = corr_RL_generateCurveMovie_v2_mockup(TrialRecord)
 
 % --- if mockup, uncomment the following  lines
 [condArray, params] = corr_RL_buildTrials_v3();
-c = 4; % hard code condition number
-bn = 2; % hard code block number
+c = 1; % hard code condition number
+b = 2; % hard code block number
 
 times = corr_RL_setTimes_v3();
 codes = corr_RL_setCurveCodes_v3();
@@ -61,38 +61,77 @@ movieImages = {};
 % --- SET FIRST FRAME (irrespective of movieMode)
 images{1} = preMovie_img;
 
-% --- RETRIEVE INFORMATION from condArray needed to identify curve image filenames
-% stimuli are pregenerated pngs
-% need 4 pieces of information to identify the correct image file for this
-% condition
-% 1. curve type (comb(ined), smooth, rough)
-% 2. block number  (saved in TrialRecord)
-% 3. curve state (1 or 2, L or R response required)
-% 4. sample number (specific curve along manifold)
-% example filename:
-% 'smooth_b3_c1_s2.png'
+% --- RETRIEVE REWARD STATE from condArray
+s = condArray(c).state;
 
-% --- RETRIEVE REWARD STATE from condArray, needed for curve number
-rs = condArray(c).movieRewState;
+% --- RETRIEVE MOVIE PARAMS FROM CONDARRAY
+ct = condArray(c).curveMovieType;
+cmn = condArray(c).curveMovieNoise;
+cmo = condArray(c).curveMovieOrder;
+cmg = condArray(c).curveMovieGeometry;
+b = condArray(c).blockNum;
 
-% --- RETRIEVE CURVE TYPE from condArray
-ct = condArray(c).curveType;
 
-% --- BUILD IMAGE STACK specifying filenames, xy position, codes, times
-for cs = 1 : params.nCurveSamples
+% --- PICK A RANDOM START POINT IN THE CURVE GRID 
+% offset search range so enough values from this start point to fill the
+% movie
+startMain = randi(params.n_tvals_main - params.nCurvesPerMovie) + params.nCurvesPerMovie;
 
-    % --- FILENAME FOR THIS CURVE PNG FILE
-    % continuous sequence of curve images, no blanks in between
-    fn = strcat(ct, '_b', num2str(bn), '_c', num2str(rs), '_s', num2str(cs), '.png');
+% --- BUILD SEQ OF CURVE IMG FILE INDICES TO CONTROL MOVIE
+switch params.blockParam
+
+    case 'curveMovieType'
+
+        if strcmp(condArray(c).curveMovieType, 'smooth')
+            % set sequeunce of curve images along main manifold
+            mainSeq = (1:params.nCurvesPerMovie) + startMain - 1;
+        elseif strcmp(condArray(c).curveMovieType, 'rough')
+            mainSeq = randperm(params.nCurvesPerMovie) + startMain - 1;
+        else
+            error('unknown curveMovieType in generateCurveMovie');
+        end
+
+        % --- select n random sequence of integers in range for
+        % n_tvals_ortho, with n = length(mainSeq)
+        orthoSeq = [];
+        for o = 1 : length(mainSeq)
+            thisOrtho = randi(params.n_tvals_ortho);
+            orthoSeq = [orthoSeq thisOrtho];
+        end
+
+        bob = 1;
+
+
+    case 'curveMovieNoise'
+
+
+    case 'curveMovieOrder'
+
+
+    case 'curveMovieGeometry'
+
+
+end
+
+
+% --- add noise (specify location of curves along ortho manifold)
+
+for cs = 1 : length(mainSeq)
+
+    % --- build filename using mainSeq and orthoSeq info
+    thisMain = mainSeq(cs);
+    thisOrtho = orthoSeq(cs);
+    fn = strcat('b', num2str(b), '_s', num2str(s), '_ec', num2str(thisMain), '_oc', num2str(thisOrtho),'.png');
     images{cs} =  {{fn}, [0 0], times.curve_frames, codes.curve_on};
 
-end  % next p
+end
+
 
 % --- CONCATENATE VARIABLE FRAMES ARRAY INTO movieImages
 movieImages = {};
 for f = 1 : size(images, 2)
     thisImg = images{1, f};
-    movieImages = [movieImages; thisImg]; 
+    movieImages = [movieImages; thisImg];
 end
 
 bob = 'finished';

@@ -96,6 +96,8 @@ switch params.stimulusType
         params.D = curveParams.D;
         params.K = curveParams.K;
         params.n_knot_points = curveParams.n_knot_points;
+        params.encurve_t = curveParams.encurve_t;
+        params.orthocurve_t = curveParams.orthocurve_t;
 
         for b = 1 : params.numBlocks
             for s = 1 : params.numStates

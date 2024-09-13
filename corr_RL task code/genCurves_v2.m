@@ -146,14 +146,14 @@ for b = 1:curveParams.nBlocks
 
         % --- set range of t values specifying weights with which endcurve
         % and orthocurve are summed to produce individual curves
-        endcurve_t = interp1([1, curveParams.n_tvals_main], [main_lowerT, main_upperT], 1:curveParams.n_tvals_main);
-        orthocurve_t = interp1([1, curveParams.n_tvals_ortho], [ortho_lowerT, ortho_upperT], 1:curveParams.n_tvals_ortho);
+        curveParams.encurve_t = interp1([1, curveParams.n_tvals_main], [main_lowerT, main_upperT], 1:curveParams.n_tvals_main);
+        curveParams.orthocurve_t = interp1([1, curveParams.n_tvals_ortho], [ortho_lowerT, ortho_upperT], 1:curveParams.n_tvals_ortho);
 
         % build a 2D matrix of curves defined by endcurve and orthocurve t
         % values
-        for ec = 1 : length(endcurve_t)
-            for oc = 1 : length(orthocurve_t)
-                state_curves(ec, oc, :, :) = curve_of_origin + (endcurve_t(ec) * endcurve) + (orthocurve_t(oc) * orthocurve);
+        for ec = 1 : length(curveParams.encurve_t)
+            for oc = 1 : length(curveParams.orthocurve_t)
+                state_curves(ec, oc, :, :) = curve_of_origin + (curveParams.encurve_t(ec) * endcurve) + (curveParams.orthocurve_t(oc) * orthocurve);
             end
         end
 
@@ -164,9 +164,9 @@ for b = 1:curveParams.nBlocks
 
             figure;
 
-            for ec = 1: length(endcurve_t)
-                for oc = 1: length(orthocurve_t)
-                    subplot(length(orthocurve_t), length(endcurve_t), (ec-1)*length(orthocurve_t)+oc);
+            for ec = 1: length(curveParams.encurve_t)
+                for oc = 1: length(curveParams.orthocurve_t)
+                    subplot(length(curveParams.orthocurve_t), length(curveParams.encurve_t), (ec-1)*length(curveParams.orthocurve_t)+oc);
                     x = state_curves(ec,oc,:,1);
                     x = squeeze(x);
                     y = state_curves(ec,oc,:,2);
@@ -185,8 +185,8 @@ for b = 1:curveParams.nBlocks
 
         if curveParams.save_png
 
-            for ec = 1: length(endcurve_t)
-                for oc = 1: length(orthocurve_t)
+            for ec = 1: length(curveParams.encurve_t)
+                for oc = 1: length(curveParams.orthocurve_t)
                     f = figure;
                     x = state_curves(ec,oc,:,1);
                     x = squeeze(x);
