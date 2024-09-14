@@ -75,7 +75,7 @@ b = condArray(c).blockNum;
 % --- PICK A RANDOM START POINT IN THE CURVE GRID 
 % offset search range so enough values from this start point to fill the
 % movie
-startMain = randi(params.n_tvals_main - params.nCurvesPerMovie) + params.nCurvesPerMovie;
+startMain = randi(params.n_tvals_main - params.nCurvesPerMovie);
 
 % --- BUILD SEQ OF CURVE IMG FILE INDICES TO CONTROL MOVIE
 switch params.blockParam
@@ -84,9 +84,9 @@ switch params.blockParam
 
         if strcmp(condArray(c).curveMovieType, 'smooth')
             % set sequeunce of curve images along main manifold
-            mainSeq = (1:params.nCurvesPerMovie) + startMain - 1;
+            mainSeq = (1:params.nCurvesPerMovie) + startMain;
         elseif strcmp(condArray(c).curveMovieType, 'rough')
-            mainSeq = randperm(params.nCurvesPerMovie) + startMain - 1;
+            mainSeq = randperm(params.nCurvesPerMovie) + startMain;
         else
             error('unknown curveMovieType in generateCurveMovie');
         end
