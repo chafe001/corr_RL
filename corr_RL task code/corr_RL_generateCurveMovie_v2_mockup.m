@@ -23,14 +23,13 @@ function [movieImages] = corr_RL_generateCurveMovie_v2_mockup()
 % --- if real fx, uncomment the following  lines
 % condArray = TrialRecord.User.condArray;
 % c = TrialRecord.CurrentCondition;
-% bn = TrialRecord.CurrentBlock;
+% b = TrialRecord.CurrentBlock;
 % params = TrialRecord.User.params;
 
 % --- if mockup, uncomment the following  lines
 [condArray, params] = corr_RL_buildTrials_v3();
-c = 9; % hard code condition number
+c = 14; % hard code condition number
 b = 2; % hard code block number
-
 
 times = corr_RL_setTimes_v3();
 codes = corr_RL_setCurveCodes_v3();
@@ -68,7 +67,6 @@ s = condArray(c).state;
 % --- RETRIEVE MOVIE PARAMS FROM CONDARRAY
 ct = condArray(c).curveMovieType;
 b = condArray(c).blockNum;
-
 
 % --- SELECT A LINEAR SEQUENCE OF CURVES at various orientations to the
 % main and orthogonal manifolds
@@ -121,6 +119,8 @@ firstMain = randi([startMain endMain]);
 firstOrtho = randi([startOrtho endOrtho]);
 
 
+
+
 % --- SET DIRECTION WITHIN CURVE GRID that movie will animate over
 switch condArray(c).curveMovieOrientation
 
@@ -156,7 +156,6 @@ switch condArray(c).curveMovieOrientation
                 deltaOrtho = 1;
         end
 
-
     case 'diagonal'
         % set slope of diagonal line based on which quadrant of grid we are
         % starting from
@@ -190,57 +189,14 @@ for f = 1 : params.nCurvesPerMovie
     orthoSeq = [orthoSeq nextOrtho];
 end
 
+% --- IF ROUGH MOVIE, RANDOMIZE ORDER
+if strcmp(condArray(c).curveMovieType, 'rough')
+    rndOrder = randperm(params.nCurvesPerMovie);
+    mainSeq = mainSeq(rndOrder);
+    orthoSeq = orthoSeq(rndOrder);
+end
 
-
-% --- BUILD SEQ OF CURVE IMG FILE INDICES TO CONTROL MOVIE
-% switch params.blockParam
-% 
-%     case 'curveMovieType'
-% 
-%         if strcmp(condArray(c).curveMovieType, 'smooth')
-%             % set sequeunce of curve images along main manifold
-% 
-%             switch condArray(c).curveMovieDir
-%                 case 1
-%                     mainSeq = (1:params.nCurvesPerMovie) + startMain;
-%                 case 2
-%                     mainSeq = (params.nCurvesPerMovie:-1:1) + startMain;
-%             end
-% 
-%         elseif strcmp(condArray(c).curveMovieType, 'rough')
-%             mainSeq = randperm(params.nCurvesPerMovie) + startMain;
-%         else
-%             error('unknown curveMovieType in generateCurveMovie');
-%         end
-% 
-%         % --- select single random noise level for all curves in this
-%         % movie, curve should not jump around
-%         switch params.curveMovieNoiseMode
-% 
-%             case 'fixed'
-%                 thisOrtho = randi(params.n_tvals_ortho);
-%                 orthoSeq = zeros(1, length(mainSeq)) + thisOrtho;
-%             case 'dynamic'
-% 
-%             case 'random'
-%                 % --- select n random sequence of integers in range for
-%                 % n_tvals_ortho, with n = length(mainSeq)
-%                 orthoSeq = [];
-%                 for o = 1 : length(mainSeq)
-%                     thisOrtho = randi(params.n_tvals_ortho);
-%                     orthoSeq = [orthoSeq thisOrtho];
-%                 end
-%         end
-% 
-%         bob = 1;
-% 
-% 
-% 
-% end
-
-
-% --- add noise (specify location of curves along ortho manifold)
-
+% --- BUILD MOVIE IMAGES
 for cs = 1 : length(mainSeq)
 
     % --- build filename using mainSeq and orthoSeq info
@@ -250,7 +206,6 @@ for cs = 1 : length(mainSeq)
     images{cs} =  {{fn}, [0 0], times.curve_frames, codes.curve_on};
 
 end
-
 
 % --- CONCATENATE VARIABLE FRAMES ARRAY INTO movieImages
 movieImages = {};

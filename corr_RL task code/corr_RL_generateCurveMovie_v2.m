@@ -28,7 +28,7 @@ params = TrialRecord.User.params;
 
 % --- if mockup, uncomment the following  lines
 % [condArray, params] = corr_RL_buildTrials_v3();
-% c = 9; % hard code condition number
+% c = 14; % hard code condition number
 % b = 2; % hard code block number
 
 times = corr_RL_setTimes_v3();
@@ -119,6 +119,8 @@ firstMain = randi([startMain endMain]);
 firstOrtho = randi([startOrtho endOrtho]);
 
 
+
+
 % --- SET DIRECTION WITHIN CURVE GRID that movie will animate over
 switch condArray(c).curveMovieOrientation
 
@@ -154,7 +156,6 @@ switch condArray(c).curveMovieOrientation
                 deltaOrtho = 1;
         end
 
-
     case 'diagonal'
         % set slope of diagonal line based on which quadrant of grid we are
         % starting from
@@ -188,9 +189,14 @@ for f = 1 : params.nCurvesPerMovie
     orthoSeq = [orthoSeq nextOrtho];
 end
 
+% --- IF ROUGH MOVIE, RANDOMIZE ORDER
+if strcmp(condArray(c).curveMovieType, 'rough')
+    rndOrder = randperm(params.nCurvesPerMovie);
+    mainSeq = mainSeq(rndOrder);
+    orthoSeq = orthoSeq(rndOrder);
+end
 
-% --- add noise (specify location of curves along ortho manifold)
-
+% --- BUILD MOVIE IMAGES
 for cs = 1 : length(mainSeq)
 
     % --- build filename using mainSeq and orthoSeq info
@@ -200,7 +206,6 @@ for cs = 1 : length(mainSeq)
     images{cs} =  {{fn}, [0 0], times.curve_frames, codes.curve_on};
 
 end
-
 
 % --- CONCATENATE VARIABLE FRAMES ARRAY INTO movieImages
 movieImages = {};
