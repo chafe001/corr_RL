@@ -91,13 +91,18 @@ switch params.blockParam
             error('unknown curveMovieType in generateCurveMovie');
         end
 
+        % --- select single random noise level for all curves in this
+        % movie, curve should not jump around
+        thisOrtho = randi(params.n_tvals_ortho);
+        orthoSeq = zeros(1, length(mainSeq)) + thisOrtho;
+
         % --- select n random sequence of integers in range for
         % n_tvals_ortho, with n = length(mainSeq)
-        orthoSeq = [];
-        for o = 1 : length(mainSeq)
-            thisOrtho = randi(params.n_tvals_ortho);
-            orthoSeq = [orthoSeq thisOrtho];
-        end
+        % orthoSeq = [];
+        % for o = 1 : length(mainSeq)
+        %     thisOrtho = randi(params.n_tvals_ortho);
+        %     orthoSeq = [orthoSeq thisOrtho];
+        % end
 
         bob = 1;
 
