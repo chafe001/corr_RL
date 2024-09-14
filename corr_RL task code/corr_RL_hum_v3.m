@@ -442,7 +442,7 @@ abortTrial = false;
 % color unchanged.
 
 % --- PRINT TRIAL AND CUE MOVIE INFO TO USER SCREEN
-switch TrialRecord.User.condArray(c).movieRewState
+switch TrialRecord.User.condArray(c).state
     case 1
         keyStr = 'Correct Key: LEFT';
     case 2
@@ -687,7 +687,7 @@ if choices.madeValidResp
     if choices.responseKey == 1
         choices.respStr = 'KEY HIT: LEFT';
         % determine if correct (high value) choice was selected
-        if TrialRecord.User.condArray(c).movieRewState == 1
+        if TrialRecord.User.condArray(c).state == 1
             choices.choseCorrect = true;
             if choices.randNum_rew < TrialRecord.User.params.highRewProb  % --- WIN, HIGH PROB ---
                 choices.rewardTrial = true;
@@ -700,7 +700,7 @@ if choices.madeValidResp
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  LOSS, SELECTED HIGH PROB';
             end
-        elseif TrialRecord.User.condArray(c).movieRewState == 2
+        elseif TrialRecord.User.condArray(c).state == 2
             choices.choseCorrect = false;
             if choices.randNum_rew < TrialRecord.User.params.lowRewProb  % --- WIN, LOW PROB ---
                 choices.rewardTrial = true;
@@ -718,7 +718,7 @@ if choices.madeValidResp
     elseif choices.responseKey == 2
         choices.respStr = 'KEY HIT: RIGHT';
         % determine if correct (high value) choice was selected
-        if TrialRecord.User.condArray(c).movieRewState == 1
+        if TrialRecord.User.condArray(c).state == 1
             choices.choseCorrect = false;
             if choices.randNum_rew < TrialRecord.User.params.lowRewProb  % --- WIN, LOW PROB ---
                 choices.rewardTrial = true;
@@ -731,7 +731,7 @@ if choices.madeValidResp
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  LOSS, SELECTED LOW PROB';
             end
-        elseif TrialRecord.User.condArray(c).movieRewState == 2
+        elseif TrialRecord.User.condArray(c).state == 2
             choices.choseCorrect = true;
             if choices.randNum_rew < TrialRecord.User.params.highRewProb  % --- WIN, HIGH PROB ---
                 choices.rewardTrial = true;

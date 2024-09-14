@@ -238,7 +238,7 @@ function fn = buildFilename(curveParams, b, s, ec, oc);
 blockstr = strcat('b', num2str(b), '_');
 statestr = strcat('s', num2str(s), '_');
 mainstr = strcat('ec_', num2str(ec), '_');
-orthostr = strcat('oc_', num2str(oc), '_');
+orthostr = strcat('oc_', num2str(oc), '.png');
 
 fn = strcat(blockstr, statestr, mainstr, orthostr);
 

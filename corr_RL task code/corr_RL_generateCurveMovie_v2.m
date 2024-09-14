@@ -23,13 +23,14 @@ function [movieImages] = corr_RL_generateCurveMovie_v2(TrialRecord)
 % --- if real fx, uncomment the following  lines
 condArray = TrialRecord.User.condArray;
 c = TrialRecord.CurrentCondition;
-params = corr_RL_setParams_v3();
 bn = TrialRecord.CurrentBlock;
+params = TrialRecord.User.params;
 
 % --- if mockup, uncomment the following  lines
 % [condArray, params] = corr_RL_buildTrials_v3();
 % c = 1; % hard code condition number
 % b = 2; % hard code block number
+% params = corr_RL_setParams_v3();
 
 times = corr_RL_setTimes_v3();
 codes = corr_RL_setCurveCodes_v3();
@@ -121,7 +122,7 @@ for cs = 1 : length(mainSeq)
     % --- build filename using mainSeq and orthoSeq info
     thisMain = mainSeq(cs);
     thisOrtho = orthoSeq(cs);
-    fn = strcat('b', num2str(b), '_s', num2str(s), '_ec', num2str(thisMain), '_oc', num2str(thisOrtho),'.png');
+    fn = strcat('b', num2str(b), '_s', num2str(s), '_ec_', num2str(thisMain), '_oc_', num2str(thisOrtho),'.png');
     images{cs} =  {{fn}, [0 0], times.curve_frames, codes.curve_on};
 
 end
