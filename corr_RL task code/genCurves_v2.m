@@ -135,13 +135,13 @@ for b = 1:curveParams.nBlocks
             case 1
                 main_lowerT = -1;
                 main_upperT = 0;
-                ortho_lowerT = -1;
-                ortho_upperT = 1;
+                ortho_lowerT = -.1;
+                ortho_upperT = .1;
             case 2
                 main_lowerT = 0;
                 main_upperT = 1;
-                ortho_lowerT = -1;
-                ortho_upperT = 1;
+                ortho_lowerT = -.1;
+                ortho_upperT = .1;
         end
 
         % --- set range of t values specifying weights with which endcurve

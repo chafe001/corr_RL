@@ -77,7 +77,7 @@ switch COMPUTER
         % Movie duration (10 pairs) = 1590 ms
 
         % times for curve stimuli
-        times.curve_frames = 20;
+        times.curve_frames = 10;
 
 
         times.preMovie_frames = 20;  % fix targ and choices
