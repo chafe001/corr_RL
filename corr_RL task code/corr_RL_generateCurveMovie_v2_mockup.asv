@@ -115,15 +115,46 @@ switch q
         endOrtho = startBox;
 end
 
-bob = 1;
 
+% --- SELECT RANDOM START POINT WITHIN STARTBOX
+firstMain = randi([startMain endMain]);
+firstOrtho = randi([startOrtho endOrtho]);
+
+
+% --- SET DIRECTION WITHIN CURVE GRID that movie will animate over
 switch condArray(c).cueMovieOrientation
 
     case 'horizontal'
-
-
+        switch q
+            case 1  % upper left, line
+                deltaMain = 1;
+                deltaOrtho = 0;
+            case 2
+                deltaMain = -1;
+                deltaOrtho = 0;
+            case 3
+                deltaMain = -1;
+                deltaOrtho = 0;
+            case 4
+                deltaMain = 1;
+                deltaOrtho = 0;
+        end
 
     case 'vertical'
+        switch q
+            case 1  % upper left, line
+                deltaMain = 0;
+                deltaOrtho = -1;
+            case 2
+                deltaMain = 0;
+                deltaOrtho = -1;
+            case 3
+                deltaMain = 0;
+                deltaOrtho = 1;
+            case 4
+                deltaMain = 0;
+                deltaOrtho = 1;
+        end
 
 
     case 'diagonal'
@@ -131,27 +162,41 @@ switch condArray(c).cueMovieOrientation
         % starting from
         switch q
             case 1  % upper left, line
-                deltaX = 1;
-                deltaY = -1;
-
+                deltaMain = 1;
+                deltaOrtho = -1;
             case 2
-                deltaX = -1;
-                deltaY = -1;
-
+                deltaMain = -1;
+                deltaOrtho = -1;
             case 3
-                deltaX = -1;
-                deltaY = 1;
-
+                deltaMain = -1;
+                deltaOrtho = 1;
             case 4
-                deltaX = 1;
-                deltaY = 1;
+                deltaMain = 1;
+                deltaOrtho = 1;
         end
 
 end
 
+% --- BUILD VECTOR OF INDICES INTO CURVE GRID along main and ortho
+% dimensions
 
-startMain = randi(params.n_tvals_main - params.nCurvesPerMovie);
-startOrtho = randi(params.n_tvals_ortho)
+mainSeq = [];
+orthoSeq = [];
+
+for f = 1 : params.nCurvesPerMovie
+    nextMain = firstmain + ((f-1) * deltaMain);
+    mainSeq = [mainSeq nextMain];
+    nextOrtho = firstOrtho + ((f-1) * deltaOrtho);
+    orthoSeq = [orthoSeq nextOrtho];
+    
+
+
+
+
+
+end
+
+
 
 
 % --- BUILD SEQ OF CURVE IMG FILE INDICES TO CONTROL MOVIE

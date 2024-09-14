@@ -28,7 +28,7 @@ function [movieImages] = corr_RL_generateCurveMovie_v2_mockup()
 
 % --- if mockup, uncomment the following  lines
 [condArray, params] = corr_RL_buildTrials_v3();
-c = 1; % hard code condition number
+c = 9; % hard code condition number
 b = 2; % hard code block number
 
 
@@ -115,15 +115,46 @@ switch q
         endOrtho = startBox;
 end
 
-bob = 1;
 
-switch condArray(c).cueMovieOrientation
+% --- SELECT RANDOM START POINT WITHIN STARTBOX
+firstMain = randi([startMain endMain]);
+firstOrtho = randi([startOrtho endOrtho]);
+
+
+% --- SET DIRECTION WITHIN CURVE GRID that movie will animate over
+switch condArray(c).curveMovieOrientation
 
     case 'horizontal'
-
-
+        switch q
+            case 1  % upper left, line
+                deltaMain = 1;
+                deltaOrtho = 0;
+            case 2
+                deltaMain = -1;
+                deltaOrtho = 0;
+            case 3
+                deltaMain = -1;
+                deltaOrtho = 0;
+            case 4
+                deltaMain = 1;
+                deltaOrtho = 0;
+        end
 
     case 'vertical'
+        switch q
+            case 1  % upper left, line
+                deltaMain = 0;
+                deltaOrtho = -1;
+            case 2
+                deltaMain = 0;
+                deltaOrtho = -1;
+            case 3
+                deltaMain = 0;
+                deltaOrtho = 1;
+            case 4
+                deltaMain = 0;
+                deltaOrtho = 1;
+        end
 
 
     case 'diagonal'
@@ -131,74 +162,81 @@ switch condArray(c).cueMovieOrientation
         % starting from
         switch q
             case 1  % upper left, line
-                deltaX = 1;
-                deltaY = -1;
-
+                deltaMain = 1;
+                deltaOrtho = -1;
             case 2
-                deltaX = -1;
-                deltaY = -1;
-
+                deltaMain = -1;
+                deltaOrtho = -1;
             case 3
-                deltaX = -1;
-                deltaY = 1;
-
+                deltaMain = -1;
+                deltaOrtho = 1;
             case 4
-                deltaX = 1;
-                deltaY = 1;
+                deltaMain = 1;
+                deltaOrtho = 1;
         end
 
 end
 
+% --- BUILD VECTOR OF INDICES INTO CURVE GRID along main and ortho
+% dimensions
 
-startMain = randi(params.n_tvals_main - params.nCurvesPerMovie);
-startOrtho = randi(params.n_tvals_ortho)
+mainSeq = [];
+orthoSeq = [];
+
+for f = 1 : params.nCurvesPerMovie
+    nextMain = firstMain + ((f-1) * deltaMain);
+    mainSeq = [mainSeq nextMain];
+    nextOrtho = firstOrtho + ((f-1) * deltaOrtho);
+    orthoSeq = [orthoSeq nextOrtho];
+end
+
 
 
 % --- BUILD SEQ OF CURVE IMG FILE INDICES TO CONTROL MOVIE
-switch params.blockParam
-
-    case 'curveMovieType'
-
-        if strcmp(condArray(c).curveMovieType, 'smooth')
-            % set sequeunce of curve images along main manifold
-
-            switch condArray(c).curveMovieDir
-                case 1
-                    mainSeq = (1:params.nCurvesPerMovie) + startMain;
-                case 2
-                    mainSeq = (params.nCurvesPerMovie:-1:1) + startMain;
-            end
-
-        elseif strcmp(condArray(c).curveMovieType, 'rough')
-            mainSeq = randperm(params.nCurvesPerMovie) + startMain;
-        else
-            error('unknown curveMovieType in generateCurveMovie');
-        end
-
-        % --- select single random noise level for all curves in this
-        % movie, curve should not jump around
-        switch params.curveMovieNoiseMode
-
-            case 'fixed'
-                thisOrtho = randi(params.n_tvals_ortho);
-                orthoSeq = zeros(1, length(mainSeq)) + thisOrtho;
-            case 'dynamic'
-
-            case 'random'
-                % --- select n random sequence of integers in range for
-                % n_tvals_ortho, with n = length(mainSeq)
-                orthoSeq = [];
-                for o = 1 : length(mainSeq)
-                    thisOrtho = randi(params.n_tvals_ortho);
-                    orthoSeq = [orthoSeq thisOrtho];
-                end
-        end
-
-        bob = 1;
-
-
-
-end
+% switch params.blockParam
+% 
+%     case 'curveMovieType'
+% 
+%         if strcmp(condArray(c).curveMovieType, 'smooth')
+%             % set sequeunce of curve images along main manifold
+% 
+%             switch condArray(c).curveMovieDir
+%                 case 1
+%                     mainSeq = (1:params.nCurvesPerMovie) + startMain;
+%                 case 2
+%                     mainSeq = (params.nCurvesPerMovie:-1:1) + startMain;
+%             end
+% 
+%         elseif strcmp(condArray(c).curveMovieType, 'rough')
+%             mainSeq = randperm(params.nCurvesPerMovie) + startMain;
+%         else
+%             error('unknown curveMovieType in generateCurveMovie');
+%         end
+% 
+%         % --- select single random noise level for all curves in this
+%         % movie, curve should not jump around
+%         switch params.curveMovieNoiseMode
+% 
+%             case 'fixed'
+%                 thisOrtho = randi(params.n_tvals_ortho);
+%                 orthoSeq = zeros(1, length(mainSeq)) + thisOrtho;
+%             case 'dynamic'
+% 
+%             case 'random'
+%                 % --- select n random sequence of integers in range for
+%                 % n_tvals_ortho, with n = length(mainSeq)
+%                 orthoSeq = [];
+%                 for o = 1 : length(mainSeq)
+%                     thisOrtho = randi(params.n_tvals_ortho);
+%                     orthoSeq = [orthoSeq thisOrtho];
+%                 end
+%         end
+% 
+%         bob = 1;
+% 
+% 
+% 
+% end
 
 
 % --- add noise (specify location of curves along ortho manifold)

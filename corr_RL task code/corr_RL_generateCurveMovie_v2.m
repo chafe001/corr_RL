@@ -23,14 +23,13 @@ function [movieImages] = corr_RL_generateCurveMovie_v2(TrialRecord)
 % --- if real fx, uncomment the following  lines
 condArray = TrialRecord.User.condArray;
 c = TrialRecord.CurrentCondition;
-bn = TrialRecord.CurrentBlock;
+b = TrialRecord.CurrentBlock;
 params = TrialRecord.User.params;
 
 % --- if mockup, uncomment the following  lines
 % [condArray, params] = corr_RL_buildTrials_v3();
-% c = 1; % hard code condition number
+% c = 9; % hard code condition number
 % b = 2; % hard code block number
-% params = corr_RL_setParams_v3();
 
 times = corr_RL_setTimes_v3();
 codes = corr_RL_setCurveCodes_v3();
@@ -67,17 +66,17 @@ s = condArray(c).state;
 
 % --- RETRIEVE MOVIE PARAMS FROM CONDARRAY
 ct = condArray(c).curveMovieType;
-cmn = condArray(c).curveMovieNoise;
-cmo = condArray(c).curveMovieOrder;
-cmg = condArray(c).curveMovieGeometry;
 b = condArray(c).blockNum;
-
 
 % --- SELECT A LINEAR SEQUENCE OF CURVES at various orientations to the
 % main and orthogonal manifolds
 
 % this assumes a square matrix of curves, main = ortho levels
-startBox = params.n_tvals_main - params.nCurvesPerMovie;
+% startBox is the dimension per side of of the quadrant of locations within
+% the curve grid from which a diagonal vector of length nCurvesPerMovie can
+% be drawn diagonally away from the quadrant without running out of points
+% in the curve grid
+startBox = params.n_tvals_main - params.nCurvesPerMovie + 1;
 
 % quadrants at 4 corners of grid contain valid start points, that will
 % allow vectors of nCurvesPerMovie without, that are either horizontal,
@@ -86,30 +85,74 @@ startBox = params.n_tvals_main - params.nCurvesPerMovie;
 % --- 1. Pick a quadrant at random
 q = randi(4);
 
-% --- pick random position within startBox
+% --- set ranges of t_val indices for startBox in this quadrant
 switch q
 
-    case 1
+    case 1  % upper left
         startMain = 1;
-        endMain = params.n_tvals_main - params.nCurvesPerMovie + 1;
-        startOrtho = params.n_tvals_ortho - params.nCurvesPerMovie + 1;
-        endOrtho = 
-        
+        endMain = startBox;
+        startOrtho = params.n_tvals_ortho - startBox + 1;
+        endOrtho = params.n_tvals_ortho;
 
-    case 2
+    case 2  % upper right
+        startMain = params.n_tvals_main - startBox + 1;
+        endMain = params.n_tvals_main;
+        startOrtho = params.n_tvals_ortho - startBox + 1;
+        endOrtho = params.n_tvals_ortho;
 
-    case 3
+    case 3  % lower left
+        startMain = params.n_tvals_main - startBox + 1;
+        endMain = params.n_tvals_main;
+        startOrtho = 1;
+        endOrtho = startBox;
 
-    case 4
+    case 4  % lower right
+        startMain = 1;
+        endMain =  startBox;
+        startOrtho = 1;
+        endOrtho = startBox;
 end
 
-switch condArray(c).cueMovieOrientation
+
+% --- SELECT RANDOM START POINT WITHIN STARTBOX
+firstMain = randi([startMain endMain]);
+firstOrtho = randi([startOrtho endOrtho]);
+
+
+% --- SET DIRECTION WITHIN CURVE GRID that movie will animate over
+switch condArray(c).curveMovieOrientation
 
     case 'horizontal'
-
-
+        switch q
+            case 1  % upper left, line
+                deltaMain = 1;
+                deltaOrtho = 0;
+            case 2
+                deltaMain = -1;
+                deltaOrtho = 0;
+            case 3
+                deltaMain = -1;
+                deltaOrtho = 0;
+            case 4
+                deltaMain = 1;
+                deltaOrtho = 0;
+        end
 
     case 'vertical'
+        switch q
+            case 1  % upper left, line
+                deltaMain = 0;
+                deltaOrtho = -1;
+            case 2
+                deltaMain = 0;
+                deltaOrtho = -1;
+            case 3
+                deltaMain = 0;
+                deltaOrtho = 1;
+            case 4
+                deltaMain = 0;
+                deltaOrtho = 1;
+        end
 
 
     case 'diagonal'
@@ -117,73 +160,32 @@ switch condArray(c).cueMovieOrientation
         % starting from
         switch q
             case 1  % upper left, line
-                deltaX = 1;
-                deltaY = -1;
-
+                deltaMain = 1;
+                deltaOrtho = -1;
             case 2
-                deltaX = -1;
-                deltaY = -1;
-
+                deltaMain = -1;
+                deltaOrtho = -1;
             case 3
-                deltaX = -1;
-                deltaY = 1;
-
+                deltaMain = -1;
+                deltaOrtho = 1;
             case 4
-                deltaX = 1;
-                deltaY = 1;
+                deltaMain = 1;
+                deltaOrtho = 1;
         end
 
 end
 
+% --- BUILD VECTOR OF INDICES INTO CURVE GRID along main and ortho
+% dimensions
 
-startMain = randi(params.n_tvals_main - params.nCurvesPerMovie);
-startOrtho = randi(params.n_tvals_ortho)
+mainSeq = [];
+orthoSeq = [];
 
-
-% --- BUILD SEQ OF CURVE IMG FILE INDICES TO CONTROL MOVIE
-switch params.blockParam
-
-    case 'curveMovieType'
-
-        if strcmp(condArray(c).curveMovieType, 'smooth')
-            % set sequeunce of curve images along main manifold
-
-            switch condArray(c).curveMovieDir
-                case 1
-                    mainSeq = (1:params.nCurvesPerMovie) + startMain;
-                case 2
-                    mainSeq = (params.nCurvesPerMovie:-1:1) + startMain;
-            end
-
-        elseif strcmp(condArray(c).curveMovieType, 'rough')
-            mainSeq = randperm(params.nCurvesPerMovie) + startMain;
-        else
-            error('unknown curveMovieType in generateCurveMovie');
-        end
-
-        % --- select single random noise level for all curves in this
-        % movie, curve should not jump around
-        switch params.curveMovieNoiseMode
-
-            case 'fixed'
-                thisOrtho = randi(params.n_tvals_ortho);
-                orthoSeq = zeros(1, length(mainSeq)) + thisOrtho;
-            case 'dynamic'
-
-            case 'random'
-                % --- select n random sequence of integers in range for
-                % n_tvals_ortho, with n = length(mainSeq)
-                orthoSeq = [];
-                for o = 1 : length(mainSeq)
-                    thisOrtho = randi(params.n_tvals_ortho);
-                    orthoSeq = [orthoSeq thisOrtho];
-                end
-        end
-
-        bob = 1;
-
-
-
+for f = 1 : params.nCurvesPerMovie
+    nextMain = firstMain + ((f-1) * deltaMain);
+    mainSeq = [mainSeq nextMain];
+    nextOrtho = firstOrtho + ((f-1) * deltaOrtho);
+    orthoSeq = [orthoSeq nextOrtho];
 end
 
 
