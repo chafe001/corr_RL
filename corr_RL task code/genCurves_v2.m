@@ -71,8 +71,8 @@ function [] = genCurves_v2()
 curveParams.nBlocks = 2;
 curveParams.nStates = 2;
 
-curveParams.n_tvals_main = 20;
-curveParams.n_tvals_ortho = 7;
+curveParams.n_tvals_main = 12;
+curveParams.n_tvals_ortho = 12;
 
 curveParams.size_of_knot_grid = 10;
 curveParams.low = -1;
@@ -135,13 +135,13 @@ for b = 1:curveParams.nBlocks
             case 1
                 main_lowerT = -1;
                 main_upperT = 0;
-                ortho_lowerT = -.1;
-                ortho_upperT = .1;
+                ortho_lowerT = -0.5;
+                ortho_upperT = 0.5;
             case 2
                 main_lowerT = 0;
                 main_upperT = 1;
-                ortho_lowerT = -.1;
-                ortho_upperT = .1;
+                ortho_lowerT = -0.5;
+                ortho_upperT = 0.5;
         end
 
         % --- set range of t values specifying weights with which endcurve

@@ -102,25 +102,31 @@ switch params.stimulusType
         for b = 1 : params.numBlocks
             for s = 1 : params.numStates
                 for d = 1 : 2  % movie directions, forward and back
-                    condArrayTemp(b, s, d).blockNum = b;
-                    condArrayTemp(b, s, d).state = s;
-                    condArrayTemp(b, s, d).curveMovieDir = d;
+                    for o = 1 : 3  % movie orientations, horz, vert, diag
+                        condArrayTemp(b, s, d, o).blockNum = b;
+                        condArrayTemp(b, s, d, o).state = s;
+                        condArrayTemp(b, s, d, o).curveMovieDir = d;
 
-                    % vary movie params by block to see which if
-                    % any influence learning
-                    if mod(b, 2) == 1 % odd block
-                        condArrayTemp(b, s, d).curveMovieType = 'smooth';
-                        condArrayTemp(b, s, d).curveMovieNoise = 'low';
-                        condArrayTemp(b, s, d).curveMovieOrder = 'forward';
-                        condArrayTemp(b, s, d).curveMovieGeometry = 'oneD';
-                    else  % even block
-                        condArrayTemp(b, s, d).curveMovieType = 'rough';
-                        condArrayTemp(b, s, d).curveMovieNoise = 'high';
-                        condArrayTemp(b, s, d).curveMovieOrder = 'forward_reverse';
-                        condArrayTemp(b, s, d).curveMovieGeometry = 'twoD';
+                        switch o
+                            case 1
+                                 condArrayTemp(b, s, d, o).curveMovieOrientation = 'horizontal';
+                            case 2
+                                condArrayTemp(b, s, d, o).curveMovieOrientation = 'vertical';
+                            case 3
+                                condArrayTemp(b, s, d, o).curveMovieOrientation = 'diagonal';
+                        end
+
+                        % vary movie params by block to see which if
+                        % any influence learning
+                        if mod(b, 2) == 1 % odd block
+                            condArrayTemp(b, s, d, o).curveMovieType = 'smooth';
+                        else  % even block
+                            condArrayTemp(b, s, d, o).curveMovieType = 'rough';
+                        end
+
                     end
 
-                end
+                end % for d
             end % for s
         end % for b
 
@@ -135,10 +141,12 @@ condNo = 1;
 for b = 1 : params.numBlocks
     for s = 1 : params.numStates
         for d = 1 : 2
-            thisCond = condArrayTemp(b, s, d);
-            thisCond.condNo = condNo;
-            condNo = condNo + 1;
-            condArray = [condArray; thisCond];
+            for o = 1 : 3
+                thisCond = condArrayTemp(b, s, d, o);
+                thisCond.condNo = condNo;
+                condNo = condNo + 1;
+                condArray = [condArray; thisCond];
+            end
         end
     end
 end

@@ -73,10 +73,70 @@ cmg = condArray(c).curveMovieGeometry;
 b = condArray(c).blockNum;
 
 
-% --- PICK A RANDOM START POINT IN THE CURVE GRID 
-% offset search range so enough values from this start point to fill the
-% movie
+% --- SELECT A LINEAR SEQUENCE OF CURVES at various orientations to the
+% main and orthogonal manifolds
+
+% this assumes a square matrix of curves, main = ortho levels
+startBox = params.n_tvals_main - params.nCurvesPerMovie;
+
+% quadrants at 4 corners of grid contain valid start points, that will
+% allow vectors of nCurvesPerMovie without, that are either horizontal,
+% vertical, or diagaonial, without running out of space in the grid.
+
+% --- 1. Pick a quadrant at random
+q = randi(4);
+
+% --- pick random position within startBox
+switch q
+
+    case 1
+        startMain = 1;
+        endMain = params.n_t
+        
+
+    case 2
+
+    case 3
+
+    case 4
+end
+
+switch condArray(c).cueMovieOrientation
+
+    case 'horizontal'
+
+
+
+    case 'vertical'
+
+
+    case 'diagonal'
+        % set slope of diagonal line based on which quadrant of grid we are
+        % starting from
+        switch q
+            case 1  % upper left, line
+                deltaX = 1;
+                deltaY = -1;
+
+            case 2
+                deltaX = -1;
+                deltaY = -1;
+
+            case 3
+                deltaX = -1;
+                deltaY = 1;
+
+            case 4
+                deltaX = 1;
+                deltaY = 1;
+        end
+
+end
+
+
 startMain = randi(params.n_tvals_main - params.nCurvesPerMovie);
+startOrtho = randi(params.n_tvals_ortho)
+
 
 % --- BUILD SEQ OF CURVE IMG FILE INDICES TO CONTROL MOVIE
 switch params.blockParam
@@ -85,7 +145,14 @@ switch params.blockParam
 
         if strcmp(condArray(c).curveMovieType, 'smooth')
             % set sequeunce of curve images along main manifold
-            mainSeq = (1:params.nCurvesPerMovie) + startMain;
+
+            switch condArray(c).curveMovieDir
+                case 1
+                    mainSeq = (1:params.nCurvesPerMovie) + startMain;
+                case 2
+                    mainSeq = (params.nCurvesPerMovie:-1:1) + startMain;
+            end
+
         elseif strcmp(condArray(c).curveMovieType, 'rough')
             mainSeq = randperm(params.nCurvesPerMovie) + startMain;
         else
@@ -94,27 +161,25 @@ switch params.blockParam
 
         % --- select single random noise level for all curves in this
         % movie, curve should not jump around
-        thisOrtho = randi(params.n_tvals_ortho);
-        orthoSeq = zeros(1, length(mainSeq)) + thisOrtho;
+        switch params.curveMovieNoiseMode
 
-        % --- select n random sequence of integers in range for
-        % n_tvals_ortho, with n = length(mainSeq)
-        % orthoSeq = [];
-        % for o = 1 : length(mainSeq)
-        %     thisOrtho = randi(params.n_tvals_ortho);
-        %     orthoSeq = [orthoSeq thisOrtho];
-        % end
+            case 'fixed'
+                thisOrtho = randi(params.n_tvals_ortho);
+                orthoSeq = zeros(1, length(mainSeq)) + thisOrtho;
+            case 'dynamic'
+
+            case 'random'
+                % --- select n random sequence of integers in range for
+                % n_tvals_ortho, with n = length(mainSeq)
+                orthoSeq = [];
+                for o = 1 : length(mainSeq)
+                    thisOrtho = randi(params.n_tvals_ortho);
+                    orthoSeq = [orthoSeq thisOrtho];
+                end
+        end
 
         bob = 1;
 
-
-    case 'curveMovieNoise'
-
-
-    case 'curveMovieOrder'
-
-
-    case 'curveMovieGeometry'
 
 
 end

@@ -37,12 +37,13 @@ params.movieMode = 'stdp';
 % curve generating code and Thomas' algorithm
 % params.stimulusType = 'bars';
 params.stimulusType = 'curves';
-params.nCurvesPerMovie = 5;
+params.nCurvesPerMovie = 8;
 % set which movie parameter is modified at block level
 params.blockParam = 'curveMovieType';
 % params.blockParam = 'curveMovieNoise';
 % params.blockParam = 'curveMovieOrder';
 % params.blockParam = 'curveMovieGeometry';
+
 
 % --- CHOICE/REWARD 
 params.choice_x = 4;
