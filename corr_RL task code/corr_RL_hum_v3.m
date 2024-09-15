@@ -369,6 +369,7 @@ switch TrialRecord.User.params.stimulusType
         % [movieFrames] = corr_RL_generateCurveMovie_v1(TrialRecord);
         [movieFrames, movieParams] = corr_RL_generateCurveMovie_v2(TrialRecord);
         TrialRecord.User.movieFrames = movieFrames;
+        TrialRecord.User.movieParams = movieParams;
 end
 
 
@@ -475,9 +476,9 @@ switch TrialRecord.User.params.stimulusType
             '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.FaceColor), ...
             '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(2).rightStim.FileName);
 
-        dashboard(1, trlInfoStr);
-        dashboard(3, pair1_Angles_str);
-        dashboard(4, pair2_Angles_str);
+        dashboard(1, trlInfoStr, [0 0 0], 'FontSize', 8);
+        dashboard(3, pair1_Angles_str, [0 0 0], 'FontSize', 8);
+        dashboard(4, pair2_Angles_str, [0 0 0], 'FontSize', 8);
 
     case 'curves'
         trlInfoStr = strcat(keyStr, ...
@@ -485,32 +486,24 @@ switch TrialRecord.User.params.stimulusType
             '  Block:', num2str(b), ...
             '  Cond:', num2str(c), ...
             '  State:', num2str(TrialRecord.User.condArray(c).state));
-        dashboard(1, trlInfoStr, [0 0 0]);
 
-        % --- compute main t_val sequence for this movie
 
-        % movieInfo = strcat()
-        % 
-        % condArrayTemp(b, s, d, o).curveMovieOrientation
-        % condArrayTemp(b, s, d, o).curveMovieType
-        % 
-        % movieParams.mainSeq = mainSeq;
-        % movieParams.orthoSeq = orthoSeq;
-        % 
-        % params.numBlocks = curveParams.nBlocks;
-        % params.numStates = curveParams.nStates;
-        % params.n_tvals_main = curveParams.n_tvals_main;
-        % params.n_tvals_ortho = curveParams.n_tvals_ortho;
-        % params.size_of_knot_grid = curveParams.size_of_knot_grid;
-        % params.low = curveParams.low;
-        % params.high = curveParams.high;
-        % params.max_knot_number = curveParams.max_knot_number;
-        % params.D = curveParams.D;
-        % params.K = curveParams.K;
-        % params.n_knot_points = curveParams.n_knot_points;
-        % params.encurve_t = curveParams.encurve_t;
-        % params.orthocurve_t = curveParams.orthocurve_t;
+        % --- DISPLAY movieParams for this movie
+        cmt = TrialRecord.User.movieParams.curveMovieType;
+        cmo = TrialRecord.User.movieParams.orientation;
+        ms = num2str(TrialRecord.User.movieParams.mainSeq);
+        os = num2str(TrialRecord.User.movieParams.orthoSeq);
+        mt = num2str(TrialRecord.User.movieParams.mainTvalSeq);
+        ot = num2str(TrialRecord.User.movieParams.orthoTvalSeq);
 
+        movieInfoStr1 = strcat('movieP Type:', cmt, '  Orient: ', cmo, '  ms: ', ms, '  os: ', os);
+        movieInfoStr2 = strcat('mt: ', mt);
+        movieInfoStr3 = strcat('ot: ', ot);
+
+        dashboard(1, trlInfoStr, [0 0 0], 'FontSize', 8);
+        dashboard(3, movieInfoStr1, [0 0 0], 'FontSize', 8);
+        dashboard(4, movieInfoStr2, [0 0 0], 'FontSize', 8);
+        dashboard(5, movieInfoStr3, [0 0 0], 'FontSize', 8);
 
 end
 
@@ -601,7 +594,6 @@ if sc2_key1.Success || sc2_key2.Success
     trialerror('earlyResp');
     choices.madeValidResp = false;
 
-
     % --- CREATE AND RUN ERROR SCENE
     scError_tc = TimeCounter(rewBox);
     scError_tc.Duration = times.scError_ms;
@@ -627,7 +619,8 @@ if sc2_key1.Success || sc2_key2.Success
         'condArray', TrialRecord.User.condArray, ...
         'params', TrialRecord.User.params, ...
         'movieFrames', TrialRecord.User.movieFrames, ...
-        'movieFrameTimes', TrialRecord.User.movieFrameTimes);
+        'movieFrameTimes', TrialRecord.User.movieFrameTimes, ...
+        'movieParams', TrialRecord.User.movieParams);
 
     % --- 'RETURN' CALL TERMINATES TRIAL EARLY
     return;
@@ -699,7 +692,8 @@ elseif ~sc3_key1.Success && ~sc3_key2.Success
         'condArray', TrialRecord.User.condArray, ...
         'params', TrialRecord.User.params, ...
         'movieFrames', TrialRecord.User.movieFrames, ...
-        'movieFrameTimes', TrialRecord.User.movieFrameTimes);
+        'movieFrameTimes', TrialRecord.User.movieFrameTimes, ...
+        'movieParams', TrialRecord.User.movieParams);
 
     % --- 'RETURN' CALL TERMINATES TRIAL EARLY
     return;
@@ -796,7 +790,7 @@ TrialRecord.User.Choices = choices;
 
 % --- OUTPUT CHOICE REWARD RESULT TO USER SCREEN
 respResStr = strcat(choices.respStr, '  ---  ', choices.resultStr);
-dashboard(2, respResStr, [0 0 0]);
+dashboard(2, respResStr, [0 0 0], 'FontSize', 8);
 
 % --- UPDATE REWARD BOX WITH THIS RESULT
 netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
@@ -838,5 +832,6 @@ bhv_variable( ...
     'condArray', TrialRecord.User.condArray, ...
     'params', TrialRecord.User.params, ...
     'movieFrames', TrialRecord.User.movieFrames, ...
-    'movieFrameTimes', TrialRecord.User.movieFrameTimes);
+    'movieFrameTimes', TrialRecord.User.movieFrameTimes, ...
+    'movieParams', TrialRecord.User.movieParams);
 

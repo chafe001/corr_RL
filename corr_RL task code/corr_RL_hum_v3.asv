@@ -369,6 +369,7 @@ switch TrialRecord.User.params.stimulusType
         % [movieFrames] = corr_RL_generateCurveMovie_v1(TrialRecord);
         [movieFrames, movieParams] = corr_RL_generateCurveMovie_v2(TrialRecord);
         TrialRecord.User.movieFrames = movieFrames;
+        TrialRecord.User.movieParams = movieParams;
 end
 
 
@@ -487,27 +488,17 @@ switch TrialRecord.User.params.stimulusType
             '  State:', num2str(TrialRecord.User.condArray(c).state));
         dashboard(1, trlInfoStr, [0 0 0]);
 
-        movieInfo = strcat()
+        % --- DISPLAY movieParams for this movie
+        cmt = TrialRecord.User.movieParams.curveMovieType;
+        cmo = TrialRecord.User.movieParams.orientation;
+        ms = num2str(TrialRecord.User.movieParams.mainSeq);
+        os = num2str(TrialRecord.User.movieParams.orthoSeq);
+        mt = TrialRecord.User.movieParams.mainTvalSeq;
+        ot = TrialRecord.User.movieParams.orthoTvalSeq;
 
-        condArrayTemp(b, s, d, o).curveMovieOrientation
-        condArrayTemp(b, s, d, o).curveMovieType
 
-        movieParams.mainSeq = mainSeq;
-        movieParams.orthoSeq = orthoSeq;
 
-        params.numBlocks = curveParams.nBlocks;
-        params.numStates = curveParams.nStates;
-        params.n_tvals_main = curveParams.n_tvals_main;
-        params.n_tvals_ortho = curveParams.n_tvals_ortho;
-        params.size_of_knot_grid = curveParams.size_of_knot_grid;
-        params.low = curveParams.low;
-        params.high = curveParams.high;
-        params.max_knot_number = curveParams.max_knot_number;
-        params.D = curveParams.D;
-        params.K = curveParams.K;
-        params.n_knot_points = curveParams.n_knot_points;
-        params.encurve_t = curveParams.encurve_t;
-        params.orthocurve_t = curveParams.orthocurve_t;
+
 
 
 end
@@ -599,7 +590,6 @@ if sc2_key1.Success || sc2_key2.Success
     trialerror('earlyResp');
     choices.madeValidResp = false;
 
-
     % --- CREATE AND RUN ERROR SCENE
     scError_tc = TimeCounter(rewBox);
     scError_tc.Duration = times.scError_ms;
@@ -625,7 +615,8 @@ if sc2_key1.Success || sc2_key2.Success
         'condArray', TrialRecord.User.condArray, ...
         'params', TrialRecord.User.params, ...
         'movieFrames', TrialRecord.User.movieFrames, ...
-        'movieFrameTimes', TrialRecord.User.movieFrameTimes);
+        'movieFrameTimes', TrialRecord.User.movieFrameTimes, ...
+        'movieParams', TrialRecord.User.movieParams);
 
     % --- 'RETURN' CALL TERMINATES TRIAL EARLY
     return;
@@ -697,7 +688,8 @@ elseif ~sc3_key1.Success && ~sc3_key2.Success
         'condArray', TrialRecord.User.condArray, ...
         'params', TrialRecord.User.params, ...
         'movieFrames', TrialRecord.User.movieFrames, ...
-        'movieFrameTimes', TrialRecord.User.movieFrameTimes);
+        'movieFrameTimes', TrialRecord.User.movieFrameTimes, ...
+        'movieParams', TrialRecord.User.movieParams);
 
     % --- 'RETURN' CALL TERMINATES TRIAL EARLY
     return;
@@ -836,5 +828,6 @@ bhv_variable( ...
     'condArray', TrialRecord.User.condArray, ...
     'params', TrialRecord.User.params, ...
     'movieFrames', TrialRecord.User.movieFrames, ...
-    'movieFrameTimes', TrialRecord.User.movieFrameTimes);
+    'movieFrameTimes', TrialRecord.User.movieFrameTimes, ...
+    'movieParams', TrialRecord.User.movieParams);
 
