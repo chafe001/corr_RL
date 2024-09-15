@@ -1,5 +1,5 @@
 
-function [] = gendcurves_v2()
+function [] = genCurves_v2()
 %%
 
 % Version history
@@ -122,10 +122,11 @@ for b = 1:curveParams.nBlocks
     plot(orthocurve(:, 1), orthocurve(:, 2), 'r');
 
     if curveParams.save_png
-        fn = 'endCurve(blue)_orthoCurve(red).png';
+        cd blockstim
+        fn = strcat('b', num2str(b), '_endCurve(blue)_orthoCurve(red).png');
         print(f, fn, '-dpng');
+        cd ..
     end
-
 
     for s = 1:curveParams.nStates  % 2 states per block (L/R response)
 
@@ -167,7 +168,7 @@ for b = 1:curveParams.nBlocks
             limx = [-lim, lim];
             limy = [-lim, lim];
 
-            figure;
+            f = figure;
 
             for ec = 1: length(curveParams.endcurve_t)
                 for oc = 1: length(curveParams.orthocurve_t)
@@ -183,6 +184,13 @@ for b = 1:curveParams.nBlocks
                     axis equal;
 
                 end
+            end
+
+            if curveParams.save_png
+                cd blockstim
+                fn = strcat('b', num2str(b), '_s', num2str(s), '_main(x-axis)_ortho(y-axis)_curveSeq.png');
+                print(f, fn, '-dpng');
+                cd ..
             end
 
         end
