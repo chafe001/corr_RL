@@ -487,7 +487,6 @@ switch TrialRecord.User.params.stimulusType
             '  Cond:', num2str(c), ...
             '  State:', num2str(TrialRecord.User.condArray(c).state));
 
-
         % --- DISPLAY movieParams for this movie
         cmt = TrialRecord.User.movieParams.curveMovieType;
         cmo = TrialRecord.User.movieParams.orientation;

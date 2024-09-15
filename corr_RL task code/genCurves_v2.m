@@ -116,10 +116,15 @@ for b = 1:curveParams.nBlocks
     fprintf('check: %.2f\n', sum(sum(orthocurve .* endcurve)));
 
     % plot endcurve and orthocurve
-    figure;
+    f = figure;
     plot(endcurve(:, 1), endcurve(:, 2));
     hold on;
     plot(orthocurve(:, 1), orthocurve(:, 2), 'r');
+
+    if curveParams.save_png
+        fn = 'endCurve(blue)_orthoCurve(red).png';
+        print(f, fn, '-dpng');
+    end
 
 
     for s = 1:curveParams.nStates  % 2 states per block (L/R response)

@@ -12,7 +12,7 @@ function [] = genCurves_v2()
 % Matlab.  Then checked that it worked. Thomas noticed some potential
 % oddities in the algorithm, needs a look over
 
-% genCurves
+% gcurveParams.endcurves
 % converting to function to generate sets of curves for each block.
 % Alternating curve complexity (smooth, rough) over blocks, and outputting
 % png files to be loaded by MovieGraphic in monkeyLoogic. corr_RL v3
@@ -20,16 +20,16 @@ function [] = genCurves_v2()
 
 % Algorithm walk-through:
 % 1. define a curve_of_origin (circle)
-% 2. call sample_knots(), picks random set of xy positions from knot grid
-% 3. call upsample() to define 'endcurve' by computing spline between the random knots
+% 2. call sample_curveParams.knots(), picks random set of xy positions from knot grid
+% 3. call upsample() to define 'curveParams.endcurve' by computing spline between the random curveParams.knots
 % 4. repeat steps 2 and 3 to generate a second curve
 % 5. invoke secrete mathematical incantations to make the second curve
 % orthogonal to the first, 'orthocurve'
 % 7. Sample curves along a 'manifold' (line through the feature space).
 % Method for sampling manifold:
 % a. Generate a vector of scaling values (t) from -1 to +1
-% b. Loop through 't', each iter multiply endcurve by t (scale endcurve)
-% c. Add scaled endcurve to curve_of_origin
+% b. Loop through 't', each iter multiply curveParams.endcurve by t (scale curveParams.endcurve)
+% c. Add scaled curveParams.endcurve to curve_of_origin
 % d. This produces a smooth_sequence of 'samples' along the manifold
 % e. Add this sequence to an image stack to make a movie
 % e. To examine effect of correlation on learning, generate rough_sequence
@@ -48,7 +48,7 @@ function [] = genCurves_v2()
 % Perceptual system immediately discriminates curves (visually distinct)
 % and with very little trial and error learns to map curves to keys
 
-% genCurves_v2:
+% gcurveParams.endcurves_v2:
 % Next steps, after speaking with Thomas
 % 1. Associate L and R keys (states) with opposite halves of the continuum
 % of curves along a single manifold.
@@ -61,71 +61,73 @@ function [] = genCurves_v2()
 % 6. Do this by adding in varying amounts of ortho curve.
 % 7. Use quantity of orthocurve added in to modulate the degree of noise
 % (if ortho component is unrelated to response/reward), or to dissociate
-% feature correlation (endcurve) from RPE (orthocurve).  That is, determine
+% feature correlation (curveParams.endcurve) from RPE (orthocurve).  That is, determine
 % response (L/R key) and reward probability based on sign and magnitude of
 % orthocurve addition
 
 
-% set params structure
+% set curveParams structure
 
-params.nBlocks = 10;
-params.nStates = 2;
-params.n_tvals_ = 50;
+curveParams.nBlocks = 2;
+curveParams.nStates = 2;
 
+curveParams.n_tvals_main = 12;
+curveParams.n_tvals_ortho = 12;
 
-params.n_tvals_main = 20;
-params.n_tvals_ortho = 7;
+curveParams.size_of_knot_grid = 10;
+curveParams.low = -1;
+curveParams.high = 1;
+knot_grid = make_knot_grid(curveParams.size_of_knot_grid, curveParams.low, curveParams.high);
+curveParams.max_knot_number = 10;
+curveParams.D = 256; % resolution_of_curves
+curveParams.K = 2; % number of axes in curve space that we will sample
+% curveParams.S = 1; % number of "exposures" to generate - not used presently
+curveParams.save_png = true;
+curveParams.plotCurveSeq = true;
 
-params.size_of_knot_grid = 10;
-params.low = -1;
-params.high = 1;
-knot_grid = make_knot_grid(params.size_of_knot_grid, params.low, params.high);
-params.max_knot_number = 10;
-params.D = 256; % resolution_of_curves
-params.K = 2; % number of axes in curve space that we will sample
-% params.S = 1; % number of "exposures" to generate - not used presently
-params.N_curves_main = 50; % number of endcurves per state
-params.N_curves_ortho = 6; % number of orthocurves per state
-params.save_png = true;
-params.plotCurveSeq = true;
-params.n_knot_points = 5;
-% params.n_knot_points = 2;
+curveParams.n_knot_points = 5;
+% curveParams.n_knot_points = 2;
 
 % Specify the "curve of origin"
-curve_of_origin = zeros(params.D, 2);
+curve_of_origin = zeros(curveParams.D, 2);
 
 % Circle
-rng = (0:params.D-1)' / params.D * 2 * pi;
+rng = (0:curveParams.D-1)' / curveParams.D * 2 * pi;
 curve_of_origin(:, 1) = sin(rng);
 curve_of_origin(:, 2) = cos(rng);
-radius = 0.1 * (params.high - params.low);
+radius = 0.1 * (curveParams.high - curveParams.low);
 curve_of_origin = curve_of_origin * radius;
 % oXY = xy2stacked(curve_of_origin);
 
-for b = 1:params.nBlocks
+for b = 1:curveParams.nBlocks
 
     % --- BLOCK LEVEL operations
-    % compute endcurve (signal) and orthocurve (noise or reward) for this block
+    % compute curveParams.endcurve (signal) and orthocurve (noise or reward) for this block
 
-    % define random endcurve
-    knots = sample_knots(knot_grid, params.n_knot_points, false);
-    [endcurve, ~] = upsample(knots, params.D);
+    % define random curveParams.endcurve
+    curveParams.knots = sample_curveParams.knots(knot_grid, curveParams.n_knot_points, false);
+    [curveParams.endcurve, ~] = upsample(curveParams.knots, curveParams.D);
 
     % define random orthocurve
-    el = sum(sum(endcurve .* endcurve));
-    knots = sample_knots(knot_grid, params.n_knot_points, false);
-    [other_curve, ~] = upsample(knots, params.D);
-    orthocurve = sum(sum(other_curve .* endcurve)) * endcurve / el - other_curve;
-    fprintf('check: %.2f\n', sum(sum(orthocurve .* endcurve)));
+    el = sum(sum(curveParams.endcurve .* curveParams.endcurve));
+    curveParams.knots = sample_curveParams.knots(knot_grid, curveParams.n_knot_points, false);
+    [other_curve, ~] = upsample(curveParams.knots, curveParams.D);
+    orthocurve = sum(sum(other_curve .* curveParams.endcurve)) * curveParams.endcurve / el - other_curve;
+    fprintf('check: %.2f\n', sum(sum(orthocurve .* curveParams.endcurve)));
 
-    % plot endcurve and orthocurve
-    figure;
-    plot(endcurve(:, 1), endcurve(:, 2));
+    % plot curveParams.endcurve and orthocurve
+    f = figure;
+    plot(curveParams.endcurve(:, 1), curveParams.endcurve(:, 2));
     hold on;
     plot(orthocurve(:, 1), orthocurve(:, 2), 'r');
 
+    if curveParams.save_png
+        fn = 'curveParams.endcurve_orthoCurve.png';
+        print(f, fn, '-dpng');
+    end
 
-    for s = 1:params.nStates  % 2 states per block (L/R response)
+
+    for s = 1:curveParams.nStates  % 2 states per block (L/R response)
 
         % --- STATE LEVEL operations
         % discretize scaling variable, t, to generate unique, nonoverlapping
@@ -138,38 +140,38 @@ for b = 1:params.nBlocks
             case 1
                 main_lowerT = -1;
                 main_upperT = 0;
-                ortho_lowerT = -1;
-                ortho_upperT = 1;
+                ortho_lowerT = -0.5;
+                ortho_upperT = 0.5;
             case 2
                 main_lowerT = 0;
                 main_upperT = 1;
-                ortho_lowerT = -1;
-                ortho_upperT = 1;
+                ortho_lowerT = -0.5;
+                ortho_upperT = 0.5;
         end
 
-        % --- set range of t values specifying weights with which endcurve
+        % --- set range of t values specifying weights with which curveParams.endcurve
         % and orthocurve are summed to produce individual curves
-        endcurve_t = interp1([1, params.n_tvals_main], [main_lowerT, main_upperT], 1:params.n_tvals_main);
-        orthocurve_t = interp1([1, params.n_tvals_ortho], [ortho_lowerT, ortho_upperT], 1:params.n_tvals_ortho);
+        curveParams.curveParams.endcurve_t = interp1([1, curveParams.n_tvals_main], [main_lowerT, main_upperT], 1:curveParams.n_tvals_main);
+        curveParams.orthocurve_t = interp1([1, curveParams.n_tvals_ortho], [ortho_lowerT, ortho_upperT], 1:curveParams.n_tvals_ortho);
 
-        % build a 2D matrix of curves defined by endcurve and orthocurve t
+        % build a 2D matrix of curves defined by curveParams.endcurve and orthocurve t
         % values
-        for ec = 1 : length(endcurve_t)
-            for oc = 1 : length(orthocurve_t)
-                state_curves(ec, oc, :, :) = curve_of_origin + (endcurve_t(ec) * endcurve) + (orthocurve_t(oc) * orthocurve);
+        for ec = 1 : length(curveParams.curveParams.endcurve_t)
+            for oc = 1 : length(curveParams.orthocurve_t)
+                state_curves(ec, oc, :, :) = curve_of_origin + (curveParams.curveParams.endcurve_t(ec) * curveParams.endcurve) + (curveParams.orthocurve_t(oc) * orthocurve);
             end
         end
 
-        if params.plotCurveSeq
+        if curveParams.plotCurveSeq
             lim = 1.5;
             limx = [-lim, lim];
             limy = [-lim, lim];
 
             figure;
 
-            for ec = 1: length(endcurve_t)
-                for oc = 1: length(orthocurve_t)
-                    subplot(length(orthocurve_t), length(endcurve_t), (ec-1)*length(orthocurve_t)+oc);
+            for ec = 1: length(curveParams.curveParams.endcurve_t)
+                for oc = 1: length(curveParams.orthocurve_t)
+                    subplot(length(curveParams.orthocurve_t), length(curveParams.curveParams.endcurve_t), (ec-1)*length(curveParams.orthocurve_t)+oc);
                     x = state_curves(ec,oc,:,1);
                     x = squeeze(x);
                     y = state_curves(ec,oc,:,2);
@@ -186,9 +188,10 @@ for b = 1:params.nBlocks
         end
 
 
-        if params.save_png
-            for ec = 1: length(endcurve_t)
-                for oc = 1: length(orthocurve_t)
+        if curveParams.save_png
+
+            for ec = 1: length(curveParams.curveParams.endcurve_t)
+                for oc = 1: length(curveParams.orthocurve_t)
                     f = figure;
                     x = state_curves(ec,oc,:,1);
                     x = squeeze(x);
@@ -199,84 +202,35 @@ for b = 1:params.nBlocks
                     ylim(limy);
                     axis off;
                     axis equal;
-
                     %--- SAVE PNG
-                    fn = buildFilename(params, b, s, ec, oc);
                     cd blockstim
+                    fn = buildFilename(curveParams, b, s, ec, oc);
                     % f is figure object, if not included in print command, prints
                     % last ML screen changed, eg user, as png file
                     print(f, fn, '-dpng');
                     close;
+                    % changedir back to working directory
                     cd ..
-
                 end
             end
 
         end
 
-    end
+    end  % nStates
+end  % nBlocks
 
 
+% --- SAVE PARAMS FILE FOR ML TO READ IN
 
-    bob = 1;
+cd blockstim
+save('curveParams.mat', "curveParams");
 
-
-
-
-
-
+cd ..
 
 
 
 
 end
-
-
-end
-
-
-
-%
-% %%
-% if params.save_png
-%
-%     for i = 1:3
-%         for n = 1:params.N
-%             % subplot(3, params.N, (i-1)*params.N + n);
-%             if i == 1
-%                 f = figure;
-%                 plot(smooth_sequence(n, :, 1), smooth_sequence(n, :, 2));
-%             elseif i == 2
-%                 f = figure;
-%                 plot(rough_sequence(n, :, 1), rough_sequence(n, :, 2));
-%             else
-%                 f = figure;
-%                 plot((rough_sequence(n, :, 1) + smooth_sequence(n, :, 1))/2, ...
-%                     (rough_sequence(n, :, 2) + smooth_sequence(n, :, 2))/2);
-%             end
-%             xlim(limx);
-%             ylim(limy);
-%             axis off;
-%             axis equal;
-%
-%             % --- SAVE PNG
-%             state = 'A';
-%             fn = buildFilename(params, i, n, b, c);
-%             cd blockstim
-%             % f is figure object, if not included in print command, prints
-%             % last ML screen changed, eg user, as png file
-%             print(f, fn, '-dpng');
-%             close;
-%             cd ..
-%
-%         end
-%     end
-%
-% end % save_png
-
-
-
-
 
 
 
@@ -284,12 +238,12 @@ end
 %%
 % Utilities for generating curves
 
-function fn = buildFilename(params, b, s, ec, oc);
+function fn = buildFilename(curveParams, b, s, ec, oc);
 
 blockstr = strcat('b', num2str(b), '_');
 statestr = strcat('s', num2str(s), '_');
 mainstr = strcat('ec_', num2str(ec), '_');
-orthostr = strcat('oc_', num2str(oc), '_');
+orthostr = strcat('oc_', num2str(oc), '.png');
 
 fn = strcat(blockstr, statestr, mainstr, orthostr);
 
@@ -395,7 +349,7 @@ function grid = make_knot_grid(size, low, high)
 grid = [X(:), Y(:)];
 end
 
-function knots = sample_knots(knot_grid, number_of_knot_points, closed)
+function curveParams.knots = sample_curveParams.knots(knot_grid, number_of_knot_points, closed)
 if nargin < 3
     closed = true;
 end
@@ -411,28 +365,28 @@ dice = randsample(grid_size, nkp, nkp > grid_size);
 if closed
     dice(end) = dice(1);
 end
-knots = knot_grid(dice, :);
+curveParams.knots = knot_grid(dice, :);
 end
 
-function [xy, knots] = upsample(knots, resolution, kind)
+function [xy, curveParams.knots] = upsample(curveParams.knots, resolution, kind)
 if nargin < 3
     kind = 'spline';
 end
 
-num_knots = size(knots, 1);
+num_curveParams.knots = size(curveParams.knots, 1);
 
-if num_knots < 3
+if num_curveParams.knots < 3
     kind = 'linear';
 end
 
-plot_range = linspace(0, num_knots-1, resolution);
+plot_range = linspace(0, num_curveParams.knots-1, resolution);
 
 if strcmp(kind, 'linear')
-    fx = interp1(0:num_knots-1, knots(:,1), plot_range, 'linear');
-    fy = interp1(0:num_knots-1, knots(:,2), plot_range, 'linear');
+    fx = interp1(0:num_curveParams.knots-1, curveParams.knots(:,1), plot_range, 'linear');
+    fy = interp1(0:num_curveParams.knots-1, curveParams.knots(:,2), plot_range, 'linear');
 else
-    fx = interp1(0:num_knots-1, knots(:,1), plot_range, 'spline');
-    fy = interp1(0:num_knots-1, knots(:,2), plot_range, 'spline');
+    fx = interp1(0:num_curveParams.knots-1, curveParams.knots(:,1), plot_range, 'spline');
+    fy = interp1(0:num_curveParams.knots-1, curveParams.knots(:,2), plot_range, 'spline');
 end
 
 xy = [fx', fy'];
