@@ -367,7 +367,7 @@ switch TrialRecord.User.params.stimulusType
 
     case 'curves'
         % [movieFrames] = corr_RL_generateCurveMovie_v1(TrialRecord);
-        [movieFrames] = corr_RL_generateCurveMovie_v2(TrialRecord);
+        [movieFrames, movieParams] = corr_RL_generateCurveMovie_v2(TrialRecord);
         TrialRecord.User.movieFrames = movieFrames;
 end
 
@@ -486,6 +486,30 @@ switch TrialRecord.User.params.stimulusType
             '  Cond:', num2str(c), ...
             '  State:', num2str(TrialRecord.User.condArray(c).state));
         dashboard(1, trlInfoStr, [0 0 0]);
+
+        % --- compute main t_val sequence for this movie
+
+        % movieInfo = strcat()
+        % 
+        % condArrayTemp(b, s, d, o).curveMovieOrientation
+        % condArrayTemp(b, s, d, o).curveMovieType
+        % 
+        % movieParams.mainSeq = mainSeq;
+        % movieParams.orthoSeq = orthoSeq;
+        % 
+        % params.numBlocks = curveParams.nBlocks;
+        % params.numStates = curveParams.nStates;
+        % params.n_tvals_main = curveParams.n_tvals_main;
+        % params.n_tvals_ortho = curveParams.n_tvals_ortho;
+        % params.size_of_knot_grid = curveParams.size_of_knot_grid;
+        % params.low = curveParams.low;
+        % params.high = curveParams.high;
+        % params.max_knot_number = curveParams.max_knot_number;
+        % params.D = curveParams.D;
+        % params.K = curveParams.K;
+        % params.n_knot_points = curveParams.n_knot_points;
+        % params.encurve_t = curveParams.encurve_t;
+        % params.orthocurve_t = curveParams.orthocurve_t;
 
 
 end

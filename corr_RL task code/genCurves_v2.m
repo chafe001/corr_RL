@@ -1,5 +1,5 @@
 
-function [] = genCurves_v2()
+function [] = gendcurves_v2()
 %%
 
 % Version history
@@ -12,7 +12,7 @@ function [] = genCurves_v2()
 % Matlab.  Then checked that it worked. Thomas noticed some potential
 % oddities in the algorithm, needs a look over
 
-% genCurves
+% gendcurves
 % converting to function to generate sets of curves for each block.
 % Alternating curve complexity (smooth, rough) over blocks, and outputting
 % png files to be loaded by MovieGraphic in monkeyLoogic. corr_RL v3
@@ -48,7 +48,7 @@ function [] = genCurves_v2()
 % Perceptual system immediately discriminates curves (visually distinct)
 % and with very little trial and error learns to map curves to keys
 
-% genCurves_v2:
+% gendcurves_v2:
 % Next steps, after speaking with Thomas
 % 1. Associate L and R keys (states) with opposite halves of the continuum
 % of curves along a single manifold.
@@ -146,14 +146,14 @@ for b = 1:curveParams.nBlocks
 
         % --- set range of t values specifying weights with which endcurve
         % and orthocurve are summed to produce individual curves
-        curveParams.encurve_t = interp1([1, curveParams.n_tvals_main], [main_lowerT, main_upperT], 1:curveParams.n_tvals_main);
+        curveParams.endcurve_t = interp1([1, curveParams.n_tvals_main], [main_lowerT, main_upperT], 1:curveParams.n_tvals_main);
         curveParams.orthocurve_t = interp1([1, curveParams.n_tvals_ortho], [ortho_lowerT, ortho_upperT], 1:curveParams.n_tvals_ortho);
 
         % build a 2D matrix of curves defined by endcurve and orthocurve t
         % values
-        for ec = 1 : length(curveParams.encurve_t)
+        for ec = 1 : length(curveParams.endcurve_t)
             for oc = 1 : length(curveParams.orthocurve_t)
-                state_curves(ec, oc, :, :) = curve_of_origin + (curveParams.encurve_t(ec) * endcurve) + (curveParams.orthocurve_t(oc) * orthocurve);
+                state_curves(ec, oc, :, :) = curve_of_origin + (curveParams.endcurve_t(ec) * endcurve) + (curveParams.orthocurve_t(oc) * orthocurve);
             end
         end
 
@@ -164,9 +164,9 @@ for b = 1:curveParams.nBlocks
 
             figure;
 
-            for ec = 1: length(curveParams.encurve_t)
+            for ec = 1: length(curveParams.endcurve_t)
                 for oc = 1: length(curveParams.orthocurve_t)
-                    subplot(length(curveParams.orthocurve_t), length(curveParams.encurve_t), (ec-1)*length(curveParams.orthocurve_t)+oc);
+                    subplot(length(curveParams.orthocurve_t), length(curveParams.endcurve_t), (ec-1)*length(curveParams.orthocurve_t)+oc);
                     x = state_curves(ec,oc,:,1);
                     x = squeeze(x);
                     y = state_curves(ec,oc,:,2);
@@ -185,7 +185,7 @@ for b = 1:curveParams.nBlocks
 
         if curveParams.save_png
 
-            for ec = 1: length(curveParams.encurve_t)
+            for ec = 1: length(curveParams.endcurve_t)
                 for oc = 1: length(curveParams.orthocurve_t)
                     f = figure;
                     x = state_curves(ec,oc,:,1);

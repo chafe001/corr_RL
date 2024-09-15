@@ -1,4 +1,4 @@
-function [movieImages] = corr_RL_generateCurveMovie_v2(TrialRecord)
+function [movieImages, movieParams] = corr_RL_generateCurveMovie_v2(TrialRecord)
 % This function returns a cell array, movieImages, that is used to set the
 % 'List' property of a imageChanger() object.  This controls the sequence
 % of images presented in the movie, which controls the proportion of cue
@@ -85,6 +85,8 @@ startBox = params.n_tvals_main - params.nCurvesPerMovie + 1;
 % --- 1. Pick a quadrant at random
 q = randi(4);
 
+movieParams.quad = q;
+
 % --- set ranges of t_val indices for startBox in this quadrant
 switch q
 
@@ -117,9 +119,6 @@ end
 % --- SELECT RANDOM START POINT WITHIN STARTBOX
 firstMain = randi([startMain endMain]);
 firstOrtho = randi([startOrtho endOrtho]);
-
-
-
 
 % --- SET DIRECTION WITHIN CURVE GRID that movie will animate over
 switch condArray(c).curveMovieOrientation
@@ -195,6 +194,14 @@ if strcmp(condArray(c).curveMovieType, 'rough')
     mainSeq = mainSeq(rndOrder);
     orthoSeq = orthoSeq(rndOrder);
 end
+
+% --- AGGREGATE MOVIE PARAMS FOR OUTPUT
+movieParams.curveMovieType = condArray(c).curveMovieType;
+movieParams.orientation = condArray(c).curveMovieOrientation;
+movieParams.mainSeq = mainSeq;
+movieParams.orthoSeq = orthoSeq;
+movieParams.mainTvalSeq = params.endcurve_t(mainSeq);
+movieParams.orthoTvalSeq = params.orthocurve_t(orthoSeq);
 
 % --- BUILD MOVIE IMAGES
 for cs = 1 : length(mainSeq)
