@@ -289,15 +289,14 @@ stdcol.curveGridQuad = stdcol.n_knot_points + 1;
 stdcol.curveMovieType = stdcol.curveGridQuad + 1;
 stdcol.curveMovieOrientation = stdcol.curveMovieType + 1;
 stdcol.mainSeq = stdcol.curveMovieOrientation + 1;
-stdcol.endMainSeq = stdcol.mainSeq + length(msq);
-stdcol.orthoSeq = stdcol.endMainSeq + 1;
-stdcol.endOrthoSeq = stdcol.orthoSeq + length(osq);
+stdcol.endMainSeq = stdcol.mainSeq + 1 + (length(msq) - 1);
+stdcol.orthoSeq = stdcol.endMainSeq;
+stdcol.endOrthoSeq = stdcol.orthoSeq + 1;
 stdcol.mainTvalSeq = stdcol.endOrthoSeq + 1;
-stdcol.endMainTvalSeq = stdcol.mainTvalSeq + length(mtv);
-stdcol.orthoTvalSeq = stdcol.endMainTvalSeq + 1;
-stdcol.endOrthoTvalSeq = stdcol.orthoTvalSeq + length(otv);
-stdcol.highRewProb = stdcol.endOrthoTvalSeq + 1;
-stdcol.lowRewProb = stdcol.highRewProb + 1;
+stdcol.endMainTvalSeq = 
+stdcol.orthoTvalSeq = 
+stdcol.highRewProb = 
+stdcol.lowRewProb = 
 stdcol.endParamData = stdcol.lowRewProb + 1;
 
 % --- AGGREGATE CHOICE REWARD DATA
