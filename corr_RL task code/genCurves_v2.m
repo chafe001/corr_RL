@@ -68,7 +68,7 @@ function [] = genCurves_v2()
 
 % set curveParams structure
 
-curveParams.nBlocks = 2;
+curveParams.nBlocks = 10;
 curveParams.nStates = 2;
 
 curveParams.n_tvals_main = 12;

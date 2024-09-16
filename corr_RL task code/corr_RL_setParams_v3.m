@@ -16,7 +16,7 @@ params.numBlocks = 10;  % WARNING: THIS NEEDS TO MATCH NUMBER OF BLOCKS IN CONDI
 params.repsPerCond = 4;
 params.blockChange = 'netWinsMode';
 % params.blockChange = 'condRepsMode';
-params.netWin_criterion = 7;  % number of netWins before switching block
+params.netWin_criterion = 10;  % number of netWins before switching block
 
 % --- BAR CONTROL
 params.randCuePercent = true;
