@@ -83,6 +83,7 @@ curveParams.D = 256; % resolution_of_curves
 curveParams.K = 2; % number of axes in curve space that we will sample
 % curveParams.S = 1; % number of "exposures" to generate - not used presently
 curveParams.save_png = true;
+
 curveParams.plotCurveSeq = true;
 
 curveParams.n_knot_points = 5;
@@ -137,17 +138,30 @@ for b = 1:curveParams.nBlocks
 
         % set limits on t for this state. States 1 and 2 correspond to first
         % and second halves of manifold for now
+        % switch s
+        %     case 1
+        %         main_lowerT = -1;
+        %         main_upperT = 0;
+        %         ortho_lowerT = -0.5;
+        %         ortho_upperT = 0.5;
+        %     case 2
+        %         main_lowerT = 0;
+        %         main_upperT = 1;
+        %         ortho_lowerT = -0.5;
+        %         ortho_upperT = 0.5;
+        % end
+
         switch s
             case 1
-                main_lowerT = -1;
-                main_upperT = 0;
-                ortho_lowerT = -0.5;
-                ortho_upperT = 0.5;
-            case 2
-                main_lowerT = 0;
+                main_lowerT = 0.8;
                 main_upperT = 1;
-                ortho_lowerT = -0.5;
-                ortho_upperT = 0.5;
+                ortho_lowerT = -1;
+                ortho_upperT = 1;
+            case 2
+                main_lowerT = 0.6;
+                main_upperT = 0.8;
+                ortho_lowerT = -1;
+                ortho_upperT = 1;
         end
 
         % --- set range of t values specifying weights with which endcurve
