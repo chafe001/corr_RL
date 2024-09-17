@@ -111,10 +111,17 @@ switch params.stimulusType
                     condArrayTemp(b, s, d).curveMovieDir = d;
 
                     % --- SET BLOCK-LEVEL VARIABLES to control curve movies
+                    % keeping switches from prior version. To lock these
+                    % variables at a desired value, set to SAME VALUE for
+                    % both even and odd blocks below
                     if mod(b, 2) ~= 0 % odd block
                         condArrayTemp(b, s, d).snr = 1;
-                    else
+                        condArrayTemp(b, s, d).curveMovieOrientation = 'horizontal';
+                        condArrayTemp(b, s, d).curveMovieType = 'smooth';
+                    else  % even block
                         condArrayTemp(b, s, d).snr = 2;
+                        condArrayTemp(b, s, d).curveMovieOrientation = 'horizontal';
+                        condArrayTemp(b, s, d).curveMovieType = 'smooth';
                     end
 
                 end
@@ -132,7 +139,7 @@ condNo = 1;
 for b = 1 : params.numBlocks
     for s = 1 : params.numStates
         for d = 1 : 2
-            thisCond = condArrayTemp(b, s, d, o);
+            thisCond = condArrayTemp(b, s, d);
             thisCond.condNo = condNo;
             condNo = condNo + 1;
             condArray = [condArray; thisCond];
