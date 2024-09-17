@@ -123,6 +123,7 @@ switch params.stimType
         plot_bData_bars(stdcol, bData);
 
     case 'curves'
+        plot_bData_curves(stdcol, bData);
 
 end
 
@@ -225,7 +226,6 @@ function [thisTrial, stdcol] = extractTrial_curves(inTrial, params, thisFile)
 trialData = [];
 eventData = [];
 
-sepval = -11111;
 
 % --- AGGREGATE ML HEADER TRIAL DATA as originally saved
 trialCountData = [thisFile inTrial.Trial inTrial.BlockCount inTrial.TrialWithinBlock inTrial.Block inTrial.Condition inTrial.TrialError];
@@ -250,18 +250,43 @@ switch inTrial.UserVars.params.blockChange
         bcm = 2;
 end
 nwc = inTrial.UserVars.params.netWin_criterion;
-mm = inTrial.UserVars.params.movieMode;
-st = inTrial.UserVars.params.stimulusType;
+switch inTrial.UserVars.params.movieMode
+    case 'stdp'
+        mm = 1;
+end
+switch inTrial.UserVars.params.stimulusType
+    case 'bars'
+        st = 1;
+    case 'curves'
+        st = 2;
+end
 cpm = inTrial.UserVars.params.nCurvesPerMovie;
-bp = inTrial.UserVars.params.blockParam;
+switch inTrial.UserVars.params.blockParam
+
+    case 'curveMovieType'
+        bp = 1;
+
+end
 ntvm = inTrial.UserVars.params.n_tvals_main;
 ntvo = inTrial.UserVars.params.n_tvals_ortho;
 skg = inTrial.UserVars.params.size_of_knot_grid;
 mkn = inTrial.UserVars.params.max_knot_number;
 nkp = inTrial.UserVars.params.n_knot_points;
 qd = inTrial.UserVars.movieParams.quad;
-cmt = inTrial.UserVars.movieParams.curveMovieType;
-cmo = inTrial.UserVars.movieParams.orientation;
+switch inTrial.UserVars.movieParams.curveMovieType
+    case 'smooth'
+        cmt = 1;
+    case 'rough'
+        cmt = 2;
+end
+switch inTrial.UserVars.movieParams.orientation
+    case 'horizontal'
+        cmo = 1;
+    case 'vertical'
+        cmo = 2;
+    case 'diagonal'
+        cmo = 3;
+end
 msq = inTrial.UserVars.movieParams.mainSeq;
 osq = inTrial.UserVars.movieParams.orthoSeq;
 mtv = inTrial.UserVars.movieParams.mainTvalSeq;
@@ -269,7 +294,7 @@ otv = inTrial.UserVars.movieParams.orthoTvalSeq;
 hrp = inTrial.UserVars.params.highRewProb;
 lrp = inTrial.UserVars.params.lowRewProb;
 
-paramData = [nb rpc nwc mm st cpm bp ntvm ntvo skg mkn nkp qd cmt cmo msq sepVal osq sepVal mtv sepVal otv sepVal hrp lrp];
+paramData = [nb rpc bcm nwc mm st cpm bp ntvm ntvo skg mkn nkp qd cmt cmo msq params.sepValue osq params.sepValue mtv params.sepValue otv params.sepValue hrp lrp];
 
 % --- add parameter vars to stdcol
 stdcol.numBlocks = stdcol.endTrialCountData + 1;
@@ -438,6 +463,82 @@ bob = 1;
 
 end
 
+% ----------------------------------------------------------------------
+function [] = plot_bData_curves(stdcol, bData)
+
+trialMin = 0;
+trialMax = 40;
+trialTick = 5;
+tickLength = 0.03;
+left = 1.0;
+bottom = 1.0;
+width = 4.0;
+height = 3.0;
+perfMin = 0.0;
+perfMax = 1.0;
+perfTick = 0.10;
+
+% proportion choseCorrect by trialInBlock, learning curve in block
+cc_by_trlBlk = grpstats(bData(:, stdcol.choseCorrect), bData(:, stdcol.trialInBlock));
+figure;
+plot(cc_by_trlBlk);
+axis([trialMin, trialMax, perfMin, perfMax]);  %  reset ranges for x and y axes
+set(gca, 'box', 'off');
+set(gca, 'TickDir', 'out');   
+set(gca, 'XTick', trialMin:trialTick:trialMax);
+set(gca, 'YTick', perfMin:perfTick:perfMax);
+set(gca, 'TickLength', [tickLength tickLength]);            %  this in proportion of x axis
+set(gca, 'FontName', 'Arial');
+set(gca, 'FontSize', 9);  
+set(gca, 'Units', 'centimeters');
+set(gca, 'Position', [left bottom width height]);
+title('choseCorrect by trialInBlock', 'FontSize', 9, 'FontWeight', 'normal');
+
+minCuePerc = 1;
+maxCuePerc = 4;
+cuePercTick = 1;
+
+% proportion choseCorrect by cueMovieOrientation, direction of movie
+% through feature/noise feature grid
+[mean, sem] = grpstats(bData(:, stdcol.choseCorrect), bData(:, stdcol.curveMovieOrientation), {'mean', 'sem'});
+figure;
+errorbar(mean, sem);
+xSpan = xlim;
+ySpan = ylim;
+axis([xSpan(1) - 0.5, xSpan(2) + 0.5, ySpan(1), ySpan(2)]);
+set(gca, 'box', 'off');
+set(gca, 'TickDir', 'out');   
+set(gca, 'XTick', xSpan(1):1:xSpan(2));
+set(gca, 'YTick', perfMin:perfTick:perfMax);
+set(gca, 'TickLength', [tickLength tickLength]);            %  this in proportion of x axis
+set(gca, 'FontName', 'Arial');
+set(gca, 'FontSize', 9);  
+set(gca, 'Units', 'centimeters');
+set(gca, 'Position', [left bottom width height]);
+title('choseCorrect by curveMovieOrientation', 'FontSize', 9, 'FontWeight', 'normal');
+
+% propotion choseCorrect by curveMovieType, smooth or rough
+[mean, sem] = grpstats(bData(:, stdcol.choseCorrect), bData(:, stdcol.curveMovieType), {'mean', 'sem'});
+figure;
+errorbar(mean, sem);
+xSpan = xlim;
+ySpan = ylim;
+axis([xSpan(1) - 0.5, xSpan(2) + 0.5, ySpan(1), ySpan(2)]);
+set(gca, 'box', 'off');
+set(gca, 'TickDir', 'out');   
+set(gca, 'XTick', xSpan(1):1:xSpan(2));
+set(gca, 'YTick', perfMin:perfTick:perfMax);
+set(gca, 'TickLength', [tickLength tickLength]);            %  this in proportion of x axis
+set(gca, 'FontName', 'Arial');
+set(gca, 'FontSize', 9);  
+set(gca, 'Units', 'centimeters');
+set(gca, 'Position', [left bottom width height]);
+title('choseCorrect by curveMovieType', 'FontSize', 9, 'FontWeight', 'normal');
+
+
+bob = 1;
+
+end
 
 % % ANALYZE BDATA -----------------------------------------------------------
 % function [] = analyze_bData(bData, stdcol, params)

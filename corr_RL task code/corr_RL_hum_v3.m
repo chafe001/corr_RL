@@ -17,6 +17,10 @@
 % algorithm). Drawing too slow for runtime, files must be generated before
 % the start of the run.
 
+% v4: Modified to allow modified balance between main (signal) and ortho
+% (noise) manifolds combined to make curves in blocks, to have low and high
+% signal-to-noise shapes
+
 
 % ---- notes from preceding xPairs task development
 
