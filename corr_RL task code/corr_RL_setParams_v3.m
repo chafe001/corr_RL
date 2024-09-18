@@ -17,6 +17,7 @@ params.repsPerCond = 4;
 params.blockChange = 'netWinsMode';
 % params.blockChange = 'condRepsMode';
 params.netWin_criterion = 10;  % number of netWins before switching block
+params.numStates = 2; % this overwritten by curveParams if curveMovie at present, but needed for bars
 
 % --- BAR CONTROL
 params.randCuePercent = true;
@@ -35,8 +36,8 @@ params.movieMode = 'stdp';
 % --- CURVE CONTROL
 % determine whether to use bars with xPairs algorithm or curves with Dave's
 % curve generating code and Thomas' algorithm
-% params.stimulusType = 'bars';
-params.stimulusType = 'curves';
+params.stimulusType = 'bars';
+% params.stimulusType = 'curves';
 params.nCurvesPerMovie = 8;
 % set which movie parameter is modified at block level
 params.blockParam = 'curveMovieType';

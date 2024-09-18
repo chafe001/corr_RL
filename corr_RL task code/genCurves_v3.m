@@ -12,7 +12,7 @@ function [] = genCurves_v3()
 % Matlab.  Then checked that it worked. Thomas noticed some potential
 % oddities in the algorithm, needs a look over
 
-% gendcurves
+% genCurves
 % converting to function to generate sets of curves for each block.
 % Alternating curve complexity (smooth, rough) over blocks, and outputting
 % png files to be loaded by MovieGraphic in monkeyLoogic. corr_RL v3

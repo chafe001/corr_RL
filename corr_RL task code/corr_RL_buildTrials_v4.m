@@ -61,7 +61,7 @@ switch params.stimulusType
             % LEFT and RIGHT reward states
             for rs = LEFT:RIGHT
                 condArrayTemp(bn, rs).blockNum = bn;
-                condArrayTemp(bn, rs).movieRewState = rs;
+                condArrayTemp(bn, rs).state = rs;
                 condArrayTemp(bn, rs).cuePercent = cuePercent;
                 switch rs
                     case LEFT
@@ -72,6 +72,18 @@ switch params.stimulusType
                 condArrayTemp(bn, rs).noisePairs = noisePairs;
             end
 
+        end
+
+        % Convert conditions matrix into a one dimensional struct array
+        condArray = [];
+        condNo = 1;
+        for bs = 1 : params.numBlocks
+            for rs = 1 : params.numStates
+                thisCond = condArrayTemp(bs, rs);
+                thisCond.condNo = condNo;
+                condNo = condNo + 1;
+                condArray = [condArray; thisCond];
+            end
         end
 
 
@@ -128,25 +140,21 @@ switch params.stimulusType
             end % for s
         end % for b
 
-        bob = 2;
-
-
-end
-
-% Convert conditions matrix into a one dimensional struct array
-condArray = [];
-condNo = 1;
-for b = 1 : params.numBlocks
-    for s = 1 : params.numStates
-        for d = 1 : 2
-            thisCond = condArrayTemp(b, s, d);
-            thisCond.condNo = condNo;
-            condNo = condNo + 1;
-            condArray = [condArray; thisCond];
+        % Convert conditions matrix into a one dimensional struct array
+        condArray = [];
+        condNo = 1;
+        for b = 1 : params.numBlocks
+            for s = 1 : params.numStates
+                for d = 1 : 2
+                    thisCond = condArrayTemp(b, s, d);
+                    thisCond.condNo = condNo;
+                    condNo = condNo + 1;
+                    condArray = [condArray; thisCond];
+                end
+            end
         end
-    end
-end
 
+end
 
 bob = 3;
 
