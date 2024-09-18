@@ -53,7 +53,7 @@ for n = 1 : numNoiseRight
 end
 
 noiseLeftVect = [];
-for n = 1 : numNoiseRight
+for n = 1 : numNoiseLeft
     randNoiseInd = randi(4) + 4;
     noiseLeftVect = [noiseLeftVect randNoiseInd];
 end

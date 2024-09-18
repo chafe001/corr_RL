@@ -143,17 +143,12 @@ switch inTrial.UserVars.params.blockChange
         bcm = 2;
 end
 nwc = inTrial.UserVars.params.netWin_criterion;
-cp = inTrial.UserVars.condArray(inTrial.Condition).cuePercent;
-cpr = inTrial.UserVars.params.cuePercentRange;
-% compute cuePercentGroup based on cuePercent and cuePercentRange
-cpg = find(inTrial.UserVars.params.cuePercentRange == cp);
-cp_eb = inTrial.UserVars.params.cuePercent_easy;
-cp_hb = inTrial.UserVars.params.cuePercent_hard;
+
 mps = inTrial.UserVars.params.moviePairSlots;
 hrp = inTrial.UserVars.params.highRewProb;
 lrp = inTrial.UserVars.params.lowRewProb;
 
-paramData = [nb rpc bcm nwc cp cpg cpr cp_eb cp_hb mps hrp lrp];
+paramData = [nb rpc bcm nwc mps hrp lrp];
 
 % --- add parameter vars to stdcol
 stdcol.numBlocks = stdcol.endTrialCountData + 1;
@@ -161,13 +156,7 @@ stdcol.repsPerCond = stdcol.numBlocks + 1;
 stdcol.blockChangeMode = stdcol.repsPerCond + 1;
 stdcol.netWinCriterion = stdcol.blockChangeMode + 1;
 stdcol.cuePercent = stdcol.netWinCriterion + 1;
-stdcol.cuePercentGroup = stdcol.cuePercent + 1;
-stdcol.cuePercentRangeStart = stdcol.cuePercentGroup + 1;
-stdcol.cuePercentRangeStop = stdcol.cuePercentRangeStart + length(cpr) - 1;
-stdcol.cuePercent_easy = stdcol.cuePercentRangeStop + 1;
-stdcol.cuePercent_hard = stdcol.cuePercent_easy + 1;
-stdcol.moviePairSlots = stdcol.cuePercent_hard + 1;
-stdcol.highRewProb = stdcol.moviePairSlots + 1;
+stdcol.highRewProb = stdcol.cuePercent + 1;
 stdcol.lowRewProb = stdcol.highRewProb + 1;
 stdcol.endParamData = stdcol.lowRewProb + 1;
 
