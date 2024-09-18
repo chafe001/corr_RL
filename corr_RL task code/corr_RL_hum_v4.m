@@ -457,7 +457,6 @@ end
 
 switch TrialRecord.User.params.stimulusType
 
-
     case 'bars'
         trlInfoStr = strcat(keyStr, ...
             '  Trial:', num2str(t), ...
@@ -509,8 +508,6 @@ switch TrialRecord.User.params.stimulusType
         dashboard(5, movieInfoStr3, [0 0 0], 'FontSize', 8);
 
 end
-
-
 
 % write event codes to store ML condition and trial numbers
 mult256 = floor(TrialRecord.CurrentTrialNumber/256) + 1;
