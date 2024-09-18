@@ -1,4 +1,4 @@
-function corrRL_bin2mat_v4()
+nfunction corrRL_bin2mat_v4()
 %%
 
 % This function opens monkeyLogic bhv2 output files, converts to a matlab

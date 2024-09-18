@@ -106,7 +106,7 @@ curve_of_origin = curve_of_origin * radius;
 % --- t val ranges to control mixtures of signal (main) and noise (ortho)
 % manifolds 
 cuveParams.t_limit_large = 1;
-cuveParams.t_limit_small = 0.25;
+cuveParams.t_limit_small = 0.50;
 cuveParams.t_limit_offset = 0.5;
 
 for b = 1:curveParams.nBlocks
