@@ -55,87 +55,24 @@ randStim = allStim(randperm(size(allStim, 1)), :);
 
 
 
-% --- SET BLOCKSTIM
-% --- set individual cue and noise stimulus parameters
+% --- SET BLOCKSTIM (cue stim and noise stim)
+for cs = 1 : params.numCueStim
+    blockStim.cue(cs).EdgeColor = randStim(cs).FaceColor;
+    blockStim.cue(cs).FaceColor = randStim(cs).FaceColor;
+    blockStim.cue(cs).Size = params.Size;
+    blockStim.cue(cs).Angle = randStim(cs).Angle;
+    blockStim.cue(cs).FileName = findFileName(randStim(cs));
+end
 
-% --- CUE STIMULI
+for ns = 1 : (length(randStim) - params.numCueStim)
+    rndIndx = ns + params.numCueStim;
+    blockStim.noise(ns).EdgeColor = randStim(rndIndx).FaceColor;
+    blockStim.noise(ns).FaceColor = randStim(rndIndx).FaceColor;
+    blockStim.noise(ns).Size = params.Size;
+    blockStim.noise(ns).Angle = randStim(rndIndx).Angle;
+    blockStim.noise(ns).FileName = findFileName(randStim(rndIndx));
+end
 
-
-% for cs = 1 : params.numCueStim
-% 
-% 
-% 
-% 
-% 
-% 
-% end
-
-
-% --- left cue 1
-blockStim.cue(1, 1).EdgeColor = randStim(1).FaceColor;
-blockStim.cue(1, 1).FaceColor = randStim(1).FaceColor;
-blockStim.cue(1, 1).Size = params.Size;
-blockStim.cue(1, 1).Position = params.leftPos;
-blockStim.cue(1, 1).Angle = randStim(1).Angle;
-blockStim.cue(1, 1).FileName = findFileName(randStim(1));
-
-% --- left cue 2
-blockStim.cue(1, 2).EdgeColor = randStim(2).FaceColor;
-blockStim.cue(1, 2).FaceColor = randStim(2).FaceColor;
-blockStim.cue(1, 2).Size = params.Size;
-blockStim.cue(1, 2).Position = params.leftPos;
-blockStim.cue(1, 2).Angle = randStim(2).Angle;
-blockStim.cue(1, 2).FileName = findFileName(randStim(2));
-
-% --- right cue 1
-blockStim.cue(2, 1).EdgeColor = randStim(3).FaceColor;
-blockStim.cue(2, 1).FaceColor = randStim(3).FaceColor;
-blockStim.cue(2, 1).Size = params.Size;
-blockStim.cue(2, 1).Position = params.rightPos;
-blockStim.cue(2, 1).Angle = randStim(3).Angle;
-blockStim.cue(2, 1).FileName = findFileName(randStim(3));
-
-% --- right cue 2
-blockStim.cue(2, 2).EdgeColor = randStim(4).FaceColor;
-blockStim.cue(2, 2).FaceColor = randStim(4).FaceColor;
-blockStim.cue(2, 2).Size = params.Size;
-blockStim.cue(2, 2).Position = params.rightPos;
-blockStim.cue(2, 2).Angle = randStim(4).Angle;
-blockStim.cue(2, 2).FileName = findFileName(randStim(4));
-
-% --- NOISE STIMULI
-
-% --- left noise 1
-blockStim.noise(1, 1).EdgeColor = randStim(5).FaceColor;
-blockStim.noise(1, 1).FaceColor = randStim(5).FaceColor;
-blockStim.noise(1, 1).Size = params.Size;
-blockStim.noise(1, 1).Position = params.leftPos;
-blockStim.noise(1, 1).Angle = randStim(5).Angle;
-blockStim.noise(1, 1).FileName = findFileName(randStim(5));
-
-% --- left noise 2
-blockStim.noise(1, 2).EdgeColor = randStim(6).FaceColor;
-blockStim.noise(1, 2).FaceColor = randStim(6).FaceColor;
-blockStim.noise(1, 2).Size = params.Size;
-blockStim.noise(1, 2).Position = params.leftPos;
-blockStim.noise(1, 2).Angle = randStim(6).Angle;
-blockStim.noise(1, 2).FileName = findFileName(randStim(6));
-
-% --- right noise 1
-blockStim.noise(2, 1).EdgeColor = randStim(7).FaceColor;
-blockStim.noise(2, 1).FaceColor = randStim(7).FaceColor;
-blockStim.noise(2, 1).Size = params.Size;
-blockStim.noise(2, 1).Position = params.rightPos;
-blockStim.noise(2, 1).Angle = randStim(7).Angle;
-blockStim.noise(2, 1).FileName = findFileName(randStim(7));
-
-% --- right noise 2
-blockStim.noise(2, 2).EdgeColor = randStim(8).FaceColor;
-blockStim.noise(2, 2).FaceColor = randStim(8).FaceColor;
-blockStim.noise(2, 2).Size = params.Size;
-blockStim.noise(2, 2).Position = params.rightPos;
-blockStim.noise(2, 2).Angle = randStim(8).Angle;
-blockStim.noise(2, 2).FileName = findFileName(randStim(8));
 
 bob = 1;
 

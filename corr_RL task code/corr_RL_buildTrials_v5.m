@@ -57,22 +57,57 @@ switch params.stimulusType
                 for bn = 1 : params.numBlocks
 
                     % -- 1. select feature combinations of individual stimuli for this block
-                    [blockStim] = corr_RL_sampleStimSpace_v2(params);
-
+                    [blockStim] = corr_RL_sampleStimSpace_v2(params);  % new for corr_RL v5
 
                     % --- 2. map orthogonal stimulus pairs to LEFT and RIGHT responses
-                    [cuePairs, noisePairs] = corr_RL_pairStimuli_v1(blockStim);
-
-                    bob = 1;
+                    [cuePairs, noisePairs] = corr_RL_pairStimuli_v2(blockStim, params); % new for corr_RL v5
 
 
+                    % --- 3. select number of cue pairs for this block, and hence degree of
+                    % visual noise (number of noise pairs) added to the movie
+                    if params.randCuePercent
+                        % select random index into the numCuePairs array and retrieve value
+                        cuePercent = params.cuePercentRange(randi(size(params.cuePercentRange, 2)));
+                    else
+                        if mod(bn, 2) == 1 % odd block
+                            cuePercent = params.cuePercent_easy;
+                        else  % even block
+                            cuePercent = params.cuePercent_hard;
+                        end
+                    end
 
+                    % --- 4. assign each condition, associated with a unique cue movie, to
+                    % LEFT and RIGHT reward states
 
+                        for rs = LEFT:RIGHT
+                            condArrayTemp(bn, rs).blockNum = bn;
+                            condArrayTemp(bn, rs).state = rs;
+                            condArrayTemp(bn, rs).cuePercent = cuePercent;
+                            switch rs
+                                case LEFT
+                                    for p = 1 : size(cuePairs, 1)
+                                        condArrayTemp(bn, rs).cuePairs(p) = cuePairs(p).stateA;
+                                    end
+                                case RIGHT
+                                    for p = 1 : size(cuePairs, 1)
+                                        condArrayTemp(bn, rs).cuePairs(p) = cuePairs(p).stateB;
+                                    end
+                            end
+                        end
 
+                end  % for bn
 
+                % Convert conditions matrix into a one dimensional struct array
+                condArray = [];
+                condNo = 1;
+                for bs = 1 : params.numBlocks
+                    for rs = 1 : params.numStates
+                        thisCond = condArrayTemp(bs, rs);
+                        thisCond.condNo = condNo;
+                        condNo = condNo + 1;
+                        condArray = [condArray; thisCond];
+                    end
                 end
-
-
 
 
             case 'xPairs'
@@ -121,7 +156,7 @@ switch params.stimulusType
                         condArrayTemp(bn, rs).noisePairs = noisePairs;
                     end
 
-                end
+                end  % for bn
 
                 % Convert conditions matrix into a one dimensional struct array
                 condArray = [];
@@ -135,82 +170,76 @@ switch params.stimulusType
                     end
                 end
 
-        end
+                bob = 1;
 
 
+            case 'curves'
 
+                % --- open curveParams file specifying how curves were generated,
+                % this has blockNum and state information also
+                cd blockstim
+                load('curveParams.mat');
+                cd ..
 
+                % --- update params with curveParams info, OK to do here because
+                % buildTrials will return the updated params
+                params.numBlocks = curveParams.nBlocks;
+                params.numStates = curveParams.nStates;
+                params.n_tvals_main = curveParams.n_tvals_main;
+                params.n_tvals_ortho = curveParams.n_tvals_ortho;
+                params.size_of_knot_grid = curveParams.size_of_knot_grid;
+                params.low = curveParams.low;
+                params.high = curveParams.high;
+                params.max_knot_number = curveParams.max_knot_number;
+                params.D = curveParams.D;
+                params.K = curveParams.K;
+                params.n_knot_points = curveParams.n_knot_points;
+                params.endcurve_t = curveParams.endcurve_t;
+                params.orthocurve_t = curveParams.orthocurve_t;
 
-        bob = 1;
+                for b = 1 : params.numBlocks
+                    for s = 1 : params.numStates
+                        for d = 1 : 2  % movie directions, forward and back
 
+                            condArrayTemp(b, s, d).blockNum = b;
+                            condArrayTemp(b, s, d).state = s;
+                            condArrayTemp(b, s, d).curveMovieDir = d;
 
-    case 'curves'
+                            % --- SET BLOCK-LEVEL VARIABLES to control curve movies
+                            % keeping switches from prior version. To lock these
+                            % variables at a desired value, set to SAME VALUE for
+                            % both even and odd blocks below
+                            if mod(b, 2) ~= 0 % odd block
+                                condArrayTemp(b, s, d).snr = 1;
+                                condArrayTemp(b, s, d).curveMovieOrientation = 'horizontal';
+                                condArrayTemp(b, s, d).curveMovieType = 'smooth';
+                            else  % even block
+                                condArrayTemp(b, s, d).snr = 2;
+                                condArrayTemp(b, s, d).curveMovieOrientation = 'horizontal';
+                                condArrayTemp(b, s, d).curveMovieType = 'smooth';
+                            end
 
-        % --- open curveParams file specifying how curves were generated,
-        % this has blockNum and state information also
-        cd blockstim
-        load('curveParams.mat');
-        cd ..
+                        end
+                    end % for s
+                end % for b
 
-        % --- update params with curveParams info, OK to do here because
-        % buildTrials will return the updated params
-        params.numBlocks = curveParams.nBlocks;
-        params.numStates = curveParams.nStates;
-        params.n_tvals_main = curveParams.n_tvals_main;
-        params.n_tvals_ortho = curveParams.n_tvals_ortho;
-        params.size_of_knot_grid = curveParams.size_of_knot_grid;
-        params.low = curveParams.low;
-        params.high = curveParams.high;
-        params.max_knot_number = curveParams.max_knot_number;
-        params.D = curveParams.D;
-        params.K = curveParams.K;
-        params.n_knot_points = curveParams.n_knot_points;
-        params.endcurve_t = curveParams.endcurve_t;
-        params.orthocurve_t = curveParams.orthocurve_t;
-
-        for b = 1 : params.numBlocks
-            for s = 1 : params.numStates
-                for d = 1 : 2  % movie directions, forward and back
-
-                    condArrayTemp(b, s, d).blockNum = b;
-                    condArrayTemp(b, s, d).state = s;
-                    condArrayTemp(b, s, d).curveMovieDir = d;
-
-                    % --- SET BLOCK-LEVEL VARIABLES to control curve movies
-                    % keeping switches from prior version. To lock these
-                    % variables at a desired value, set to SAME VALUE for
-                    % both even and odd blocks below
-                    if mod(b, 2) ~= 0 % odd block
-                        condArrayTemp(b, s, d).snr = 1;
-                        condArrayTemp(b, s, d).curveMovieOrientation = 'horizontal';
-                        condArrayTemp(b, s, d).curveMovieType = 'smooth';
-                    else  % even block
-                        condArrayTemp(b, s, d).snr = 2;
-                        condArrayTemp(b, s, d).curveMovieOrientation = 'horizontal';
-                        condArrayTemp(b, s, d).curveMovieType = 'smooth';
+                % Convert conditions matrix into a one dimensional struct array
+                condArray = [];
+                condNo = 1;
+                for b = 1 : params.numBlocks
+                    for s = 1 : params.numStates
+                        for d = 1 : 2
+                            thisCond = condArrayTemp(b, s, d);
+                            thisCond.condNo = condNo;
+                            condNo = condNo + 1;
+                            condArray = [condArray; thisCond];
+                        end
                     end
-
                 end
-            end % for s
-        end % for b
 
-        % Convert conditions matrix into a one dimensional struct array
-        condArray = [];
-        condNo = 1;
-        for b = 1 : params.numBlocks
-            for s = 1 : params.numStates
-                for d = 1 : 2
-                    thisCond = condArrayTemp(b, s, d);
-                    thisCond.condNo = condNo;
-                    condNo = condNo + 1;
-                    condArray = [condArray; thisCond];
-                end
-            end
         end
 
-end
-
-bob = 3;
+        bob = 3;
 
 
 end

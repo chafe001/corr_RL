@@ -372,7 +372,16 @@ end
 switch TrialRecord.User.params.stimulusType
 
     case 'bars'
-        [movieFrames, pairSeq] = corr_RL_generateStimMovie_v1(TrialRecord);
+        
+        switch TrialRecord.User.params.pairMode
+            case 'randList'
+                [movieFrames, pairSeq] = corr_RL_generateBarMovie_v2(TrialRecord);
+
+            case 'xPairs'
+                [movieFrames, pairSeq] = corr_RL_generateBarMovie_v1(TrialRecord);
+
+        end
+        
         TrialRecord.User.movieFrames = movieFrames;
         TrialRecord.User.pairSeq = pairSeq;
 
