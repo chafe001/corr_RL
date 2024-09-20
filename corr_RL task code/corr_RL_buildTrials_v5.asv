@@ -57,7 +57,7 @@ switch params.stimulusType
                 for bn = 1 : params.numBlocks
 
                     % -- 1. select feature combinations of individual stimuli for this block
-                    [blockStim] = corr_RL_sampleStimSpace_v2(params);
+                    [blockStim] = corr_RL_s_v1(params);
 
 
                     % --- 2. map orthogonal stimulus pairs to LEFT and RIGHT responses
