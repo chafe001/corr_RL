@@ -1,4 +1,4 @@
-function [movieImages, pairSeq] = corr_RL_generateBarMovie_v2(TrialRecord)
+function [movieImages, pairSeq] = corr_RL_generateBarMovie_v2_mockup(TrialRecord)
 % This function returns a cell array, movieImages, that is used to set the
 % 'List' property of a imageChanger() object.  This controls the sequence
 % of images presented in the movie, which controls the proportion of cue
@@ -8,67 +8,25 @@ function [movieImages, pairSeq] = corr_RL_generateBarMovie_v2(TrialRecord)
 % v1: works with original xPairs design
 % v2: adds new randList pairs design
 
+% --- if real fx, uncomment the following  lines
 condArray = TrialRecord.User.condArray;
+params = TrialRecord.User.params;
 c = TrialRecord.CurrentCondition;
-params = corr_RL_setParams_v4();
+
+% --- if mockup, uncomment the following  lines
+% [condArray, params] = corr_RL_buildTrials_v5();
+% c = 4; % hard code condition number
+% bn = 2; % hard code block number
+
 times = corr_RL_setTimes_v3();
 codes = corr_RL_setBarCodes_v3();
 
-% --- BUILD PAIRSEQ VECTOR which is a sequence of indicies to access and retrieve 
-% stimulus information from condArray.  Each row of condArray, corresponding to a
-% single trial condition (c), includes an array of cuePairs and noisePairs. The
-% stimulus movie constructed for trials of this condition will be a sequence of pair
-% images selected from these arrays.  To specify specific stimuli in each pair, we
-% need a vector of indices that specify which cue pair to use (1 of 2 pairs for each
-% condition), and which noise pair to use (1 of 8 pairs for each condition).
-
-% Note: new method of introducing visual noise.  Noise pairs include one
-% cue stimuli (one of the initial 4 cue stimuli specified at the beggining of each 
-% block) and one noise stimulus, which is a stimulus with feature
-% combinations other than those of cue stimuli.  This precludes, for now,
-% mixing cue pairs for reward state 1 and 2 in dfferent combinations in the
-% same movie, Newsome/Shadlen-style, which seems a different question about
-% perceptual discrimination than statistical learning which is our current
-% focus
-
-% --- retrive number of cue pairs for this movie
-numCuePairs = round(condArray(c).cuePercent * params.numMoviePairs);
-% --- build vector of 1s and 2s indicating which of the two cue pairs
-% associated with each condition to show each frame of the movie. (Note:
-% setParams() checks that numCuePairs is divisible by 2).
-cue1Vect = ones(1, round(numCuePairs/2));
-cue2Vect = ones(1, round(numCuePairs/2)) + 1;
-cueVect = [cue1Vect cue2Vect];
-
-% build vector of elements equal to 1-8 controlling whether to include
-% noise pair 1-8 in each movie frame.  Add 10 to each element to indicate
-% this is an index into the noisePair array.
-numNoisePairs = params.numMoviePairs - numCuePairs;
-
-% divide noise pairs equally between pairs that are cue left/noise right
-% (ind 1-4) and pairs that are noise left/cue right (ind 5-8)
-numNoiseRight = floor(numNoisePairs/2);
-numNoiseLeft = numNoisePairs - numNoiseRight;
-
-noiseRightVect = [];
-for n = 1 : numNoiseRight
-    randNoiseInd = randi(4);
-    noiseRightVect = [noiseRightVect randNoiseInd];
-end
-
-noiseLeftVect = [];
-for n = 1 : numNoiseLeft
-    randNoiseInd = randi(4) + 4;
-    noiseLeftVect = [noiseLeftVect randNoiseInd];
-end
-% aggregate noise indices
-noiseVect = [noiseRightVect noiseLeftVect];
-noiseVect = noiseVect + 10;
-
-% concatenate cue and noise vectors into pairSeq
-pairSeq = [cueVect noiseVect];
-% --- randomize order of pairSeq
-pairSeq = pairSeq(randperm(length(pairSeq)));
+% --- create pairSeq vector specifying which pairs to show how many times
+% in movie in randomized order
+nPairs = size(condArray(c).cuePairs, 2);
+pairSeq = 1:nPairs;
+pairSeq = repmat(pairSeq, 1, params.numCueReps);
+pairSeq = pairSeq(randperm(size(pairSeq, 2)));
 
 % --- build seq of pairs, stim and noise, to control movie frames
 for p = 1 : length(pairSeq)

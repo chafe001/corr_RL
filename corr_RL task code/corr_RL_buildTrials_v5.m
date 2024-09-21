@@ -89,8 +89,8 @@ switch params.stimulusType
                             case RIGHT
 
                                 condArrayTemp(bn, rs).cuePairs = stateB_pairs;
-
                         end
+                        condArrayTemp(bn, rs).noisePairs = noisePairs;
                     end
 
                 end  % for bn

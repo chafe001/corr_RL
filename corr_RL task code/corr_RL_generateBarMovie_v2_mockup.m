@@ -21,7 +21,12 @@ bn = 2; % hard code block number
 times = corr_RL_setTimes_v3();
 codes = corr_RL_setBarCodes_v3();
 
-% in randList mode 
+% --- create pairSeq vector specifying which pairs to show how many times
+% in movie in randomized order
+nPairs = size(condArray(c).cuePairs, 2);
+pairSeq = 1:nPairs;
+pairSeq = repmat(pairSeq, 1, params.numCueReps);
+pairSeq = pairSeq(randperm(size(pairSeq, 2)));
 
 % --- build seq of pairs, stim and noise, to control movie frames
 for p = 1 : length(pairSeq)
