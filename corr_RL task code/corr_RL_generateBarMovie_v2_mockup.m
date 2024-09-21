@@ -28,7 +28,18 @@ pairSeq = 1:nPairs;
 pairSeq = repmat(pairSeq, 1, params.numCueReps);
 pairSeq = pairSeq(randperm(size(pairSeq, 2)));
 
-% --- build seq of pairs, stim and noise, to control movie frames
+% --- add noise if enabled
+% degrade series by replacing subsets of cue pairs with either singletons
+% or noise pairs
+numNoisePairs = round((1 - condArray(c).cuePercent) * length(pairSeq));
+% pick this number of random indices into pairSeq, add 10 to pairSeq
+% numbers at these indices to indicate where to swap in noise stimuli
+noiseIndx = randperm(length(pairSeq));
+noiseIndx = sort(noiseIndx(1:numNoisePairs));
+pairSeq(noiseIndx) = pairSeq(noiseIndx) + 10;
+
+
+% --- build seq of image pairs, stim and noise, to control movie frames
 for p = 1 : length(pairSeq)
 
     if pairSeq(p) < 10 % stimPair

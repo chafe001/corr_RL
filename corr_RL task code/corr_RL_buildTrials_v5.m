@@ -40,9 +40,7 @@ switch params.stimulusType
 
     case 'bars'
 
-
         switch params.pairMode
-
 
             case 'randList'
                 % in randList pairMode, a fixed vector of bars is presented
