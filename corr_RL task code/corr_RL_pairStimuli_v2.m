@@ -47,9 +47,9 @@ end
 % --- STATE B PAIRS
 for p = 1 : length(stateB_leftVect)  % same number of cue pairs as number of cue stimuli
     stateB_pairs(p).leftStim = blockStim.cue(stateB_leftVect(p));
-    stateA_pairs(p).leftStim.Position = params.leftPos;
+    stateB_pairs(p).leftStim.Position = params.leftPos;
     stateB_pairs(p).rightStim = blockStim.cue(stateB_rightVect(p));
-    stateA_pairs(p).rightStim.Position = params.rightPos;
+    stateB_pairs(p).rightStim.Position = params.rightPos;
     stateB_pairs(p).pairID = [stateB_leftVect(p) stateB_rightVect(p)]; % left cue and right cue array indices
     stateB_pairs(p).pairRespSide = RIGHT;
 end
@@ -57,9 +57,9 @@ end
 % --- NOISE PAIRS
 for n = 1 : length(noise_leftVect)
     noisePairs(n).leftStim = blockStim.noise(noise_leftVect(n));
-    stateA_pairs(p).leftStim.Position = params.leftPos;
+    noisePairs(p).leftStim.Position = params.leftPos;
     noisePairs(n).rightStim = blockStim.noise(noise_rightVect(n));
-    stateA_pairs(p).rightStim.Position = params.rightPos;
+    noisePairs(p).rightStim.Position = params.rightPos;
     noisePairs(n).pairID = [stateB_leftVect(p) stateB_rightVect(n)]; % left cue and right cue array indices
     noisePairs(n).pairRespSide = NaN;
 end
