@@ -60,7 +60,7 @@ switch params.stimulusType
                     [blockStim] = corr_RL_sampleStimSpace_v2(params);  % new for corr_RL v5
 
                     % --- 2. map orthogonal stimulus pairs to LEFT and RIGHT responses
-                    [cuePairs, noisePairs] = corr_RL_pairStimuli_v2(blockStim, params); % new for corr_RL v5
+                    [stateA_pairs, stateB_pairs, noisePairs] = corr_RL_pairStimuli_v2(blockStim, params); % new for corr_RL v5
 
 
                     % --- 3. select number of cue pairs for this block, and hence degree of
@@ -79,21 +79,19 @@ switch params.stimulusType
                     % --- 4. assign each condition, associated with a unique cue movie, to
                     % LEFT and RIGHT reward states
 
-                        for rs = LEFT:RIGHT
-                            condArrayTemp(bn, rs).blockNum = bn;
-                            condArrayTemp(bn, rs).state = rs;
-                            condArrayTemp(bn, rs).cuePercent = cuePercent;
-                            switch rs
-                                case LEFT
-                                    for p = 1 : size(cuePairs, 1)
-                                        condArrayTemp(bn, rs).cuePairs(p) = cuePairs(p).stateA;
-                                    end
-                                case RIGHT
-                                    for p = 1 : size(cuePairs, 1)
-                                        condArrayTemp(bn, rs).cuePairs(p) = cuePairs(p).stateB;
-                                    end
-                            end
+                    for rs = LEFT:RIGHT
+                        condArrayTemp(bn, rs).blockNum = bn;
+                        condArrayTemp(bn, rs).state = rs;
+                        condArrayTemp(bn, rs).cuePercent = cuePercent;
+                        switch rs
+                            case LEFT
+                                condArrayTemp(bn, rs).cuePairs = stateA_pairs;
+                            case RIGHT
+
+                                condArrayTemp(bn, rs).cuePairs = stateB_pairs;
+
                         end
+                    end
 
                 end  % for bn
 

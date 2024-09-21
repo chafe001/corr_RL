@@ -1,4 +1,4 @@
-function [cuePairs, noisePairs] = corr_RL_pairStimuli_v2(blockStim, params)
+function [stateA_pairs, stateB_pairs, noisePairs] = corr_RL_pairStimuli_v2(blockStim, params)
 % This function organizes blockStim into pairs
 
 % VERSION HISTORY
@@ -35,18 +35,18 @@ noise_rightVect = noise_leftVect(randperm(length(noise_leftVect)));
 
 % --- STATE A PAIRS
 for p = 1 : length(stateA_leftVect)  % same number of cue pairs as number of cue stimuli
-    cuePairs(p).stateA.leftStim = blockStim.cue(stateA_leftVect(p));
-    cuePairs(p).stateA.rightStim = blockStim.cue(stateA_rightVect(p));
-    cuePairs(p).stateA.pairID = [stateA_leftVect(p) stateA_rightVect(p)]; % left cue and right cue array indices
-    cuePairs(p).stateA.pairRespSide = LEFT;
+    stateA_pairs(p).leftStim = blockStim.cue(stateA_leftVect(p));
+    stateA_pairs(p).rightStim = blockStim.cue(stateA_rightVect(p));
+    stateA_pairs(p).pairID = [stateA_leftVect(p) stateA_rightVect(p)]; % left cue and right cue array indices
+    stateA_pairs(p).pairRespSide = LEFT;
 end
 
 % --- STATE B PAIRS
 for p = 1 : length(stateB_leftVect)  % same number of cue pairs as number of cue stimuli
-    cuePairs(p).stateB.leftStim = blockStim.cue(stateB_leftVect(p));
-    cuePairs(p).stateB.rightStim = blockStim.cue(stateB_rightVect(p));
-    cuePairs(p).stateB.pairID = [stateB_leftVect(p) stateB_rightVect(p)]; % left cue and right cue array indices
-    cuePairs(p).stateB.pairRespSide = RIGHT;
+    stateB_pairs(p).leftStim = blockStim.cue(stateB_leftVect(p));
+    stateB_pairs(p).rightStim = blockStim.cue(stateB_rightVect(p));
+    stateB_pairs(p).pairID = [stateB_leftVect(p) stateB_rightVect(p)]; % left cue and right cue array indices
+    stateB_pairs(p).pairRespSide = RIGHT;
 end
 
 % --- NOISE PAIRS
