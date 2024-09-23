@@ -117,11 +117,11 @@ switch params.barNoiseMode
 
         % --- CHECK THAT CUE BAR COUNTS ARE CORRECT
         if tblLeft(:, 2) ~= params.numCueReps
-            error('incorrect rep count for LEFT stim in generateBarMovie_v2')
+            error('incorrect rep count for LEFT stim in generateBarMovie_v2');
         end
 
         if tblRight(:, 2) ~= params.numCueReps
-            error('incorrect rep count for RIGHT stim in generateBarMovie_v2')
+            error('incorrect rep count for RIGHT stim in generateBarMovie_v2');
         end
 
 
@@ -156,9 +156,6 @@ switch params.barNoiseMode
         end % next p
 
 end
-
-
-
 
 
 % --- DEFINE STANDARD IMAGES
@@ -206,6 +203,7 @@ for p = 1 : length(pairs)
     pair_img = {{leftImg_fn, rightImg_fn}, [leftImg_x leftImg_y; rightImg_x rightImg_y], times.stim_frames, codes.imgPair_on};
     leftImg_frame = {{leftImg_fn}, [leftImg_x leftImg_y], times.stim_frames, codes.img1_on};
     rightImg_frame = {{rightImg_fn}, [rightImg_x rightImg_y], times.stim_frames, codes.img2_on};
+    blankImg_frame = {[], [], times.stim_frames, []};
 
     % --- COMBINE FRAMES INTO SEQUENCE
     switch params.movieMode
@@ -239,13 +237,13 @@ for p = 1 : length(pairs)
                 case 'leftOnly'
                     images{indx + 1} = leftImg_frame;
                     images{indx + 2} = soa_img;
-                    images{indx + 3} = soa_img;
+                    images{indx + 3} = blankImg_frame;
                     images{indx + 4} = interPair_img;
 
                 case 'rightOnly'
                     images{indx + 1} = rightImg_frame;
                     images{indx + 2} = soa_img;
-                    images{indx + 3} = soa_img;
+                    images{indx + 3} = blankImg_frame;
                     images{indx + 4} = interPair_img;
 
             end

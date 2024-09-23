@@ -9,11 +9,11 @@ function [params] = corr_RL_setParams_v4()
 % --- STIMULUS FEATURE SPACE
 
 % --- variable feature dimensions
-% params.Angles = [0 45 90 135];
-params.Angles = [0 30 60 90 120 150];
+params.Angles = [0 45 90 135];
+% params.Angles = [0 30 60 90 120 150];
 % params.FaceColors = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
-params.FaceColors = [0 0 0; 1 1 1];  
-% params.FaceColors = [0 0 0];  
+% params.FaceColors = [0 0 0; 1 1 1];  
+params.FaceColors = [0 0 0];  
 
 % --- fixed feature dimensions
 params.Size = [1 4]; % [width height] in degrees
@@ -36,8 +36,8 @@ params.cuePercent_easy = max(params.cuePercentRange);
 params.cuePercent_hard = min(params.cuePercentRange);
 params.randCuePercent = true;
 params.movieMode = 'stdp';
-params.numCueStim = 4;  % new v5
-params.numCueReps = 3;  % new v5
+params.numCueStim = 3;  % new v5
+params.numCueReps = 2;  % new v5
 % adding new pairing algorithm
 % params.pairMod = 'xPairs'; % new v5
 params.pairMode = 'randList';  % new v5

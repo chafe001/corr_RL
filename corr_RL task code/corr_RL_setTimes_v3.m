@@ -5,7 +5,7 @@ COMPUTER = getenv('COMPUTERNAME');
 
 switch COMPUTER
     case 'MATTWALLIN'
-        times.stim_frames = 3;
+        times.stim_frames = 2;
         times.soa_frames = 2;
         times.interPair_frames = 10;
 
