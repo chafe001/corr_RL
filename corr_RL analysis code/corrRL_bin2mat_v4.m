@@ -141,7 +141,7 @@ trialData = [];
 eventData = [];
 
 % --- AGGREGATE ML HEADER TRIAL DATA as originally saved
-trialCountData = [thisFile inTrial.Trial inTrial.BlockCount inTrial.TrialWithinBlock inTrial.Block inTrial.Condition inTrial.TrialError];
+trialCountData = [thisFile inTrial.Trial inTrial.BlockCount inTrial.TrialWithinBlock inTrial.Block inTrial.Condition inTrial.TrialError params.sepValue];
 
 % --- add header vars to stdcol
 stdcol.fileNum = 1;
@@ -173,7 +173,7 @@ cp_hb = inTrial.UserVars.params.cuePercent_hard;
 hrp = inTrial.UserVars.params.highRewProb;
 lrp = inTrial.UserVars.params.lowRewProb;
 
-paramData = [nb rpc bcm nwc cp cpg cp_eb cp_hb  hrp lrp];
+paramData = [nb rpc bcm nwc cp cpg cp_eb cp_hb  hrp lrp params.sepValue];
 
 % --- add parameter vars to stdcol
 stdcol.numBlocks = stdcol.endTrialCountData + 1;
@@ -182,7 +182,9 @@ stdcol.blockChangeMode = stdcol.repsPerCond + 1;
 stdcol.netWinCriterion = stdcol.blockChangeMode + 1;
 stdcol.cuePercent = stdcol.netWinCriterion + 1;
 stdcol.cuePercentGroup = stdcol.cuePercent + 1;
-stdcol.highRewProb = stdcol.cuePercentGroup + 1;
+stdcol.cuePercent_easy = stdcol.cuePercentGroup + 1;
+stdcol.cuePercent_hard = stdcol.cuePercent_easy + 1;
+stdcol.highRewProb = stdcol.cuePercent_hard + 1;
 stdcol.lowRewProb = stdcol.highRewProb + 1;
 stdcol.endParamData = stdcol.lowRewProb + 1;
 
@@ -199,7 +201,7 @@ rk = inTrial.UserVars.choices.responseKey;
 % according to reward state probabilities
 rnw = inTrial.UserVars.choices.randNum_rew;
 
-rewChoiceData = [rs r_t rt bw bl nw cc rk rnw];
+rewChoiceData = [rs r_t rt bw bl nw cc rk rnw params.sepValue];
 
 % --- add choice and reward vars to stdcol
 stdcol.rewardState = stdcol.endParamData + 1;
@@ -211,10 +213,10 @@ stdcol.netWins = stdcol.blockLosses + 1;
 stdcol.choseCorrect = stdcol.netWins + 1;
 stdcol.responseKey = stdcol.choseCorrect + 1;
 stdcol.randNum_rew = stdcol.responseKey + 1;
+stdcol.endChoiceData = stdcol.randNum_rew + 1;
 
 % --- CONCATENATE DATA TO BUILD TRIAL ROW
-sep = params.sepValue;
-thisTrial = [trialCountData sep paramData sep rewChoiceData];
+thisTrial = [trialCountData paramData rewChoiceData];
 
 return;
 
@@ -396,7 +398,7 @@ maxCuePerc = 4;
 cuePercTick = 1;
 
 % proportion choseCorrect by cuePercent, effect of noise
-[mean, sem] = grpstats(bData(:, stdcol.choseCorrect), bData(:, stdcol.cuePercentGroup), {'mean', 'sem'});
+[mean, sem, grp] = grpstats(bData(:, stdcol.choseCorrect), bData(:, stdcol.cuePercentGroup), {'mean', 'sem', 'gname'});
 figure;
 errorbar(mean, sem);
 xSpan = xlim;
