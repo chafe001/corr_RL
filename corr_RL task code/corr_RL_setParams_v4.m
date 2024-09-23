@@ -27,9 +27,9 @@ params.netWin_criterion = 10;  % number of netWins before switching block
 params.numStates = 2; % this overwritten by curveParams if curveMovie at present, but needed for bars
 
 % --- BAR CONTROL
-params.randCuePercent = true;
+params.randCuePercent = false;
 params.numMoviePairs = 10;
-params.cuePercentRange = [0.6 0.7 0.8 0.9];
+params.cuePercentRange = [0.7 0.8 0.9 1];
 params.cuePercent_easy = min(params.cuePercentRange);
 params.cuePercent_hard = max(params.cuePercentRange);
 params.randCuePercent = true;

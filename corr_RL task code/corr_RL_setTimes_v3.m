@@ -70,7 +70,7 @@ switch COMPUTER
 
         times.stim_frames = 5;  % 17 ms
         times.soa_frames = 5; % 25 ms
-        times.interPair_frames = 20; % 100 ms
+        times.interPair_frames = 15; % 100 ms
         % MOVIE DURATION with these parameters
         % Triplet duration (17 + 25 + 17 ms) = 59 ms
         % Triplet + interPair duration = 59 + 100 ms = 159 ms
