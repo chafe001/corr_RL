@@ -178,7 +178,7 @@ for p = 1 : length(pairs)
     leftImg_frame = {{leftImg_fn}, [leftImg_x leftImg_y], times.stim_frames, TrialRecord.User.codes.img1_on};
     rightImg_frame = {{rightImg_fn}, [rightImg_x rightImg_y], times.stim_frames, TrialRecord.User.codes.img2_on};
 
-    % --- COMBINE FRAMES INTO SEQUENCEg
+    % --- COMBINE FRAMES INTO SEQUENCE
     switch params.movieMode
 
         case 'simultaneous'
@@ -198,11 +198,28 @@ for p = 1 : length(pairs)
             % pr 3 : indx = 9, 1on = 10, 1off = 11, 2on = 12, 2off = 13
             % pr 4 : indx = 13, 1on = 14, 1off = 15, 2on = 16, 2off = 17 ...
             indx = ((p - 1) * 4) + 2;
-            images{indx + 1} = leftImg_frame;
-            % images{indx + 2} = soa_img;
-            images{indx + 2} = pair_img;
-            images{indx + 3} = rightImg_frame;
-            images{indx + 4} = interPair_img;
+
+            switch pairs(p).showStim
+
+                case 'both'
+                    images{indx + 1} = leftImg_frame;
+                    images{indx + 2} = soa_img;
+                    images{indx + 3} = rightImg_frame;
+                    images{indx + 4} = interPair_img;
+
+                case 'leftOnly'
+                    images{indx + 1} = leftImg_frame;
+                    images{indx + 2} = soa_img;
+                    images{indx + 3} = soa_img;
+                    images{indx + 4} = interPair_img;
+
+                case 'rightOnly'
+                    images{indx + 1} = rightImg_frame;
+                    images{indx + 2} = soa_img;
+                    images{indx + 3} = soa_img;
+                    images{indx + 4} = interPair_img;
+
+            end
 
         otherwise
             error('unrecognized movieMode in generateStimMovie');

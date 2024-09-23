@@ -1,4 +1,4 @@
-function [movieImages, pairSeq] = corr_RL_generateBarMovie_v2_mockup(TrialRecord)
+function [movieImages, pairSeq] = corr_RL_generateBarMovie_v2(TrialRecord)
 % This function returns a cell array, movieImages, that is used to set the
 % 'List' property of a imageChanger() object.  This controls the sequence
 % of images presented in the movie, which controls the proportion of cue
@@ -26,27 +26,93 @@ codes = corr_RL_setBarCodes_v3();
 nPairs = size(condArray(c).cuePairs, 2);
 pairSeq = 1:nPairs;
 pairSeq = repmat(pairSeq, 1, params.numCueReps);
-pairSeq = pairSeq(randperm(size(pairSeq, 2)));
+% --- add noise if enabled
+numNoisePairs = round((1 - condArray(c).cuePercent) * length(pairSeq));
+% pick random indices into pairSeq indicating which pairs to either break
+% or replace with noise pairs
+noiseIndx = randperm(length(pairSeq));
+noiseIndx = sort(noiseIndx(1:numNoisePairs));
 
-% --- build seq of pairs, stim and noise, to control movie frames
-for p = 1 : length(pairSeq)
 
-    if pairSeq(p) < 10 % stimPair
-        ind = pairSeq(p);
-        pairs(p).pairIndx = ind;
-        pairs(p).pairID = condArray(c).cuePairs(ind).pairID;
-        pairs(p).leftStim = condArray(c).cuePairs(ind).leftStim;
-        pairs(p).rightStim = condArray(c).cuePairs(ind).rightStim;
-    elseif pairSeq(p) >= 10 % noisePair
-        ind = pairSeq(p) - 10;
-        pairs(p).pairIndx = ind;
-        pairs(p).pairID = condArray(c).noisePairs(ind).pairID;
-        pairs(p).leftStim = condArray(c).noisePairs(ind).leftStim;
-        pairs(p).rightStim = condArray(c).noisePairs(ind).rightStim;
+% add noise according to different methods at each noiseIndx in pairSeq
+switch params.barNoiseMode
 
-    end
+    case 'breakPairs'
 
-end % next p
+        % find values of pairSeq at noiseIndx
+        bp = pairSeq(noiseIndx);
+        % add 10 to these values to indicate left stim of pair only
+        bp_left = bp + 10;
+        % add 20 to these values to indicate right stim of apir only
+        bp_right = bp + 20;
+        % delete original values of pairSeq at noiseIndx
+        pairSeq(noiseIndx) = [];
+        % add left stim only and right stim only
+        pairSeq = [pairSeq bp_left bp_right];
+        % randomize sequence
+        pairSeq = pairSeq(randperm(size(pairSeq, 2)));
+        % NOTE: the above should hold constant features and repetitions of
+        % individual bar stimuli shown at left and right positions, but
+        % brake pairing of the selected pairs.  One way to degrade
+        % correlation while keeping lower level visual features constant
+        % across all movies.
+
+        for p = 1 : length(pairSeq)
+
+            if pairSeq(p) < 10 % stimPair
+                ind = pairSeq(p);
+                pairs(p).pairIndx = ind;
+                pairs(p).pairID = condArray(c).cuePairs(ind).pairID;
+                pairs(p).leftStim = condArray(c).cuePairs(ind).leftStim;
+                pairs(p).rightStim = condArray(c).cuePairs(ind).rightStim;
+                pairs(p).showStim = 'both';
+            elseif pairSeq(p) >= 10 && pairSeq(p) < 20 % leftStim of pair
+                ind = pairSeq(p) - 10;
+                pairs(p).pairIndx = ind;
+                pairs(p).pairID = condArray(c).cuePairs(ind).pairID;
+                pairs(p).leftStim = condArray(c).cuePairs(ind).leftStim;
+                pairs(p).rightStim = condArray(c).cuePairs(ind).rightStim;
+                pairs(p).showStim = 'leftOnly';
+            elseif pairSeq(p) >= 20 % rightStim of pair
+                ind = pairSeq(p) - 20;
+                pairs(p).pairIndx = ind;
+                pairs(p).pairID = condArray(c).cuePairs(ind).pairID;
+                pairs(p).leftStim = condArray(c).cuePairs(ind).leftStim;
+                pairs(p).rightStim = condArray(c).cuePairs(ind).rightStim;
+                pairs(p).showStim = 'rightOnly';
+            end
+
+        end % next p
+
+
+    case 'noisePairs'
+        % add 10 to pairSeq at noiseIndx to indicate replacement with noise
+        % pair, then randomize pairSeq to randomize pair order in each
+        % movie
+        pairSeq(noiseIndx) = pairSeq(noiseIndx) + 10;
+        pairSeq = pairSeq(randperm(size(pairSeq, 2)));
+
+        for p = 1 : length(pairSeq)
+
+            if pairSeq(p) < 10 % stimPair
+                ind = pairSeq(p);
+                pairs(p).pairIndx = ind;
+                pairs(p).pairID = condArray(c).cuePairs(ind).pairID;
+                pairs(p).leftStim = condArray(c).cuePairs(ind).leftStim;
+                pairs(p).rightStim = condArray(c).cuePairs(ind).rightStim;
+                pairs(p).showStim = 'both';
+            elseif pairSeq(p) >= 10 % noisePair
+                ind = pairSeq(p) - 10;
+                pairs(p).pairIndx = ind;
+                pairs(p).pairID = condArray(c).noisePairs(ind).pairID;
+                pairs(p).leftStim = condArray(c).noisePairs(ind).leftStim;
+                pairs(p).rightStim = condArray(c).noisePairs(ind).rightStim;
+                pairs(p).showStim = 'both';
+            end
+
+        end % next p
+
+end
 
 
 % codes.startFix = 10;
@@ -112,7 +178,7 @@ for p = 1 : length(pairs)
     leftImg_frame = {{leftImg_fn}, [leftImg_x leftImg_y], times.stim_frames, TrialRecord.User.codes.img1_on};
     rightImg_frame = {{rightImg_fn}, [rightImg_x rightImg_y], times.stim_frames, TrialRecord.User.codes.img2_on};
 
-    % --- COMBINE FRAMES INTO SEQUENCEg
+    % --- COMBINE FRAMES INTO SEQUENCE
     switch params.movieMode
 
         case 'simultaneous'
@@ -124,7 +190,7 @@ for p = 1 : length(pairs)
             indx = ((p - 1) * 2) + 2;
             images{indx + 1} = pair_img;
             images{indx + 2} = interPair_img;
-            
+
         case 'stdp'
             % pr, indx and frame number looping values:
             % pr 1 : indx = 1, 1on = 2, 1off = 3, 2on = 4, 2off = 5
@@ -132,11 +198,28 @@ for p = 1 : length(pairs)
             % pr 3 : indx = 9, 1on = 10, 1off = 11, 2on = 12, 2off = 13
             % pr 4 : indx = 13, 1on = 14, 1off = 15, 2on = 16, 2off = 17 ...
             indx = ((p - 1) * 4) + 2;
-            images{indx + 1} = leftImg_frame;
-            % images{indx + 2} = soa_img;
-            images{indx + 2} = pair_img;
-            images{indx + 3} = rightImg_frame;
-            images{indx + 4} = interPair_img;
+
+            switch pairs(p).showStim
+
+                case 'both'
+                    images{indx + 1} = leftImg_frame;
+                    images{indx + 2} = soa_img;
+                    images{indx + 3} = rightImg_frame;
+                    images{indx + 4} = interPair_img;
+
+                case 'leftOnly'
+                    images{indx + 1} = leftImg_frame;
+                    images{indx + 2} = soa_img;
+                    images{indx + 3} = soa_img;
+                    images{indx + 4} = interPair_img;
+
+                case 'rightOnly'
+                    images{indx + 1} = rightImg_frame;
+                    images{indx + 2} = soa_img;
+                    images{indx + 3} = soa_img;
+                    images{indx + 4} = interPair_img;
+
+            end
 
         otherwise
             error('unrecognized movieMode in generateStimMovie');
@@ -148,7 +231,7 @@ end  % next p
 movieImages = {};
 for f = 1 : size(images, 2)
     thisImg = images{1, f};
-    movieImages = [movieImages; thisImg]; 
+    movieImages = [movieImages; thisImg];
 end
 
 
