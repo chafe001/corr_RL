@@ -34,7 +34,6 @@ params.numMoviePairs = 10;
 params.cuePercentRange = [0.7 0.8 0.9 1];
 params.cuePercent_easy = max(params.cuePercentRange);
 params.cuePercent_hard = min(params.cuePercentRange);
-params.randCuePercent = true;
 params.movieMode = 'stdp';
 params.numCueStim = 3;  % new v5
 params.numCueReps = 2;  % new v5

@@ -495,9 +495,9 @@ switch TrialRecord.User.params.stimulusType
             '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.FaceColor), ...
             '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(2).rightStim.FileName);
 
-        dashboard(1, trlInfoStr, [0 0 0], 'FontSize', 8);
-        dashboard(3, pair1_Angles_str, [0 0 0], 'FontSize', 8);
-        dashboard(4, pair2_Angles_str, [0 0 0], 'FontSize', 8);
+        dashboard(1, trlInfoStr, [1 1 1], 'FontSize', 8);
+        dashboard(3, pair1_Angles_str, [1 1 1], 'FontSize', 8);
+        dashboard(4, pair2_Angles_str, [1 1 1], 'FontSize', 8);
 
     case 'curves'
         trlInfoStr = strcat(keyStr, ...
@@ -835,7 +835,18 @@ TrialRecord.User.Choices = choices;
 
 % --- OUTPUT CHOICE REWARD RESULT TO USER SCREEN
 respResStr = strcat(choices.respStr, '  ---  ', choices.resultStr);
-dashboard(2, respResStr, [0 0 0], 'FontSize', 8);
+
+switch TrialRecord.User.params.stimulusType
+
+    case 'bars'
+        dashboard(2, respResStr, [1 1 1], 'FontSize', 8);
+
+    case 'curves'
+        dashboard(2, respResStr, [0 0 0], 'FontSize', 8);
+
+end
+
+
 
 % --- UPDATE REWARD BOX WITH THIS RESULT
 netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
