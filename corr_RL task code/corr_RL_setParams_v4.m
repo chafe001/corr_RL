@@ -39,8 +39,8 @@ params.numCueReps = 3;  % new v5
 % adding new pairing algorithm
 % params.pairMod = 'xPairs'; % new v5
 params.pairMode = 'randList';  % new v5
-params.barNoiseMode = 'breakPairs';
-% params.barNoiseMode = 'noisePairs';
+% params.barNoiseMode = 'breakPairs';
+params.barNoiseMode = 'noisePairs';
 
 % --- CURVE CONTROL
 % determine whether to use bars with xPairs algorithm or curves with Dave's
