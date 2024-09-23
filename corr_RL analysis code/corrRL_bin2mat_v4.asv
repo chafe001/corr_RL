@@ -173,7 +173,7 @@ cp_hb = inTrial.UserVars.params.cuePercent_hard;
 hrp = inTrial.UserVars.params.highRewProb;
 lrp = inTrial.UserVars.params.lowRewProb;
 
-paramData = [nb rpc bcm nwc cp cpg cp_eb cp_hb  hrp lrp];
+paramData = [nb rpc bcm nwc cp cpg cpr cp_eb cp_hb  hrp lrp];
 
 % --- add parameter vars to stdcol
 stdcol.numBlocks = stdcol.endTrialCountData + 1;
@@ -181,8 +181,8 @@ stdcol.repsPerCond = stdcol.numBlocks + 1;
 stdcol.blockChangeMode = stdcol.repsPerCond + 1;
 stdcol.netWinCriterion = stdcol.blockChangeMode + 1;
 stdcol.cuePercent = stdcol.netWinCriterion + 1;
-stdcol.cuePercentGroup = stdcol.cuePercent + 1;
-stdcol.highRewProb = stdcol.cuePercentGroup + 1;
+stdcol.cuePrecentGroup = stdcol.cuePercent + 1;
+stdcol.highRewProb = stdcol.cuePrecentRange + 1;
 stdcol.lowRewProb = stdcol.highRewProb + 1;
 stdcol.endParamData = stdcol.lowRewProb + 1;
 
