@@ -5,10 +5,9 @@ COMPUTER = getenv('COMPUTERNAME');
 
 switch COMPUTER
     case 'MATTWALLIN'
-        % laptop at 120 Hz
-        times.stim_frames = 1;
-        times.soa_frames = 1;
-        times.interPair_frames = 5;
+        times.stim_frames = 3;
+        times.soa_frames = 2;
+        times.interPair_frames = 10;
 
         % times for curve stimuli
         times.curve_frames = 3;

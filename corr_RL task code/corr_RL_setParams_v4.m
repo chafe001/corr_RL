@@ -9,9 +9,11 @@ function [params] = corr_RL_setParams_v4()
 % --- STIMULUS FEATURE SPACE
 
 % --- variable feature dimensions
-params.Angles = [0 45 90 135];
+% params.Angles = [0 45 90 135];
+params.Angles = [0 30 60 90 120 150];
 % params.FaceColors = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
 params.FaceColors = [0 0 0; 1 1 1];  
+% params.FaceColors = [0 0 0];  
 
 % --- fixed feature dimensions
 params.Size = [1 4]; % [width height] in degrees
@@ -30,8 +32,8 @@ params.numStates = 2; % this overwritten by curveParams if curveMovie at present
 params.randCuePercent = false;
 params.numMoviePairs = 10;
 params.cuePercentRange = [0.7 0.8 0.9 1];
-params.cuePercent_easy = min(params.cuePercentRange);
-params.cuePercent_hard = max(params.cuePercentRange);
+params.cuePercent_easy = max(params.cuePercentRange);
+params.cuePercent_hard = min(params.cuePercentRange);
 params.randCuePercent = true;
 params.movieMode = 'stdp';
 params.numCueStim = 4;  % new v5
@@ -39,8 +41,8 @@ params.numCueReps = 3;  % new v5
 % adding new pairing algorithm
 % params.pairMod = 'xPairs'; % new v5
 params.pairMode = 'randList';  % new v5
-% params.barNoiseMode = 'breakPairs';
-params.barNoiseMode = 'noisePairs';
+params.barNoiseMode = 'breakPairs';
+% params.barNoiseMode = 'noisePairs';
 
 % --- CURVE CONTROL
 % determine whether to use bars with xPairs algorithm or curves with Dave's

@@ -18,25 +18,11 @@ function [blockStim] = corr_RL_sampleStimSpace_v2(params)
 % at a minimum
 
 % v2: written at time of corr_RL v5 development.  Switching from xCorr to randomized list algorithm
-% to define correlation patterns defining state.  Removing easyStim.
+% to define correlation patterns defining state.
 
 % --- COMPUTE DIMENSIONS OF FEATURE SPACE
 numAngles = size(params.Angles, 2);
 numColors = size(params.FaceColors, 1);
-
-% --- CHECK FEATURE VECTORS IN PARAMS MEET MIN REQUIREMENTS
-if (numAngles * numColors) < 8
-    error('Error in sampleStimSpace, need more angles/colors to specify min 8 distinct stimuli')
-end
-
-
-if length(unique(params.Angles)) < length(params.Angles)
-    error('Error in sampleStimSpace, redundant values in params.Angles');
-end
-
-if size(unique(params.FaceColors, 'rows'), 1) < size(params.FaceColors, 1)
-    error('Error in sampleStimSpace, redundant values in params.FaceColors');
-end
 
 % --- PERMUTE FEATURES
 for a = 1:numAngles
@@ -49,11 +35,13 @@ end
 % --- CONVERT 2D to 1D matrix
 allStim = reshape(stim, [(numAngles * numColors), 1]);
 
-
 % --- RANDOMLY PERMUTE 1D matrix to randomize cue and noise stimuli
 randStim = allStim(randperm(size(allStim, 1)), :);
 
-
+% --- ADD ID NUM to each stim to keep track of stim through process
+for s = 1 : size(randStim, 1)
+    randStim(s).id = s;
+end
 
 % --- SET BLOCKSTIM (cue stim and noise stim)
 for cs = 1 : params.numCueStim
@@ -62,6 +50,7 @@ for cs = 1 : params.numCueStim
     blockStim.cue(cs).Size = params.Size;
     blockStim.cue(cs).Angle = randStim(cs).Angle;
     blockStim.cue(cs).FileName = findFileName(randStim(cs));
+    blockStim.cue(cs).id = randStim(cs).id;
 end
 
 for ns = 1 : (length(randStim) - params.numCueStim)
@@ -71,6 +60,7 @@ for ns = 1 : (length(randStim) - params.numCueStim)
     blockStim.noise(ns).Size = params.Size;
     blockStim.noise(ns).Angle = randStim(rndIndx).Angle;
     blockStim.noise(ns).FileName = findFileName(randStim(rndIndx));
+    blockStim.noise(ns).id = randStim(rndIndx).id;
 end
 
 

@@ -64,26 +64,68 @@ switch params.barNoiseMode
                 pairs(p).pairIndx = ind;
                 pairs(p).pairID = condArray(c).cuePairs(ind).pairID;
                 pairs(p).leftStim = condArray(c).cuePairs(ind).leftStim;
+                pairs(p).leftStim_id = condArray(c).cuePairs(ind).leftStim.id;
                 pairs(p).rightStim = condArray(c).cuePairs(ind).rightStim;
+                pairs(p).rightStim_id = condArray(c).cuePairs(ind).rightStim.id;
                 pairs(p).showStim = 'both';
             elseif pairSeq(p) >= 10 && pairSeq(p) < 20 % leftStim of pair
                 ind = pairSeq(p) - 10;
                 pairs(p).pairIndx = ind;
-                pairs(p).pairID = condArray(c).noisePairs(ind).pairID(1);
-                pairs(p).leftStim = condArray(c).noisePairs(ind).leftStim;
+                pairs(p).pairID = condArray(c).cuePairs(ind).pairID;
+                pairs(p).leftStim = condArray(c).cuePairs(ind).leftStim;
+                pairs(p).leftStim_id = condArray(c).cuePairs(ind).leftStim.id;
                 pairs(p).rightStim = condArray(c).cuePairs(ind).rightStim;
+                pairs(p).rightStim_id = condArray(c).cuePairs(ind).rightStim.id;
                 pairs(p).showStim = 'leftOnly';
             elseif pairSeq(p) >= 20 % rightStim of pair
                 ind = pairSeq(p) - 20;
                 pairs(p).pairIndx = ind;
-                pairs(p).pairID = condArray(c).noisePairs(ind).pairID(2);
+                pairs(p).pairID = condArray(c).cuePairs(ind).pairID;
                 pairs(p).leftStim = condArray(c).cuePairs(ind).leftStim;
-                pairs(p).rightStim = condArray(c).noisePairs(ind).rightStim;
+                pairs(p).leftStim_id = condArray(c).cuePairs(ind).leftStim.id;
+                pairs(p).rightStim = condArray(c).cuePairs(ind).rightStim;
+                pairs(p).rightStim_id = condArray(c).cuePairs(ind).rightStim.id;
                 pairs(p).showStim = 'rightOnly';
             end
 
         end % next p
 
+
+        % --- CHECK SAME STIMULI AND NUMBER OF REPS AT LEFT AND RIGHT afte
+        % breaking pairs
+        leftStim_ids = [];
+        rightStim_ids = [];
+        for p = 1 : size(pairs, 2)
+            switch pairs(p).showStim
+                case 'both'
+                    leftStim_ids = [leftStim_ids pairs(p).leftStim_id];
+                    rightStim_ids = [rightStim_ids pairs(p).rightStim_id];
+                case 'leftOnly'
+                    leftStim_ids = [leftStim_ids pairs(p).leftStim_id];
+                case 'rightOnly'
+                    rightStim_ids = [rightStim_ids pairs(p).rightStim_id];
+            end
+
+        end
+
+        tblLeft = tabulate(leftStim_ids);
+        tblRight = tabulate(rightStim_ids);
+
+        if ~isequal(tblLeft, tblRight)
+            error('unequal L and R stim in generateBarMovie_v2');
+        end
+
+        % --- CHECK THAT CUE BAR COUNTS ARE CORRECT
+        if tblLeft(:, 2) ~= params.numCueReps
+            error('incorrect rep count for LEFT stim in generateBarMovie_v2')
+        end
+
+        if tblRight(:, 2) ~= params.numCueReps
+            error('incorrect rep count for RIGHT stim in generateBarMovie_v2')
+        end
+
+
+        bob = 1;
 
     case 'noisePairs'
         % add 10 to pairSeq at noiseIndx to indicate replacement with noise
@@ -99,6 +141,7 @@ switch params.barNoiseMode
                 pairs(p).pairIndx = ind;
                 pairs(p).pairID = condArray(c).cuePairs(ind).pairID;
                 pairs(p).leftStim = condArray(c).cuePairs(ind).leftStim;
+                pairs(p).leftStim_id = ondArray(c).cuePairs(ind).leftStim.id;
                 pairs(p).rightStim = condArray(c).cuePairs(ind).rightStim;
                 pairs(p).showStim = 'both';
             elseif pairSeq(p) >= 10 % noisePair
@@ -115,27 +158,13 @@ switch params.barNoiseMode
 end
 
 
-% codes.startFix = 10;
-% codes.preMovie = 20;
-% codes.imgPair_on = 30;
-% codes.imgPair_off = 40;
-% codes.img1_on = 50;
-% codes.img1_off = 60;
-% codes.img2_on = 70;
-% codes.img2_off = 80;
-% codes.endMovie = 90;
-% codes.beginRespWindow = 100;
-% codes.response_key1 = 110;
-% codes.response_key2 = 120;
-% codes.choiceRing_on = 130;
-% codes.errorRing_on = 140;
-% codes.rewRing_on = 150;
+
 
 
 % --- DEFINE STANDARD IMAGES
-preMovie_img = {[], [], times.preMovie_frames, TrialRecord.User.codes.preMovie};
-soa_img = {[], [], times.soa_frames, TrialRecord.User.codes.img1_off};
-interPair_img = {[], [], times.interPair_frames, TrialRecord.User.codes.imgPair_off};
+preMovie_img = {[], [], times.preMovie_frames, codes.preMovie};
+soa_img = {[], [], times.soa_frames, codes.img1_off};
+interPair_img = {[], [], times.interPair_frames, codes.imgPair_off};
 
 % --- PREALLOCATE FRAME CELL ARRAY
 % --- SET STIM PARAMS FOR imageChanger FUNCTION CALL TO CONTROL MOVIE
@@ -174,9 +203,9 @@ for p = 1 : length(pairs)
     rightImg_y = pairs(p).rightStim.Position(2);
 
     % --- BUILD SIMULTANEOUS AND SEQUENTIAL STIM FRAMES FOR EACH IMG PAIR
-    pair_img = {{leftImg_fn, rightImg_fn}, [leftImg_x leftImg_y; rightImg_x rightImg_y], times.stim_frames, TrialRecord.User.codes.imgPair_on};
-    leftImg_frame = {{leftImg_fn}, [leftImg_x leftImg_y], times.stim_frames, TrialRecord.User.codes.img1_on};
-    rightImg_frame = {{rightImg_fn}, [rightImg_x rightImg_y], times.stim_frames, TrialRecord.User.codes.img2_on};
+    pair_img = {{leftImg_fn, rightImg_fn}, [leftImg_x leftImg_y; rightImg_x rightImg_y], times.stim_frames, codes.imgPair_on};
+    leftImg_frame = {{leftImg_fn}, [leftImg_x leftImg_y], times.stim_frames, codes.img1_on};
+    rightImg_frame = {{rightImg_fn}, [rightImg_x rightImg_y], times.stim_frames, codes.img2_on};
 
     % --- COMBINE FRAMES INTO SEQUENCE
     switch params.movieMode
