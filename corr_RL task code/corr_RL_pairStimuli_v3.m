@@ -66,7 +66,7 @@ end
 for p = 1 : length(stateB_leftVect)  % same number of cue pairs as number of cue stimuli
     stateB_pairs(p).leftStim = blockStim.cue(stateB_pairVect(p, 1));
     stateB_pairs(p).leftStim.Position = params.leftPos;
-    stateB_pairs(p).rightStim = blockStim.cue(stateB_pairVect(p, 1));
+    stateB_pairs(p).rightStim = blockStim.cue(stateB_pairVect(p, 2));
     stateB_pairs(p).rightStim.Position = params.rightPos;
     stateB_pairs(p).pairID = [stateB_pairVect(p, 1) stateB_pairVect(p, 2)]; % left cue and right cue array indices
     stateB_pairs(p).pairRespSide = RIGHT;

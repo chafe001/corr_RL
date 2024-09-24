@@ -13,7 +13,7 @@ function [movieImages, pairSeq] = corr_RL_generateBarMovie_v2_mockup()
 % params = TrialRecord.User.params;
 % c = TrialRecord.CurrentCondition;
 
-% --- if mockup, uncomment the following  lines
+% --- if mockup, uncomment the following 3 lines
 [condArray, params] = corr_RL_buildTrials_v5();
 c = 4; % hard code condition number
 bn = 2; % hard code block number
