@@ -46,10 +46,14 @@ while ~bFound
 
     stateB_pairVect = [stateB_leftVect stateB_rightVect];
 
-    % check for rows common to both stateA_pairVect and stateB_pairVect
-    samePairs = ismember(stateA_pairVect, stateB_pairVect, 'rows');
+    % check that each row of stateA_pairVect is different from every row of
+    % stateB_pairVect
 
-    if sum(samePairs) == 0  % no rows in common bwt stateA and stateB
+    
+
+    % this leaks some equal rows, if one row in A is not the same in B
+    % ~isequal triggers.
+    if ~isequal(stateA_pairVect, stateB_pairVect)
         bFound = true;
     end
 

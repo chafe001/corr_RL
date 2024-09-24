@@ -12,8 +12,8 @@ function [params] = corr_RL_setParams_v4()
 params.Angles = [0 45 90 135];
 % params.Angles = [0 30 60 90 120 150];
 % params.FaceColors = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
-params.FaceColors = [0 0 0; 1 1 1];  
-% params.FaceColors = [0 0 0];  
+% params.FaceColors = [0 0 0; 1 1 1];  
+params.FaceColors = [0 0 0];  
 
 % --- fixed feature dimensions
 params.Size = [1 4]; % [width height] in degrees
