@@ -25,7 +25,16 @@ RIGHT = 2;
 % stimuli appear at both locations for all movies, trials, and states.
 
 stateA_leftVect = (1:params.numCueStim)';
-stateA_rightVect = stateA_leftVect(randperm(length(stateA_leftVect)));
+aRightFound = false;
+% ensure that randperm does not return the original vector 1:4, which it is
+% able to do, to prevent left stim from being same as right stim
+while ~aRightFound
+    stateA_rightVect = stateA_leftVect(randperm(length(stateA_leftVect)));
+    if ~isequal(stateA_leftVect, stateA_rightVect)
+        aRightFound = true;
+    end
+end
+
 
 stateA_pairVect = [stateA_leftVect stateA_rightVect];
 
@@ -44,7 +53,7 @@ while ~bFound
 end
 
 % --- STATE A PAIRS
-for p = 1 : length(stateA_leftVect)  % same number of cue pairs as number of cue stimuli
+for p = 1 : length(stateA_pairVect)  % same number of cue pairs as number of cue stimuli
     stateA_pairs(p).leftStim = blockStim.cue(stateA_pairVect(p, 1));
     stateA_pairs(p).leftStim.Position = params.leftPos;
     stateA_pairs(p).rightStim = blockStim.cue(stateA_pairVect(p, 2));
