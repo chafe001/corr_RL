@@ -91,7 +91,7 @@ switch params.barNoiseMode
         end % next p
 
 
-        % --- CHECK SAME STIMULI AND NUMBER OF REPS AT LEFT AND RIGHT afte
+        % --- CHECK SAME STIMULI AND NUMBER OF REPS AT LEFT AND RIGHT after
         % breaking pairs
         leftStim_ids = [];
         rightStim_ids = [];
