@@ -28,7 +28,6 @@
 % B.  This isolates correlation from any low level visual feature
 % differences between states.
 
-
 % ---- notes from preceding xPairs task development
 
 % FUTURE DIRECTIONS:

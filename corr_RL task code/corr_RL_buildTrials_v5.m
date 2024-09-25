@@ -104,6 +104,7 @@ switch params.stimulusType
                 end
 
 
+
             case 'xPairs'
                 % in xPairs pairMode, program selects 4 bar stimuli and
                 % organizes them into 4 orthogonal pairs, mapping 2 pairs
@@ -166,74 +167,76 @@ switch params.stimulusType
 
                 bob = 1;
 
-
-            case 'curves'
-
-                % --- open curveParams file specifying how curves were generated,
-                % this has blockNum and state information also
-                cd blockstim
-                load('curveParams.mat');
-                cd ..
-
-                % --- update params with curveParams info, OK to do here because
-                % buildTrials will return the updated params
-                params.numBlocks = curveParams.nBlocks;
-                params.numStates = curveParams.nStates;
-                params.n_tvals_main = curveParams.n_tvals_main;
-                params.n_tvals_ortho = curveParams.n_tvals_ortho;
-                params.size_of_knot_grid = curveParams.size_of_knot_grid;
-                params.low = curveParams.low;
-                params.high = curveParams.high;
-                params.max_knot_number = curveParams.max_knot_number;
-                params.D = curveParams.D;
-                params.K = curveParams.K;
-                params.n_knot_points = curveParams.n_knot_points;
-                params.endcurve_t = curveParams.endcurve_t;
-                params.orthocurve_t = curveParams.orthocurve_t;
-
-                for b = 1 : params.numBlocks
-                    for s = 1 : params.numStates
-                        for d = 1 : 2  % movie directions, forward and back
-
-                            condArrayTemp(b, s, d).blockNum = b;
-                            condArrayTemp(b, s, d).state = s;
-                            condArrayTemp(b, s, d).curveMovieDir = d;
-
-                            % --- SET BLOCK-LEVEL VARIABLES to control curve movies
-                            % keeping switches from prior version. To lock these
-                            % variables at a desired value, set to SAME VALUE for
-                            % both even and odd blocks below
-                            if mod(b, 2) ~= 0 % odd block
-                                condArrayTemp(b, s, d).snr = 1;
-                                condArrayTemp(b, s, d).curveMovieOrientation = 'horizontal';
-                                condArrayTemp(b, s, d).curveMovieType = 'smooth';
-                            else  % even block
-                                condArrayTemp(b, s, d).snr = 2;
-                                condArrayTemp(b, s, d).curveMovieOrientation = 'horizontal';
-                                condArrayTemp(b, s, d).curveMovieType = 'smooth';
-                            end
-
-                        end
-                    end % for s
-                end % for b
-
-                % Convert conditions matrix into a one dimensional struct array
-                condArray = [];
-                condNo = 1;
-                for b = 1 : params.numBlocks
-                    for s = 1 : params.numStates
-                        for d = 1 : 2
-                            thisCond = condArrayTemp(b, s, d);
-                            thisCond.condNo = condNo;
-                            condNo = condNo + 1;
-                            condArray = [condArray; thisCond];
-                        end
-                    end
-                end
-
         end
 
-        bob = 3;
+
+    case 'curves'
+
+        % --- open curveParams file specifying how curves were generated,
+        % this has blockNum and state information also
+        cd blockstim
+        load('curveParams.mat');
+        cd ..
+
+        % --- update params with curveParams info, OK to do here because
+        % buildTrials will return the updated params
+        params.numBlocks = curveParams.nBlocks;
+        params.numStates = curveParams.nStates;
+        params.n_tvals_main = curveParams.n_tvals_main;
+        params.n_tvals_ortho = curveParams.n_tvals_ortho;
+        params.size_of_knot_grid = curveParams.size_of_knot_grid;
+        params.low = curveParams.low;
+        params.high = curveParams.high;
+        params.max_knot_number = curveParams.max_knot_number;
+        params.D = curveParams.D;
+        params.K = curveParams.K;
+        params.n_knot_points = curveParams.n_knot_points;
+        params.endcurve_t = curveParams.endcurve_t;
+        params.orthocurve_t = curveParams.orthocurve_t;
+
+        for b = 1 : params.numBlocks
+            for s = 1 : params.numStates
+                for d = 1 : 2  % movie directions, forward and back
+
+                    condArrayTemp(b, s, d).blockNum = b;
+                    condArrayTemp(b, s, d).state = s;
+                    condArrayTemp(b, s, d).curveMovieDir = d;
+
+                    % --- SET BLOCK-LEVEL VARIABLES to control curve movies
+                    % keeping switches from prior version. To lock these
+                    % variables at a desired value, set to SAME VALUE for
+                    % both even and odd blocks below
+                    if mod(b, 2) ~= 0 % odd block
+                        condArrayTemp(b, s, d).snr = 1;
+                        condArrayTemp(b, s, d).curveMovieOrientation = 'horizontal';
+                        condArrayTemp(b, s, d).curveMovieType = 'smooth';
+                    else  % even block
+                        condArrayTemp(b, s, d).snr = 2;
+                        condArrayTemp(b, s, d).curveMovieOrientation = 'horizontal';
+                        condArrayTemp(b, s, d).curveMovieType = 'smooth';
+                    end
+
+                end
+            end % for s
+        end % for b
+
+        % Convert conditions matrix into a one dimensional struct array
+        condArray = [];
+        condNo = 1;
+        for b = 1 : params.numBlocks
+            for s = 1 : params.numStates
+                for d = 1 : 2
+                    thisCond = condArrayTemp(b, s, d);
+                    thisCond.condNo = condNo;
+                    condNo = condNo + 1;
+                    condArray = [condArray; thisCond];
+                end
+            end
+        end
+
+end
+
+bob = 3;
 
 
 end
