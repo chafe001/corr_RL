@@ -1,73 +1,68 @@
-function [cuePairs, noisePairs] = corr_RL_pairStimuli_v2(blockStim)
-% corr_RL_pairStimuli builds 2 sets of orthogonal pairs from 4 cue stimuli
-% randomly selected within feature space
+function [stateA_pairs, stateB_pairs, noisePairs] = corr_RL_pairStimuli_v2(blockStim, params)
+% This function organizes blockStim into pairs
+
+% VERSION HISTORY
+
+% v1: original version implementing xPairs design. Blockstim input is 4
+% stimuli, 2 at left and 2 at right screen positions.  pairStimuli
+% organized these four stimuli into 4 orthogonal pairs.  Each stimulus
+% belongs to 2 pairs instructing the two different states. This dissociates
+% stimulus features from state
+
+% v2: new pairing scheme.  Blockstim input is no longer allocated to screen
+% positions left and right. The same vector of stimuli will be shown at
+% screen left and right every trial.  Only the order of presentation will
+% be controlled to alter pairing.  This seems a cleaner approach, a better
+% way to dissociate stimulus features from state.
 
 % --- constants
 LEFT = 1;
 RIGHT = 2;
 
-% Stimulus crossing scheme below should ensure that each stimulus on each
-% side of the display is associated with RIGHT response on half of trials
-% and LEFT response on the remaining half (so no single stimulus is
-% correlated with response side, need to decode the pair to select
-% direction)
+% --- RANDOMLY PAIR LEFT and RIGHT CUE STIMULI
+% this produces a unique pairing of the same stimuli shown at left and
+% right positions for states A and B, while ensuring that the same set of
+% stimuli appear at both locations for all movies, trials, and states.
 
+stateA_leftVect = 1:params.numCueStim;
+stateA_rightVect = stateA_leftVect(randperm(length(stateA_leftVect)));
 
-% --- CUE PAIRS
-% CUE PAIR 1: Stim 1L-2R: LEFT response
-cuePairs(1).leftStim = blockStim.cue(1);
-cuePairs(1).rightStim = blockStim.cue(2);
-cuePairs(1).pairID = [1 2]; % left cue and right cue array indices
-cuePairs(1).pairState = 1;
+stateB_leftVect = stateA_leftVect;
+stateB_rightVect = stateA_rightVect(randperm(length(stateA_rightVect)));
 
-% CUE PAIR 2: Stim 3L-4R: LEFT response
-cuePairs(2).leftStim = blockStim.cue(3);
-cuePairs(2).rightStim = blockStim.cue(4);
-cuePairs(2).pairID = [3 4]; % left cue and right cue array indices
-cuePairs(2).pairState = 1;
+noise_leftVect = 1 : size(blockStim.noise, 2);
+noise_rightVect = noise_leftVect(randperm(length(noise_leftVect)));
 
-% CUE PAIR 3: Stim 1-3: RIGHT response
-cuePairs(3).leftStim = blockStim.cue(1);
-cuePairs(3).rightStim = blockStim.cue(4);
-cuePairs(3).pairID = [1 3]; % left cue and right cue array indices
-cuePairs(3).pairState = 2;
+% --- STATE A PAIRS
+for p = 1 : length(stateA_leftVect)  % same number of cue pairs as number of cue stimuli
+    stateA_pairs(p).leftStim = blockStim.cue(stateA_leftVect(p));
+    stateA_pairs(p).leftStim.Position = params.leftPos;
+    stateA_pairs(p).rightStim = blockStim.cue(stateA_rightVect(p));
+    stateA_pairs(p).rightStim.Position = params.rightPos;
+    stateA_pairs(p).pairID = [stateA_leftVect(p) stateA_rightVect(p)]; % left cue and right cue array indices
+    stateA_pairs(p).pairRespSide = LEFT;
+    
+end
 
-% CUE PAIR 4: Stim 2-4: RIGHT response
-cuePairs(4).leftStim = blockStim.cue(3);
-cuePairs(4).rightStim = blockStim.cue(2);
-cuePairs(4).pairID = [2 4]; % left cue and right cue array indices
-cuePairs(4).pairState = 2;
+% --- STATE B PAIRS
+for p = 1 : length(stateB_leftVect)  % same number of cue pairs as number of cue stimuli
+    stateB_pairs(p).leftStim = blockStim.cue(stateB_leftVect(p));
+    stateB_pairs(p).leftStim.Position = params.leftPos;
+    stateB_pairs(p).rightStim = blockStim.cue(stateB_rightVect(p));
+    stateB_pairs(p).rightStim.Position = params.rightPos;
+    stateB_pairs(p).pairID = [stateB_leftVect(p) stateB_rightVect(p)]; % left cue and right cue array indices
+    stateB_pairs(p).pairRespSide = RIGHT;
+end
 
 % --- NOISE PAIRS
-% Same feature combinations as cues but screen position (left/right)
-% inverted
-
-% NOISE PAIR 1: Stim 1L-2R: LEFT response
-noisePairs(1).leftStim = blockStim.cue(2);
-noisePairs(1).rightStim = blockStim.cue(1);
-noisePairs(1).pairID = [2 1]; % left cue and right cue array indices
-noisePairs(1).pairState = NaN;
-
-% NOISE PAIR 2: Stim 3L-4R: LEFT response
-noisePairs(2).leftStim = blockStim.cue(4);
-noisePairs(2).rightStim = blockStim.cue(3);
-noisePairs(2).pairID = [4 3]; % left cue and right cue array indices
-noisePairs(2).pairState = NaN;
-
-% NOISE PAIR 3: Stim 1-3: RIGHT response
-noisePairs(3).leftStim = blockStim.cue(4);
-noisePairs(3).rightStim = blockStim.cue(1);
-noisePairs(3).pairID = [4 1]; % left cue and right cue array indices
-noisePairs(3).pairState = NaN;
-
-% NOISE PAIR 4: Stim 2-4: RIGHT response
-noisePairs(4).leftStim = blockStim.cue(2);
-noisePairs(4).rightStim = blockStim.cue(3);
-noisePairs(4).pairID = [2 3]; % left cue and right cue array indices
-noisePairs(4).pairState = NaN;
-
-
-
+for n = 1 : length(noise_leftVect)
+    noisePairs(n).leftStim = blockStim.noise(noise_leftVect(n));
+    noisePairs(p).leftStim.Position = params.leftPos;
+    noisePairs(n).rightStim = blockStim.noise(noise_rightVect(n));
+    noisePairs(p).rightStim.Position = params.rightPos;
+    noisePairs(n).pairID = [stateB_leftVect(p) stateB_rightVect(n)]; % left cue and right cue array indices
+    noisePairs(n).pairRespSide = NaN;
+end
 
 
 
