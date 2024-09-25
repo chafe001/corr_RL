@@ -31,7 +31,7 @@ params.numStates = 2; % this overwritten by curveParams if curveMovie at present
 % --- BAR CONTROL
 params.randCuePercent = false;
 params.numMoviePairs = 10;
-params.cuePercentRange = [0.6 0.7 0.8 0.9];
+params.cuePercentRange = [0.7 0.8 0.9 1.0];
 params.cuePercent_easy = max(params.cuePercentRange);
 params.cuePercent_hard = min(params.cuePercentRange);
 params.movieMode = 'stdp';
