@@ -46,8 +46,8 @@ params.barNoiseMode = 'breakPairs';
 % --- CURVE CONTROL
 % determine whether to use bars with xPairs algorithm or curves with Dave's
 % curve generating code and Thomas' algorithm
-params.stimulusType = 'bars';
-% params.stimulusType = 'curves';
+% params.stimulusType = 'bars';
+params.stimulusType = 'curves';
 params.nCurvesPerMovie = 8;
 
 % --- CHOICE/REWARD 
