@@ -17,6 +17,7 @@ clear;
 % --- PARAMS ---
 params.maxEventCodes = 300;
 params.sepValue = -111111;
+
 % params.stimType = 'curves';
 params.stimType = 'bars';
 
@@ -119,6 +120,8 @@ bob = 1;
 
 toc;
 %%
+
+params.stimType = 'bars';
 
 switch params.stimType
     case 'bars'
@@ -487,50 +490,19 @@ set(gca, 'Position', [left bottom width height]);
 title('choseCorrect by cuePerc, all trials', 'FontSize', 9, 'FontWeight', 'normal');
 
 % divide data by corrStrength
-% cuePerc_here = unique(bData(:, stdcol.cuePercent));
-% figure;
-% hold on;
-% for f = 1 : length(cuePerc_here)
-% 
-%     thisLevel = bData(bData(:, stdcol.cuePercent) == cuePerc_here(f), :);
-% 
-%     perf = grpstats(thisLevel(:, stdcol.choseCorrect), thisLevel(:, stdcol.trialInBlock));
-% 
-%     plot(perf);
-% end
-
-earlyBlock = bData(bData(:, stdcol.trialInBlock) < 20, :);
-[mean, sem] = grpstats(earlyBlock(:, stdcol.choseCorrect), earlyBlock(:, stdcol.cuePercent));
+cuePerc_here = unique(bData(:, stdcol.cuePercent));
 figure;
-errorbar(mean, sem);
-xSpan = xlim;
-ySpan = ylim;
-axis([xSpan(1) - 0.5, xSpan(2) + 0.5, ySpan(1), ySpan(2)]);
-set(gca, 'box', 'off');
-set(gca, 'TickDir', 'out');   
-set(gca, 'XTick', xSpan(1):1:xSpan(2));
-set(gca, 'YTick', perfMin:perfTick:perfMax);
-set(gca, 'TickLength', [tickLength tickLength]);            %  this in proportion of x axis
-set(gca, 'FontName', 'Arial');
-set(gca, 'FontSize', 9);  
-set(gca, 'Units', 'centimeters');
-set(gca, 'Position', [left bottom width height]);
-title('choseCorrect by cuePerc, first 20 trials in block', 'FontSize', 9, 'FontWeight', 'normal');
+hold on;
+for f = 1 : length(cuePerc_here)
 
-figure;
-hist(bData(:, stdcol.trialInBlock));
-set(gca, 'box', 'off');
-set(gca, 'TickDir', 'out');  
-% xSpan = xlim;
-% ySpan = ylim;
-% % set(gca, 'XTick', xSpan(1):1:xSpan(2));
-% set(gca, 'YTick', perfMin:perfTick:perfMax);
-set(gca, 'TickLength', [tickLength tickLength]);            %  this in proportion of x axis
-set(gca, 'FontName', 'Arial');
-set(gca, 'FontSize', 9);  
-set(gca, 'Units', 'centimeters');
-set(gca, 'Position', [left bottom width height]);
-title('choseCorrect by cuePerc, first 20 trials in block', 'FontSize', 9, 'FontWeight', 'normal');
+    thisLevel = bData(bData(:, stdcol.cuePercent) == cuePerc_here(f), :);
+
+    perf = grpstats(thisLevel(:, stdcol.choseCorrect), thisLevel(:, stdcol.trialInBlock));
+
+    plot(perf);
+end
+
+
 
 bob = 1;
 
