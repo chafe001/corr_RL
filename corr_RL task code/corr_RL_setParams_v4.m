@@ -38,7 +38,7 @@ params.movieMode = 'stdp';
 params.numCueStim = 4;  % new v5
 params.numCueReps = 3;  % new v5
 % adding new pairing algorithm
-% params.pairMod = 'xPairs'; % new v5
+% params.pairMode = 'xPairs'; % new v5
 params.pairMode = 'randList';  % new v5
 params.barNoiseMode = 'breakPairs';
 % params.barNoiseMode = 'noisePairs';
@@ -53,8 +53,8 @@ params.nCurvesPerMovie = 8;
 % --- CHOICE/REWARD 
 params.choice_x = 4;
 params.choice_y = 0;
-params.highRewProb = 1.0;
-params.lowRewProb = 0;
+params.highRewProb = 0.8;
+params.lowRewProb = 0.2;
 
 % --- FEEDBACK
 params.rewBox_width = 10; % degrees visual angle
