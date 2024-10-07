@@ -54,7 +54,7 @@ switch COMPUTER
         % 6 frames - 50 ms
         % 2012 McMahon and Leopold, maximal STDP perceptual shifts with 10
         % ms stimulus duration, and 20 ms SOA, 1 and 3 frames respectively
-        % at 120 Hz. 
+        % at 120 Hz.
         % Pairing protocol:
         % - 120 trials
         % - Each trial 1 pair of images quickly flashed at screen center
@@ -62,7 +62,7 @@ switch COMPUTER
         % - 20 trials of nonface pairs
         % - Subjects responded whether face (press) or nonface (withhold)
         % - So they really didn't have movies, one response per pair
-        % - one pair every 800-1200 ms. 
+        % - one pair every 800-1200 ms.
         % - SOA 10-100 ms
         % - stimulus duration 10 ms
         % - SOA and stimulus order A->B, B->A, held constant in ea session
@@ -86,7 +86,7 @@ switch COMPUTER
         times.rewRing_frames = 10;
         times.scError_ms = 1000;
 
-case 'LAPTOP-42DLT8TH'
+    case 'LAPTOP-42DLT8TH'
         % laptop at 120 Hz, 8.33 ms per frame
         % durations, frames:ms
         % 2 frames - 17 ms
@@ -96,7 +96,7 @@ case 'LAPTOP-42DLT8TH'
         % 6 frames - 50 ms
         % 2012 McMahon and Leopold, maximal STDP perceptual shifts with 10
         % ms stimulus duration, and 20 ms SOA, 1 and 3 frames respectively
-        % at 120 Hz. 
+        % at 120 Hz.
         % Pairing protocol:
         % - 120 trials
         % - Each trial 1 pair of images quickly flashed at screen center
@@ -104,7 +104,7 @@ case 'LAPTOP-42DLT8TH'
         % - 20 trials of nonface pairs
         % - Subjects responded whether face (press) or nonface (withhold)
         % - So they really didn't have movies, one response per pair
-        % - one pair every 800-1200 ms. 
+        % - one pair every 800-1200 ms.
         % - SOA 10-100 ms
         % - stimulus duration 10 ms
         % - SOA and stimulus order A->B, B->A, held constant in ea session
@@ -143,6 +143,25 @@ case 'LAPTOP-42DLT8TH'
         times.sc4_feedback_frames = 20; % duration of scene depends on choice ring timing
         times.choiceRing_frames = 10;
         times.rewRing_frames = 10;
+        times.scError_ms = 1000;
+
+    case '3080Y25-G0Y3FF'
+        % augsburg desktop at 60 Hz (double frames but leave ms alone)
+        times.stim_frames = 6;
+        times.soa_frames = 4;
+        times.interPair_frames = 24;
+        % times below specified in screen refresh units, absolute time depends on
+        % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
+        % in new laptops, etc
+        % scene 1 is pretrial
+        % times.fixDur_ms = 20;  % fix targ only
+        times.preMovie_frames = 40;  % fix targ and choices
+        times.postMovie_frames = 40;
+        times.sc1_pretrial_ms = 20;
+        times.sc3_response_ms = 2500;
+        times.sc4_feedback_frames = 40; % duration of scene depends on choice ring timing
+        times.choiceRing_frames = 20;
+        times.rewRing_frames = 20;
         times.scError_ms = 1000;
 
     case 'DESKTOP-RJQAES2'
