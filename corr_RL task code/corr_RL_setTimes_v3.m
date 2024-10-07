@@ -146,22 +146,26 @@ switch COMPUTER
         times.scError_ms = 1000;
 
     case '3080Y25-G0Y3FF'
-        % augsburg desktop at 60 Hz (double frames but leave ms alone)
-        times.stim_frames = 6;
-        times.soa_frames = 4;
-        times.interPair_frames = 24;
+        % augsburg desktop at 60 Hz (copied from DESKTOP-RJQAES2)
+        times.stim_frames = 1;
+        times.soa_frames = 1;
+        times.interPair_frames = 5;
+
+        % times for curve stimuli
+        times.curve_frames = 3;
+
         % times below specified in screen refresh units, absolute time depends on
         % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
         % in new laptops, etc
         % scene 1 is pretrial
         % times.fixDur_ms = 20;  % fix targ only
-        times.preMovie_frames = 40;  % fix targ and choices
-        times.postMovie_frames = 40;
+        times.preMovie_frames = 20;  % fix targ and choices
+        times.postMovie_frames = 20;
         times.sc1_pretrial_ms = 20;
         times.sc3_response_ms = 2500;
-        times.sc4_feedback_frames = 40; % duration of scene depends on choice ring timing
-        times.choiceRing_frames = 20;
-        times.rewRing_frames = 20;
+        times.sc4_feedback_frames = 20; % duration of scene depends on choice ring timing
+        times.choiceRing_frames = 10;
+        times.rewRing_frames = 10;
         times.scError_ms = 1000;
 
     case 'DESKTOP-RJQAES2'
