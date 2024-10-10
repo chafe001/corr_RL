@@ -67,9 +67,9 @@ switch COMPUTER
         % - stimulus duration 10 ms
         % - SOA and stimulus order A->B, B->A, held constant in ea session
 
-        times.stim_frames = 3;  % 17 ms
-        times.soa_frames = 3; % 25 ms
-        times.interPair_frames = 15; % 100 ms
+        times.stim_frames = 4;  % 17 ms
+        times.soa_frames = 4; % 25 ms
+        times.interPair_frames = 30; % 500 ms
         % MOVIE DURATION with these parameters
         % Triplet duration (17 + 25 + 17 ms) = 59 ms
         % Triplet + interPair duration = 59 + 100 ms = 159 ms

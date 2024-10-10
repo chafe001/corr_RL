@@ -31,7 +31,7 @@ params.numStates = 2; % this overwritten by curveParams if curveMovie at present
 % --- BAR CONTROL
 params.randCuePercent = false;
 params.numMoviePairs = 10;
-params.cuePercentRange = [0.5 0.6 0.7 0.8];
+params.cuePercentRange = [0.3 0.5 0.7 0.9];
 params.cuePercent_easy = max(params.cuePercentRange);
 params.cuePercent_hard = min(params.cuePercentRange);
 params.movieMode = 'stdp';
@@ -53,8 +53,8 @@ params.nCurvesPerMovie = 8;
 % --- CHOICE/REWARD 
 params.choice_x = 4;
 params.choice_y = 0;
-params.highRewProb = 1.0;
-params.lowRewProb = 0;
+params.highRewProb = 0.8;
+params.lowRewProb = 0.2;
 
 % --- FEEDBACK
 params.rewBox_width = 10; % degrees visual angle
