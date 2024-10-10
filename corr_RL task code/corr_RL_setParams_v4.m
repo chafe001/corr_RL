@@ -38,7 +38,7 @@ params.movieMode = 'stdp';
 params.numCueStim = 4;  % new v5
 params.numCueReps = 3;  % new v5
 % adding new pairing algorithm
-% params.pairMod = 'xPairs'; % new v5
+% params.pairMode = 'xPairs'; % new v5
 params.pairMode = 'randList';  % new v5
 params.barNoiseMode = 'breakPairs';
 % params.barNoiseMode = 'noisePairs';

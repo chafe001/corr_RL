@@ -43,7 +43,10 @@ switch COMPUTER
     case 'MATT_MICRO'
         stdInPath = 'C:\MYFILES\1 DATA\stdin\';
         stdOutPath = 'C:\MYFILES\1 DATA\stdin\';
-
+    case '3080Y25-G0Y3FF'
+        % augsburg desktop
+        stdInPath = 'C:\Users\crowe\Documents\GitHub\corr_RL\corr_RL task code\';
+        stdOutPath = 'C:\Users\crowe\Documents\GitHub\corr_RL\corr_RL task code\';
 end
 
 % ------------------------ GET LIST OF  FILES TO PROCEESS

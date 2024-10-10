@@ -76,16 +76,16 @@ for count = 1:100
     CM(5,:) = CM(5,:) + BEST;
     
 end
-%%
-figure(1); 
-title('')
-set(gcf, 'Position', [811   417   500   400])
-set(gca, 'fontsize', 28);
-saveFigurePdf(gcf, '~/Figures/Figure5b')
-%
-%
-% [Xf, LL, BIC] = fit_M1random_v1(a, r);
-% [Xf, LL, BIC] = fit_M2WSLS_v1(a, r);
-% [Xf, LL, BIC] = fit_M3RescorlaWagner_v1(a, r);
-% [Xf, LL, BIC] = fit_M4CK_v1(a, r);
-% [Xf, LL, BIC] = fit_M5RWCK_v1(a, r);
+% %%
+% figure(1); 
+% title('')
+% set(gcf, 'Position', [811   417   500   400])
+% set(gca, 'fontsize', 28);
+% saveFigurePdf(gcf, '~/Figures/Figure5b')
+% %
+% %
+% % [Xf, LL, BIC] = fit_M1random_v1(a, r);
+% % [Xf, LL, BIC] = fit_M2WSLS_v1(a, r);
+% % [Xf, LL, BIC] = fit_M3RescorlaWagner_v1(a, r);
+% % [Xf, LL, BIC] = fit_M4CK_v1(a, r);
+% % [Xf, LL, BIC] = fit_M5RWCK_v1(a, r);
