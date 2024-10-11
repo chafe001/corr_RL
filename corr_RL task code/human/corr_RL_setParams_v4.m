@@ -9,11 +9,12 @@ function [params] = corr_RL_setParams_v4()
 % --- STIMULUS FEATURE SPACE
 
 % --- variable feature dimensions
-params.Angles = [0 45 90 135];
+params.Angles = [0 45];
+% params.Angles = [0 45 90 135];
 % params.Angles = [0 30 60 90 120 150];
 % params.FaceColors = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
-params.FaceColors = [0 0 0; 1 1 1];  
-% params.FaceColors = [0 0 0];  
+% params.FaceColors = [0 0 0; 1 1 1];  
+params.FaceColors = [0 0 0];  
 
 % --- fixed feature dimensions
 params.Size = [1 4]; % [width height] in degrees
@@ -34,11 +35,12 @@ params.numMoviePairs = 10;
 params.cuePercentRange = [0.3 0.5 0.7 0.9];
 params.cuePercent_easy = max(params.cuePercentRange);
 params.cuePercent_hard = min(params.cuePercentRange);
-params.movieMode = 'stdp';
-params.numCueStim = 4;  % new v5
+% params.movieMode = 'stdp';
+params.movieMode = 'simPairs';  % simultaneous pairs
+params.numCueStim = 2;  % new v5
 params.numCueReps = 3;  % new v5
 % adding new pairing algorithm
-% params.pairMode = 'xPairs'; % new v5
+% params.pairMode = 'xPairs'; 
 params.pairMode = 'randList';  % new v5
 params.barNoiseMode = 'breakPairs';
 % params.barNoiseMode = 'noisePairs';
@@ -53,8 +55,10 @@ params.nCurvesPerMovie = 8;
 % --- CHOICE/REWARD 
 params.choice_x = 4;
 params.choice_y = 0;
-params.highRewProb = 0.8;
-params.lowRewProb = 0.2;
+% params.highRewProb = 0.8;
+% params.lowRewProb = 0.2;
+params.highRewProb = 1;
+params.lowRewProb = 0;
 
 % --- FEEDBACK
 params.rewBox_width = 10; % degrees visual angle
