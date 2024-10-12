@@ -58,7 +58,7 @@ switch params.stimulusType
                     [blockStim] = corr_RL_sampleStimSpace_v2(params);  % new for corr_RL v5
 
                     % --- 2. map orthogonal stimulus pairs to LEFT and RIGHT responses
-                    [stateA_pairs, stateB_pairs] = corr_RL_pairStimuli_v3(blockStim, params); % new for corr_RL v5
+                    [stateA_pairs, stateB_pairs] = corr_RL_pairStimuli_v4(blockStim, params); % new for corr_RL v5
 
                     % --- 3. select number of cue pairs for this block, and hence degree of
                     % visual noise (number of noise pairs) added to the movie

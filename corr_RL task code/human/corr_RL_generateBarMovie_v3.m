@@ -9,18 +9,20 @@ function [movieImages, pairSeq, pairs] = corr_RL_generateBarMovie_v3(TrialRecord
 % v2: adds new randList pairs design
 % v3: enable simultaneous pairs and fixed sequences
 
+% --- set times
+times = corr_RL_setTimes_v3();
+
 % --- if real fx, uncomment the following  lines
 condArray = TrialRecord.User.condArray;
 params = TrialRecord.User.params;
 c = TrialRecord.CurrentCondition;
+codes = TrialRecord.User.codes;
 
 % --- if mockup, uncomment the following  lines
 % [condArray, params] = corr_RL_buildTrials_v5();
 % c = 4; % hard code condition number
 % bn = 2; % hard code block number
-
-times = corr_RL_setTimes_v3();
-codes = corr_RL_setBarCodes_v3();
+% codes = corr_RL_setBarCodes_v3();
 
 % --- create pairSeq vector specifying which pairs to show how many times
 % in movie in randomized order
@@ -92,7 +94,7 @@ switch params.barNoiseMode
         end % next p
 
 
-        % --- CHECK SAME STIMULI AND NUMBER OF REPS AT LEFT AND RIGHT afte
+        % --- CHECK SAME STIMULI AND NUMBER OF REPS AT LEFT AND RIGHT after
         % breaking pairs
         leftStim_ids = [];
         rightStim_ids = [];
@@ -160,9 +162,9 @@ end
 
 
 % --- DEFINE STANDARD IMAGES
-preMovie_img = {[], [], times.preMovie_frames, TrialRecord.User.codes.preMovie};
-soa_img = {[], [], times.soa_frames, TrialRecord.User.codes.img1_off};
-interPair_img = {[], [], times.interPair_frames, TrialRecord.User.codes.imgPair_off};
+preMovie_img = {[], [], times.preMovie_frames, codes.preMovie};
+soa_img = {[], [], times.soa_frames, codes.img1_off};
+interPair_img = {[], [], times.interPair_frames, codes.imgPair_off};
 
 % --- PREALLOCATE FRAME CELL ARRAY
 % --- SET STIM PARAMS FOR imageChanger FUNCTION CALL TO CONTROL MOVIE
@@ -201,9 +203,9 @@ for p = 1 : length(pairs)
     rightImg_y = pairs(p).rightStim.Position(2);
 
     % --- BUILD SIMULTANEOUS AND SEQUENTIAL STIM FRAMES FOR EACH IMG PAIR
-    pair_img = {{leftImg_fn, rightImg_fn}, [leftImg_x leftImg_y; rightImg_x rightImg_y], times.stim_frames, TrialRecord.User.codes.imgPair_on};
-    leftImg_frame = {{leftImg_fn}, [leftImg_x leftImg_y], times.stim_frames, TrialRecord.User.codes.img1_on};
-    rightImg_frame = {{rightImg_fn}, [rightImg_x rightImg_y], times.stim_frames, TrialRecord.User.codes.img2_on};
+    pair_img = {{leftImg_fn, rightImg_fn}, [leftImg_x leftImg_y; rightImg_x rightImg_y], times.stim_frames, codes.imgPair_on};
+    leftImg_frame = {{leftImg_fn}, [leftImg_x leftImg_y], times.stim_frames, codes.img1_on};
+    rightImg_frame = {{rightImg_fn}, [rightImg_x rightImg_y], times.stim_frames, codes.img2_on};
     blankImg_frame = {[], [], times.stim_frames, []};
 
     % --- COMBINE FRAMES INTO SEQUENCE
@@ -215,9 +217,26 @@ for p = 1 : length(pairs)
             % p 2 : indx = 3, pair_img = 4, interPair_img = 5
             % p 3 : indx = 5, pair_img =  6, interPair_img = 7
             % p 4 : indx = 7, pair_img =  8, interPair_img = 9 ...
+
+            % increment image counter
             indx = ((p - 1) * 2) + 2;
-            images{indx + 1} = pair_img;
-            images{indx + 2} = interPair_img;
+
+            switch pairs(p).showStim
+
+                case 'both'
+                    images{indx + 1} = pair_img;
+                    images{indx + 2} = interPair_img;
+
+                case 'leftOnly'
+                    images{indx + 1} = leftImg_frame;
+                    images{indx + 2} = interPair_img;
+
+                case 'rightOnly'
+                    images{indx + 1} = rightImg_frame;
+                    images{indx + 2} = interPair_img;
+
+            end
+
 
         case 'stdp'
             % pr, indx and frame number looping values:
@@ -225,6 +244,8 @@ for p = 1 : length(pairs)
             % pr 2 : indx = 5, 1on = 6, 1off = 7, 2on = 8, 2off = 9
             % pr 3 : indx = 9, 1on = 10, 1off = 11, 2on = 12, 2off = 13
             % pr 4 : indx = 13, 1on = 14, 1off = 15, 2on = 16, 2off = 17 ...
+
+            % increment image counter
             indx = ((p - 1) * 4) + 2;
 
             switch pairs(p).showStim
