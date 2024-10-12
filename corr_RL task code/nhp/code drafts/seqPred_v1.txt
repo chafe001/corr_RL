@@ -1,0 +1,12 @@
+Condition	Info	Frequency	Block	Timing File	TaskObject#1		
+1	'trialType','A1X'	25	1	seqPred_v1	fix(0,0)	
+2	'trialType','A2X'	25	1	seqPred_v1	fix(0,0)	
+3	'trialType','B1X'	25	1	seqPred_v1	fix(0,0)	
+4	'trialType','B2X'	25	1	seqPred_v1	fix(0,0)	
+5	'trialType','A1Y'	25	1	seqPred_v1	fix(0,0)	
+6	'trialType','A2Y'	25	1	seqPred_v1	fix(0,0)	
+7	'trialType','B1Y'	25	1	seqPred_v1	fix(0,0)	
+8	'trialType','B2Y'	25	1	seqPred_v1	fix(0,0)
+	
+
+
