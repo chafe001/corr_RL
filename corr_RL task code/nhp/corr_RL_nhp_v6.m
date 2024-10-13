@@ -321,9 +321,109 @@
 
 
 % -------------------------------------------------------------------------
-% ------------------------- ERROR CODES -----------------------------------
+% ---------------------- TASK CONTROL SWITCHES ----------------------------
 % -------------------------------------------------------------------------
+
+% --- Display joystick
+% This will display the joystick cursor, but for both the experimenter and
+% subject screen. Not sure there's a way to only display to experimenter
+% screen, but I think the joystick cursor should show in replay.
+showcursor(false);
+
+% --- Multiple hits
+% require that 2-n correct trials are performed in a row before delivering
+% reward drops equal to the number of successive trials on the last trial.
+% If multipleHits = 0, then disabled
+multipleHits = 0; %3
+
+
+% -------------------------------------------------------------------------
+% --------------------------- CONSTANTS -----------------------------------
+% -------------------------------------------------------------------------
+% Task objects. Numbers are column indices in the conditions *.txt file and
+% control how ML accesses stimulus information from the conditions file. We
+% are using this mostly to control stimulus positions.  Stimuli identities
+% are controlled by setting the filenames of *.png files to read from disk
+taskObj_fix = 1;
+
 trialerror(0, 'validResp', 1, 'earlyResp', 2, 'noResp');
+
+leftPos = [-4.5, -2];
+rightPos = [4.5, -2];
+upPos = [0, 4.5];
+
+
+% Eye and joy fixation window (in degrees)
+eye_radius = 3;
+joy_radius = 3;
+
+% Reward sizes
+rewDur1 = 85;
+numDrops1 = 2;
+
+% -------------------------------------------------------------------------
+% ---------------------- TRIAL OUTCOME VARIABLES --------------------------
+% -------------------------------------------------------------------------
+% --- these variables save behavioral events to the outfile
+
+% trialResult is a string that should take on one of the following values
+% 'null' (initialized)
+% 'noEyeJoyFix'
+% 'breakFix_eye'
+% 'breakFix_joy'
+% 'breakFix_eye_joy'
+% 'noResponse'
+% 'correctChoice'
+% 'incorrectChoice'
+trialResult = 'null';
+
+% resultScene is the scene in which the result occurred, and should take
+% on one of the following values
+% 'null' (initialization)
+% 'preCue'
+% 'cue'
+% 'post_cue_resp'
+% 'post_cue_return'
+% 'isi'
+% 'probe'
+% 'post_probe_resp'
+% 'post_probe_return'
+% 'post_probe_fix'
+% 'feedback'
+% 'reward'
+% 'post_reward_fix'
+resultScene = 'null';
+
+
+% -------------------------------------------------------------------------
+% ------------------- INIT TRIAL FLAGS AND COUNTERS -----------------------
+% -------------------------------------------------------------------------
+% --- These variables track behavioral events for trial control
+
+% flag to call 'return' to end trial prematurely if error
+abortTrial = false;
+
+% flag for determining trialerror if all scenes completed successfully
+totalTrialSuccess = 0;
+
+% flag to determine if probe response was successfully completed (out and
+% back)
+stimRespCompleted = false;
+
+% -------------------------------------------------------------------------
+% ------------------------ CHECK HARDWARE ---------------------------------
+% -------------------------------------------------------------------------
+
+% check eye input is detected
+if ~exist('eye_','var'), error('This demo requires eye signal input. Please set it up or try the simulation mode.'); end
+
+% set hotkey for exit
+hotkey('x', 'escape_screen(); assignin(''caller'',''continue_'',false);');
+
+% Note for manual reward: during task, [R] is preprogrammed as a manual
+% reward hotkey and will dispense the amount of reward specified in the
+% section of the main menu
+% [R] key: Delivers a manual reward (initial pulse duration: 100 ms, juiceline: as determined in Reward of the main menu).
 
 % -------------------------------------------------------------------------
 % -------------------------- PARAMETERS -----------------------------------
@@ -341,7 +441,6 @@ times = corr_RL_setTimes_v3();
 
 % save times to TrialRecord
 TrialRecord.User.times = times;
-
 
 % -------------------------------------------------------------------------
 % -------------- BUILD CONDITION AND TRIAL ARRAYS -------------------------
@@ -376,7 +475,7 @@ if TrialRecord.CurrentTrialNumber == 1
 
     switch TrialRecord.User.params.stimulusType
         case 'bars'
-            TrialRecord.User.codes = corr_RL_setBarCodes_v3();
+            TrialRecord.User.codes = corr_RL_setBarCodes_nhp_v3();
         case 'curves'
             TrialRecord.User.codes = corr_RL_setCurveCodes_v3();
     end
@@ -442,15 +541,6 @@ choices.responseKey = [];
 choices.choseCorrect = []; % selected the choice with the higher reward probability
 choices.madeValidResp = [];
 
-% -------------------------------------------------------------------------
-% ------------------------ CHECK HARDWARE ---------------------------------
-% -------------------------------------------------------------------------
-
-% check eye input is detected
-if ~exist('eye_','var'), error('This task requires eye signal input. Please set it up or try the simulation mode.'); end
-
-% set hotkey for exit
-hotkey('x', 'escape_screen(); assignin(''caller'',''continue_'',false);');
 
 % *************************************************************************************************
 % *************************************************************************************************
@@ -476,10 +566,7 @@ abortTrial = false;
 % description of the timing script functions (adapters)
 
 % -------------------------------------------------------------------------
-% SCENE 1: PRETRIAL
-% idle(duration, [RGB], eventcodes) changes background color, has timer
-% built in, and writes event codes. Empty brackets for screen color leaves
-% color unchanged.
+% PRETRIAL period
 
 % --- PRINT TRIAL AND CUE MOVIE INFO TO USER SCREEN
 switch TrialRecord.User.condArray(c).state
@@ -488,7 +575,6 @@ switch TrialRecord.User.condArray(c).state
     case 2
         keyStr = 'Correct Key: RIGHT';
 end
-
 
 switch TrialRecord.User.params.stimulusType
 
@@ -551,8 +637,43 @@ mod256 = mod(TrialRecord.CurrentTrialNumber, 256);
 % blinking of reward bar when called
 eventmarker([TrialRecord.CurrentCondition mult256 mod256]);
 
-% --- reward box for visual feedback
-rewBox = BoxGraphic(null_);
+% -------------------------------------------------------------------------
+% SCENE 1: PRECUE FIX
+
+% --- BUILD ADAPTOR CHAINS
+% See TBT or TOPX recording code for additional notes
+
+% present fix target, activatate eye window
+sc1_eyeCenter = SingleTarget(eye_);
+sc1_eyeCenter.Target = taskObj_fix;
+sc1_eyeCenter.Threshold = eye_radius;
+
+% write event code for acquiring eye fixation
+sc1_eyeCenter_oom = OnOffMarker(sc1_eyeCenter);
+sc1_eyeCenter_oom.OnMarker = TrialRecord.User.codes.gazeFixAcq;
+sc1_eyeCenter_oom.ChildProperty = 'Success';
+
+% present joystick target, activate joystick window
+sc1_joyCenter = SingleTarget(joy_);
+sc1_joyCenter.Target = taskObj_fix; % redundant
+sc1_joyCenter.Threshold = joy_radius;
+
+% write event code for acquiring joy fixation
+sc1_joyCenter_oom = OnOffMarker(sc1_joyCenter);
+sc1_joyCenter_oom.OnMarker = TrialRecord.User.codes.joyFixAcq;
+sc1_joyCenter_oom.ChildProperty = 'Success';
+
+% 'and' eye and joy together
+sc1_eyejoy = AndAdapter(sc1_eyeCenter_oom);
+sc1_eyejoy.add(sc1_joyCenter_oom);
+
+% pass eyejoy to WaitThenHold, require eye and joy fixation for a period
+sc1_wtHold = WaitThenHold(sc1_eyejoy);  % WaitThenHold will trigger once both the eye and the joystick are in the center and will make sure that they are held there for the duration of this scene
+sc1_wtHold.WaitTime = times.sc1_precue_eyejoy_waitTime_ms;
+sc1_wtHold.HoldTime = times.sc1_precue_eyejoy_holdTime_ms;
+
+% draw rewBox to indicate accumulated rewards
+sc1_rewBox = BoxGraphic(sc1_wtHold);
 netWinBox_height = TrialRecord.User.params.rewBox_height;
 netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
 maxWinBox_width = TrialRecord.User.params.rewBox_width;
@@ -571,18 +692,22 @@ netWinBox_faceColor = [0.3010 0.7459 0.9330];
 netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
 
 % rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
-rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
+sc1_rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 
-
-sc1_tc = TimeCounter(rewBox);
-sc1_tc.Duration = times.sc1_pretrial_ms;
+% % pass rewBox to timer, set rewBox time to be lo
+% sc1_rewBox_tc = TimeCounter(sc1_rewBox);
+% sc1_rewBox_tc.Duration = times.sc1_rewBox_ms;
+% 
+% % combine eyejoy and rewBox
+% sc1_eyejoy_rewBox = Concurrent(sc1_wtHold);
+% sc1_eyejoy_rewBox.add = sc1_rewBox_tc;
 
 % --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
-scene1 = create_scene(sc1_tc);
+scene1 = create_scene(sc1_rewBox);
 % fliptime is time the trialtime in ms at which the first frame of the
 % screen is pressented and is the return value of run_scene.  Logs timing
 % of scene transitions
-scene1_start = run_scene(scene1, TrialRecord.User.codes.startFix); %'pretrial'
+scene1_start = run_scene(scene1, TrialRecord.User.codes.gazeFixAcq); %'pretrial'
 
 % -------------------------------------------------------------------------
 % SCENE 2: PRESENT STIM MOVIE, ERROR IF KEY RESPONSE
@@ -597,7 +722,7 @@ sc2_watchKeys = OrAdapter(sc2_key1);
 sc2_watchKeys.add(sc2_key2);
 
 % --- 3. movie adaptor
-sc2_movie = ImageChanger(rewBox);
+sc2_movie = ImageChanger(sc1_rewBox);
 sc2_movie.List = movieFrames;
 sc2_movie.Repetition = 1;
 
@@ -682,7 +807,7 @@ end
 
 % --- MAKE ADAPTOR(S)
 % --- 1. timeCounter
-sc3_tc = TimeCounter(rewBox);
+sc3_tc = TimeCounter(sc1_rewBox);
 sc3_tc.Duration = times.sc3_response_ms;
 
 % --- 2. key checking adaptor
