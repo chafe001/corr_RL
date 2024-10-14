@@ -744,7 +744,7 @@ sc3_joyCenter_oom.ChildProperty = 'Success';
 sc3_eyejoy = AndAdapter(sc3_eyeCenter_oom);
 sc3_eyejoy.add(sc3_joyCenter_oom);
 
-% pass eyejoy to WaitThenHold, require eye and joy fixation for a period
+% pass eyejoy to WaitThenHold, require eye and joy fixation for hold time
 sc3_wtHold = WaitThenHold(sc3_eyejoy);  % WaitThenHold will trigger once both the eye and the joystick are in the center and will make sure that they are held there for the duration of this scene
 sc3_wtHold.WaitTime = times.sc3_precue_eyejoy_waitTime_ms;
 sc3_wtHold.HoldTime = times.sc3_precue_eyejoy_holdTime_ms;
@@ -754,9 +754,10 @@ sc3_movie = ImageChanger(null_);
 sc3_movie.List = movieFrames;
 sc3_movie.Repetition = 1;
 
-% --- 3. combine movie, wtHold and rewbox, base duration on movie (first added)
-sc3_wtHold_movie = Concurrent(sc3_movie);
-sc3_wtHold_movie.add(sc3_wtHold);
+% --- 3. combine movie, wtHold and rewbox
+% add wtHold first so this controls timing and ends scene if fix broken
+sc3_wtHold_movie = AllContinue(sc3_wtHold);
+sc3_wtHold_movie.add(sc3_movie);
 sc3_wtHold_movie.add(rewBox);
 
 % --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
