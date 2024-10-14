@@ -1,4 +1,4 @@
-function [movieImages, pairSeq, pairs] = corr_RL_generateBarMovie_v3(TrialRecord)
+function [movieImages, pairSeq, pairs] = corr_RL_nhp_generateBarMovie_v1(TrialRecord)
 % This function returns a cell array, movieImages, that is used to set the
 % 'List' property of a imageChanger() object.  This controls the sequence
 % of images presented in the movie, which controls the proportion of cue

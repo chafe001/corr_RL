@@ -1,4 +1,4 @@
-function codes = corr_RL_nhp_setCodes_v3()
+function codes = corr_RL_nhp_setCodes_v1()
 
 % -------------------------------------------------------------------------
 % --------------------------- EVENT CODES ---------------------------------
