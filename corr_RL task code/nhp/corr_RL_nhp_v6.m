@@ -575,7 +575,7 @@ switch TrialRecord.User.params.stimulusType
             '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.FaceColor), ...
             '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(2).rightStim.FileName);
 
-        dashboard(1, trlInfoStr, [1 1 1], 'FontSize', 8);
+        dashboard(2, trlInfoStr, [1 1 1], 'FontSize', 8);
         dashboard(3, pair1_Angles_str, [1 1 1], 'FontSize', 8);
         dashboard(4, pair2_Angles_str, [1 1 1], 'FontSize', 8);
 
@@ -699,8 +699,7 @@ sc2_wtHold_rewBox = Concurrent(sc2_wtHold);
 sc2_wtHold_rewBox.add(rewBox);
 
 % --- RUN SCENE
-
-scene2 = create_scene(rewBox);
+scene2 = create_scene(sc2_wtHold_rewBox);
 scene2_start = run_scene(scene2, TrialRecord.User.codes.fixTargOn); 
 
 % --- CHECK BEHAVIORAL OUTCOMES
