@@ -9,20 +9,20 @@ function [movieImages, pairSeq, pairs] = corr_RL_generateBarMovie_v3(TrialRecord
 % v2: adds new randList pairs design
 % v3: enable simultaneous pairs and fixed sequences
 
-% --- set times
-times = corr_RL_setTimes_v3();
-
 % --- if real fx, uncomment the following  lines
 condArray = TrialRecord.User.condArray;
 params = TrialRecord.User.params;
 c = TrialRecord.CurrentCondition;
 codes = TrialRecord.User.codes;
+times = TrialRecord.User.times;
 
 % --- if mockup, uncomment the following  lines
 % [condArray, params] = corr_RL_buildTrials_v5();
 % c = 4; % hard code condition number
 % bn = 2; % hard code block number
 % codes = corr_RL_setBarCodes_v3();
+% times = corr_RL_setTimes_v3();
+
 
 % --- create pairSeq vector specifying which pairs to show how many times
 % in movie in randomized order

@@ -436,7 +436,7 @@ taskObj_fix = 1;
 % -------------------------------------------------------------------------
 
 % call fx to set trial timing
-times = corr_RL_setTimes_v3();
+times = corr_RL_nhp_setTimes_v3();
 
 % save times to TrialRecord
 TrialRecord.User.times = times;
@@ -892,8 +892,7 @@ end
 
 
 % -------------------------------------------------------------------------
-% SCENE 3: RESPONSE WINDOW
-
+% SCENE 3: JOYSTICK RESPONSE
 % --- MAKE ADAPTOR(S)
 % Present fixation target and establish XY position window for eye
 sc3_eyeCenter = SingleTarget(eye_);
@@ -919,10 +918,9 @@ sc3_mTarg_joy_oom.OffMarker = codes.joyOut;
 % fixation at selected MultiTarget choice
 sc3_mTarg_joy_oom.ChildProperty = 'Waiting';
 
-% AllContinue will be used to continue eye fix, probe image changer, and
-% joy multitarget. It will stop once any one of these stops (hopefully, joy
-% causing multitarget success).
-sc3_joyResp = AllContinue(sc3_mTarg_joy_oom); % this will hopefully end scene when joy moves
+% AllContinue will be used to continue eye fix, and
+% joy multitarget. It will stop once any one of these stops 
+sc3_joyResp = AllContinue(sc3_mTarg_joy_oom); 
 sc3_joyResp.add(sc3_wtHold);
 
 % --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
