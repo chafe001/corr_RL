@@ -203,7 +203,7 @@ for p = 1 : length(pairs)
     rightImg_y = pairs(p).rightStim.Position(2);
 
     % --- BUILD SIMULTANEOUS AND SEQUENTIAL STIM FRAMES FOR EACH IMG PAIR
-    pair_img = {{leftImg_fn, rightImg_fn}, [leftImg_x leftImg_y; rightImg_x rightImg_y], times.sc3_stim_frames, codes.imgPair_on};
+    pair_img = {{leftImg_fn, rightImg_fn}, [leftImg_x leftImg_y; rightImg_x rightImg_y], times.sc3_stim_frames, codes.pair_img_on};
     leftImg_frame = {{leftImg_fn}, [leftImg_x leftImg_y], times.sc3_stim_frames, codes.left_img_on};
     rightImg_frame = {{rightImg_fn}, [rightImg_x rightImg_y], times.sc3_stim_frames, codes.right_img_on};
     blankImg_frame = {[], [], times.sc3_stim_frames, []};

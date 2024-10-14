@@ -1,4 +1,4 @@
-function codes = corr_RL_nhp_setCodes_v1()
+function codes = corr_RL_nhp_setBarCodes_v1()
 
 % -------------------------------------------------------------------------
 % --------------------------- EVENT CODES ---------------------------------
@@ -9,12 +9,10 @@ codes.fixTargOn = 11;
 codes.gazeFixAcq = 12;
 codes.joyFixAcq = 13; 
 codes.preMovie = 20;
-codes.imgPair_on = 21;
-codes.imgPair_off = 22;
+codes.pair_img_on = 21;
 codes.left_img_on = 23;
-codes.left_img_off = 24;
 codes.right_img_on = 25;
-codes.right_img_off = 26;
+codes.img_off = 26;
 codes.endMovie = 30;
 codes.beginRespWindow = 40;
 codes.joyOut = 41;

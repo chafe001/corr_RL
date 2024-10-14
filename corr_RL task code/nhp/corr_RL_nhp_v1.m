@@ -409,7 +409,7 @@ taskObj_fix = 1;
 % -------------------------------------------------------------------------
 
 % call fx to set trial timing
-times = corr_RL_nhp_setTimes_v3();
+times = corr_RL_nhp_setTimes_v1();
 
 % save times to TrialRecord
 TrialRecord.User.times = times;
