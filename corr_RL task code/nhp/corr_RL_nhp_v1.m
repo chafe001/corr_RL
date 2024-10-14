@@ -432,7 +432,7 @@ TrialRecord.User.times = times;
 % each trial
 if TrialRecord.CurrentTrialNumber == 1
 
-    [condArray, params] = corr_RL_buildTrials_v5();
+    [condArray, params] = corr_RL_nhp_buildTrials_v1();
 
     % store output in TrialRecord so variables live (have scope) beyond
     % this trial.  Other variables in script are only defined during the
@@ -447,7 +447,7 @@ if TrialRecord.CurrentTrialNumber == 1
 
     switch TrialRecord.User.params.stimulusType
         case 'bars'
-            TrialRecord.User.codes = corr_RL_setBarCodes_nhp_v3();
+            TrialRecord.User.codes = corr_RL_nhp_setBarCodes_v1();
         case 'curves'
             TrialRecord.User.codes = corr_RL_setCurveCodes_v3();
     end
@@ -464,7 +464,7 @@ switch TrialRecord.User.params.stimulusType
 
         switch TrialRecord.User.params.pairMode
             case 'randList'
-                [movieFrames, pairSeq, pairs] = corr_RL_generateBarMovie_v3(TrialRecord);
+                [movieFrames, pairSeq, pairs] = corr_RL_nhp_generateBarMovie_v1(TrialRecord);
 
             case 'xPairs'
                 [movieFrames, pairSeq, pairs] = corr_RL_generateBarMovie_v1(TrialRecord);
@@ -755,7 +755,8 @@ sc3_movie.List = movieFrames;
 sc3_movie.Repetition = 1;
 
 % --- 3. combine movie, wtHold and rewbox
-% add wtHold first so this controls timing and ends scene if fix broken
+% use AllContinue so termination of any adaptor ends scene, either movie
+% completes, or fixation broken
 sc3_wtHold_movie = AllContinue(sc3_wtHold);
 sc3_wtHold_movie.add(sc3_movie);
 sc3_wtHold_movie.add(rewBox);
@@ -808,53 +809,53 @@ end
 
 
 % -------------------------------------------------------------------------
-% SCENE 3: JOYSTICK RESPONSE
-% --- MAKE ADAPTOR(S)
+% SCENE 4: JOYSTICK RESPONSE
+
+% --- BUILD ADAPTOR CHAINS
+
 % Present fixation target and establish XY position window for eye
-sc3_eyeCenter = SingleTarget(eye_);
-sc3_eyeCenter.Target = taskObj_fix;
-sc3_eyeCenter.Threshold = eye_radius;
+sc4_eyeCenter = SingleTarget(eye_);
+sc4_eyeCenter.Target = taskObj_fix;
+sc4_eyeCenter.Threshold = eye_radius;
 
 % pass eye to WaitThenHold
-sc3_wtHold = WaitThenHold(sc3_eyeCenter);
-sc3_wtHold.WaitTime = probe_eye_waitTime;
-sc3_wtHold.HoldTime = probe_eye_holdTime; % entire duration of scene
+sc4_wtHold = WaitThenHold(sc4_eyeCenter);
+sc4_wtHold.WaitTime = probe_eye_waitTime;
+sc4_wtHold.HoldTime = probe_eye_holdTime; % entire duration of scene
 
 % MultiTarget()
-sc3_mTarg_joy = MultiTarget(joy_);
-sc3_mTarg_joy.Target = [leftTarg; rightTarg];
-sc3_mTarg_joy.Threshold = joy_radius;
-sc3_mTarg_joy.WaitTime = times.joy_waitTime;
-sc3_mTarg_joy.HoldTime = times.joy_holdTime;
+sc4_mTarg_joy = MultiTarget(joy_);
+sc4_mTarg_joy.Target = [leftTarg; rightTarg];
+sc4_mTarg_joy.Threshold = joy_radius;
+sc4_mTarg_joy.WaitTime = times.joy_waitTime;
+sc4_mTarg_joy.HoldTime = times.joy_holdTime;
 
-% Mark behavioral event: probeResp, when MultiTarget choice is acquired
-sc3_mTarg_joy_oom = OnOffMarker(sc3_mTarg_joy);
-sc3_mTarg_joy_oom.OffMarker = codes.joyOut;
-% Mark event when waiting goes from true to false, start of joy
-% fixation at selected MultiTarget choice
-sc3_mTarg_joy_oom.ChildProperty = 'Waiting';
+% Mark behavioral event:
+sc4_mTarg_joy_oom = OnOffMarker(sc4_mTarg_joy);
+sc4_mTarg_joy_oom.OffMarker = codes.joyOut;
+% Mark event when waiting goes from true to false
+sc4_mTarg_joy_oom.ChildProperty = 'Waiting';
 
 % AllContinue will be used to continue eye fix, and
 % joy multitarget. It will stop once any one of these stops 
-sc3_joyResp = AllContinue(sc3_mTarg_joy_oom); 
-sc3_joyResp.add(sc3_wtHold);
+sc4_joyResp = AllContinue(sc4_mTarg_joy_oom); 
+sc4_joyResp.add(sc4_wtHold);
 
 % --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
 % scene6 will terminate when gaze hold at center is complete, hold time is
 % 250 ms, which corresponds to probe duration
-scene3 = create_scene(sc3_joyResp, taskObj_fix);
-scene3_start = run_scene(scene3, codes.beginRespWindow);
+scene4 = create_scene(sc4_joyResp);
+scene4_start = run_scene(scene3, codes.beginRespWindow);
 
 
 % --- CHECK BEHAVIORAL OUTCOMES
-if sc3_mTarg_joy.Success % response made to one of two response windows, not nessarily the correct one
-    rt = sc3_mTarg_joy.RT;
-    probeRespRT = sc3_mTarg_joy.RT;
-    if sc3_mTarg_joy.ChosenTarget == 1 % correct target
+if sc4_mTarg_joy.Success % response made to one of two response windows
+    rt = sc4_mTarg_joy.RT;
+    if sc4_mTarg_joy.ChosenTarget == 1 % correct target
         successiveHits = successiveHits + 1;
         trialResult = 'correctChoice';
         resultScene = 'post_probe_resp';
-        dashboard(4,sprintf('sc3_mTarg_joy: Correct choice'));
+        dashboard(4,sprintf('sc4_mTarg_joy: Correct choice'));
         probeRespChoice = 'correctChoice';
         % --- WRITE EVENT CODE specifying correct response to ML and NI DAQ
         if correctDir == LEFT
@@ -862,17 +863,17 @@ if sc3_mTarg_joy.Success % response made to one of two response windows, not nes
         elseif correctDir == RIGHT
             eventmarker(rightCorrResp_eventCode);
         end
-        dashboard(3,sprintf('sc3_wtHold: Correct target (x,y) = %d %d', sc3_mTarg_joy.Target(1), sc3_mTarg_joy.Target(2)));
-        dashboard(4,sprintf('sc3_wtHold: Chosen target = %d', sc3_mTarg_joy.ChosenTarget));
-        dashboard(5,sprintf('sc3_wtHold: Correct choice'));
-        dashboard(6,sprintf('sc3_successiveHits = %d', successiveHits));
+        dashboard(3,sprintf('sc4_wtHold: Correct target (x,y) = %d %d', sc4_mTarg_joy.Target(1), sc4_mTarg_joy.Target(2)));
+        dashboard(4,sprintf('sc4_wtHold: Chosen target = %d', sc4_mTarg_joy.ChosenTarget));
+        dashboard(5,sprintf('sc4_wtHold: Correct choice'));
+        dashboard(6,sprintf('sc4_successiveHits = %d', successiveHits));
 
-    elseif sc3_mTarg_joy.ChosenTarget == 2 % incorrect target
+    elseif sc4_mTarg_joy.ChosenTarget == 2 % incorrect target
         successiveHits = 0;
         successiveErrors = successiveErrors + 1;
         trialResult = 'incorrectChoice';
         resultScene = 'post_probe_resp';
-        dashboard(4,sprintf('sc3_mTarg_joy: Incorrect choice'));
+        dashboard(4,sprintf('sc4_mTarg_joy: Incorrect choice'));
         probeRespChoice = 'incorrectChoice';
         % --- WRITE EVENT CODE specifying error response to ML and NI DAQ
         if correctDir == LEFT
@@ -881,18 +882,18 @@ if sc3_mTarg_joy.Success % response made to one of two response windows, not nes
             eventmarker(leftErrResp_eventCode);  % WRONG DIRECTION
         end
         trialerror(6);  %'Incorrect'
-        dashboard(3,sprintf('sc3_wtHold: Incorrect target (x,y) = %d %d', sc3_mTarg_joy.Target(1), sc3_mTarg_joy.Target(2)));
-        dashboard(4,sprintf('sc3_wtHold: Chosen target = %d', sc3_mTarg_joy.ChosenTarget));
-        dashboard(5,sprintf('sc3_wtHold: Incorrect choice'));
+        dashboard(3,sprintf('sc4_wtHold: Incorrect target (x,y) = %d %d', sc4_mTarg_joy.Target(1), sc4_mTarg_joy.Target(2)));
+        dashboard(4,sprintf('sc4_wtHold: Chosen target = %d', sc4_mTarg_joy.ChosenTarget));
+        dashboard(5,sprintf('sc4_wtHold: Incorrect choice'));
     end
-elseif sc3_mTarg_joy.Waiting
+elseif sc4_mTarg_joy.Waiting
     idle(0, [], noJoy_eventCode);
     trialerror(1);  %'No response'
     abortTrial = true;
     trialResult = 'noResponse';
     resultScene = 'post_probe_resp';
-    dashboard(4, 'sc3_mTarg_joy: Waiting');
-elseif sc3_eyeCenter.Success
+    dashboard(4, 'sc4_mTarg_joy: Waiting');
+elseif sc4_eyeCenter.Success
     % scene terminated with eye in window. Therefore eye did not cause
     % scene to terminate. The joystick caused the scene to terminate.
     % Joystick not success, not waiting, therefore joystick must have
@@ -902,17 +903,17 @@ elseif sc3_eyeCenter.Success
     abortTrial = true;
     trialResult = 'breakFix_joy';
     resultScene = 'post_probe_resp';
-    dashboard(4, 'sc3_mTarg_joy: Fail');
-    dashboard(5, 'sc3_eyeCenter: Success');
-elseif ~sc3_eyeCenter.Success
+    dashboard(4, 'sc4_mTarg_joy: Fail');
+    dashboard(5, 'sc4_eyeCenter: Success');
+elseif ~sc4_eyeCenter.Success
     % scene terminated with eye outside of window, eye fixation error
     idle(0, [], brokeGazeFix_eventCode);
     trialerror(3);  %'Break fixation'
     abortTrial = true;
     trialResult = 'breakFix_eye';
     resultScene = 'post_probe_resp';
-    dashboard(4, 'sc3_mTarg_joy: In window, holding');
-    dashboard(5, 'sc3_eyeCenter: Fail');
+    dashboard(4, 'sc4_mTarg_joy: In window, holding');
+    dashboard(5, 'sc4_eyeCenter: Fail');
 end
 
 % bomb trial if error

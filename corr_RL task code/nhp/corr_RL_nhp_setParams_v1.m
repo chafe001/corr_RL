@@ -1,4 +1,4 @@
-function [params] = corr_RL_setParams_v4()
+function [params] = corr_RL_nhp_setParams_v1()
 
 % VERSION HISTORY
 

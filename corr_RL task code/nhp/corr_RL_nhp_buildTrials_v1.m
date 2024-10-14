@@ -1,4 +1,4 @@
-function [condArray, params] = corr_RL_buildTrials_v5()
+function [condArray, params] = corr_RL_nhp_buildTrials_v1()
 
 % This utility function builds the condition and condition rep arrays.
 % These supercede the conditions .txt file MonkeyLogic normally reads to specify
@@ -34,7 +34,7 @@ LEFT = 1;
 RIGHT = 2;
 
 % -------- SET PARAMS
-params = corr_RL_setParams_v4();  % setParams_v4 updated for corr_RL v5
+params = corr_RL_nhp_setParams_v1();  % setParams_v4 updated for corr_RL v5
 
 switch params.stimulusType
 
@@ -55,10 +55,10 @@ switch params.stimulusType
                 for bn = 1 : params.numBlocks
 
                     % -- 1. select feature combinations of individual stimuli for this block
-                    [blockStim] = corr_RL_sampleStimSpace_v2(params);  % new for corr_RL v5
+                    [blockStim] = corr_RL_nhp_sampleStimSpace_v1(params);  % new for corr_RL v5
 
                     % --- 2. map orthogonal stimulus pairs to LEFT and RIGHT responses
-                    [stateA_pairs, stateB_pairs] = corr_RL_pairStimuli_v4(blockStim, params); % new for corr_RL v5
+                    [stateA_pairs, stateB_pairs] = corr_RL_nhp_pairStimuli_v1(blockStim, params); % new for corr_RL v5
 
                     % --- 3. select number of cue pairs for this block, and hence degree of
                     % visual noise (number of noise pairs) added to the movie
