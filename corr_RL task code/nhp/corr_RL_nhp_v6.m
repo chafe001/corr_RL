@@ -540,31 +540,10 @@ choices.responseKey = [];
 choices.choseCorrect = []; % selected the choice with the higher reward probability
 choices.madeValidResp = [];
 
+% -------------------------------------------------------------------------
+% ----------------- PRINT TRIAL INFO TO USER SCREEN -----------------------
+% -------------------------------------------------------------------------
 
-% *************************************************************************************************
-% *************************************************************************************************
-% ************************ BUILD AND RUN SCENES (RUN TRIAL) BELOW *********************************
-% *************************************************************************************************
-% *************************************************************************************************
-
-% flag to call 'return' to end trial prematurely if error
-abortTrial = false;
-
-% --- ML notes
-% ML provides a library of 'adapters'.  Each performs a rudimentary
-% function (monitor eye position, present stimulus, set timer, etc). We
-% concatenate adapters to create functions with complex properties.
-% Adaptors are objects.  One object is instantiated then passed as an
-% argument to the constructor for the next object (concatenation).
-% Thus the 'parent' adaptor inherits the properties of the 'child' adaptor
-% (passed to the constructor for the parent).
-
-% see: https://monkeylogic.nimh.nih.gov/docs.html for documentation, in
-% particular, see:
-% https://monkeylogic.nimh.nih.gov/docs_RuntimeFunctions.html for a
-% description of the timing script functions (adapters)
-
-% --- PRINT TRIAL AND CUE MOVIE INFO TO USER SCREEN
 switch TrialRecord.User.condArray(c).state
     case 1
         keyStr = 'Correct Key: LEFT';
@@ -627,10 +606,19 @@ switch TrialRecord.User.params.stimulusType
 end
 
 
+% *************************************************************************************************
+% *************************************************************************************************
+% ************************ BUILD AND RUN SCENES (RUN TRIAL) BELOW *********************************
+% *************************************************************************************************
+% *************************************************************************************************
 
+% flag to call 'return' to end trial prematurely if error
+abortTrial = false;
 
 % -------------------------------------------------------------------------
 % SCENE 1: PRETRIAL
+% draw reward box, and count a clock down to record nerual activity before
+% fixation onset
 
 % write event codes to store ML condition and trial numbers
 mult256 = floor(TrialRecord.CurrentTrialNumber/256) + 1;
@@ -639,50 +627,11 @@ mod256 = mod(TrialRecord.CurrentTrialNumber, 256);
 % blinking of reward bar when called
 eventmarker([TrialRecord.CurrentCondition mult256 mod256]);
 
-% provide time for neural recording before fixation target onset
-sc1_tc = TimeCounter(null_);
-sc1_tc.Duration = TrialRecord.User.times.sc1_preTrial_ms;
-scene1 = create_scene(sc1_tc);
-run_scene(scene1);
-
-% -------------------------------------------------------------------------
-% SCENE 2: FIX
-
 % --- BUILD ADAPTOR CHAINS
-% See TBT or TOPX recording code for additional notes
-
-% present fix target, activatate eye window
-sc2_eyeCenter = SingleTarget(eye_);
-sc2_eyeCenter.Target = taskObj_fix;
-sc2_eyeCenter.Threshold = eye_radius;
-
-% write event code for acquiring eye fixation
-sc2_eyeCenter_oom = OnOffMarker(sc2_eyeCenter);
-sc2_eyeCenter_oom.OnMarker = TrialRecord.User.codes.gazeFixAcq;
-sc2_eyeCenter_oom.ChildProperty = 'Success';
-
-% present joystick target, activate joystick window
-sc2_joyCenter = SingleTarget(joy_);
-sc2_joyCenter.Target = taskObj_fix; % redundant
-sc2_joyCenter.Threshold = joy_radius;
-
-% write event code for acquiring joy fixation
-sc2_joyCenter_oom = OnOffMarker(sc2_joyCenter);
-sc2_joyCenter_oom.OnMarker = TrialRecord.User.codes.joyFixAcq;
-sc2_joyCenter_oom.ChildProperty = 'Success';
-
-% 'and' eye and joy together
-sc2_eyejoy = AndAdapter(sc2_eyeCenter_oom);
-sc2_eyejoy.add(sc2_joyCenter_oom);
-
-% pass eyejoy to WaitThenHold, require eye and joy fixation for a period
-sc2_wtHold = WaitThenHold(sc2_eyejoy);  % WaitThenHold will trigger once both the eye and the joystick are in the center and will make sure that they are held there for the duration of this scene
-sc2_wtHold.WaitTime = times.sc2_precue_eyejoy_waitTime_ms;
-sc2_wtHold.HoldTime = times.sc2_precue_eyejoy_holdTime_ms;
 
 % draw rewBox to indicate accumulated rewards
-% NOTE: PASS wtHold INTO BoxGraphic
-sc2_rewBox = BoxGraphic(sc2_wtHold);
+% NOTE: Passing wtHold into BoxGraphic works
+rewBox = BoxGraphic(null_);
 netWinBox_height = TrialRecord.User.params.rewBox_height;
 netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
 maxWinBox_width = TrialRecord.User.params.rewBox_width;
@@ -701,22 +650,58 @@ netWinBox_faceColor = [0.3010 0.7459 0.9330];
 netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
 
 % rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
-sc2_rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
+rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 
-% % pass rewBox to timer, set rewBox time to be lo
-% sc1_rewBox_tc = TimeCounter(sc1_rewBox);
-% sc1_rewBox_tc.Duration = times.sc1_rewBox_ms;
-%
-% % combine eyejoy and rewBox
-% sc1_eyejoy_rewBox = Concurrent(sc1_wtHold);
-% sc1_eyejoy_rewBox.add = sc1_rewBox_tc;
+% pass rewBox to TimeCounter
+sc1_tc = TimeCounter(rewBox);
+sc1_tc.Duration = TrialRecord.User.times.sc1_preTrial_ms;
 
-% --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
-scene1 = create_scene(sc2_rewBox);
-% fliptime is time the trialtime in ms at which the first frame of the
-% screen is pressented and is the return value of run_scene.  Logs timing
-% of scene transitions
-scene1_start = run_scene(scene1, TrialRecord.User.codes.gazeFixAcq); %'pretrial'
+% --- RUN SCENE
+scene1 = create_scene(sc1_tc);
+run_scene(scene1);
+
+% -------------------------------------------------------------------------
+% SCENE 2: FIX
+
+% --- BUILD ADAPTOR CHAINS
+
+% present fix target, activatate eye window
+sc2_eyeCenter = SingleTarget(eye_);
+sc2_eyeCenter.Target = taskObj_fix;
+sc2_eyeCenter.Threshold = eye_radius;
+
+% write event code for acquiring eye fixation
+sc2_eyeCenter_oom = OnOffMarker(sc2_eyeCenter);
+sc2_eyeCenter_oom.OnMarker = TrialRecord.User.codes.gazeFixAcq;
+sc2_eyeCenter_oom.ChildProperty = 'Success';
+
+% present joystick target, activate joystick window
+sc2_joyCenter = SingleTarget(joy_);
+sc2_joyCenter.Target = taskObj_fix;
+sc2_joyCenter.Threshold = joy_radius;
+
+% write event code for acquiring joy fixation
+sc2_joyCenter_oom = OnOffMarker(sc2_joyCenter);
+sc2_joyCenter_oom.OnMarker = TrialRecord.User.codes.joyFixAcq;
+sc2_joyCenter_oom.ChildProperty = 'Success';
+
+% 'and' eye and joy together
+sc2_eyejoy = AndAdapter(sc2_eyeCenter_oom);
+sc2_eyejoy.add(sc2_joyCenter_oom);
+
+% require maintaining eye and gaze fixation for holdTime
+sc2_wtHold = WaitThenHold(sc2_eyejoy);  % WaitThenHold will trigger once both the eye and the joystick are in the center and will make sure that they are held there for the duration of this scene
+sc2_wtHold.WaitTime = times.sc2_precue_eyejoy_waitTime_ms;
+sc2_wtHold.HoldTime = times.sc2_precue_eyejoy_holdTime_ms;
+
+% combine wtHold with rewbox
+sc2_wtHold_rewBox = Concurrent(sc2_wtHold);
+sc2_wtHold_rewBox.add(rewBox);
+
+% --- RUN SCENE
+
+scene2 = create_scene(rewBox);
+scene2_start = run_scene(scene2, TrialRecord.User.codes.fixTargOn); 
 
 % --- CHECK BEHAVIORAL OUTCOMES
 % Note: this status checking structure copied from ML documentation on
