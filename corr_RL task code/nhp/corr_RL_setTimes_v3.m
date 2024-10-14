@@ -73,6 +73,10 @@ switch COMPUTER
         times.sc1_rewBox_ms = 2000;                     % make sure longer than eyejoy_holdTime
 
         % --- s2: movie
+        times.sc2_precue_eyejoy_waitTime_ms = 1000;     % Time allowed to acquire eye and joystick fixation
+        times.sc2_precue_eyejoy_holdTime_ms = 300;      % Time required to hold center eye and joystick at screen center before cue
+        times.sc2_rewBox_ms = 2000;     
+        
         times.sc2_stim_frames = 4;  % 17 ms
         times.sc2_soa_frames = 4; % 25 ms
         times.sc2_interPair_frames = 30; % 500 ms

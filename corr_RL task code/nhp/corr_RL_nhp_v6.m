@@ -489,7 +489,7 @@ end
 switch TrialRecord.User.params.stimulusType
 
     case 'bars'
-        
+
         switch TrialRecord.User.params.pairMode
             case 'randList'
                 [movieFrames, pairSeq, pairs] = corr_RL_generateBarMovie_v3(TrialRecord);
@@ -498,7 +498,7 @@ switch TrialRecord.User.params.stimulusType
                 [movieFrames, pairSeq, pairs] = corr_RL_generateBarMovie_v1(TrialRecord);
 
         end
-        
+
         TrialRecord.User.movieFrames = movieFrames;
         TrialRecord.User.pairSeq = pairSeq;
         TrialRecord.User.pairs = pairs;
@@ -673,6 +673,7 @@ sc1_wtHold.WaitTime = times.sc1_precue_eyejoy_waitTime_ms;
 sc1_wtHold.HoldTime = times.sc1_precue_eyejoy_holdTime_ms;
 
 % draw rewBox to indicate accumulated rewards
+% NOTE: PASS wtHold INTO BoxGraphic
 sc1_rewBox = BoxGraphic(sc1_wtHold);
 netWinBox_height = TrialRecord.User.params.rewBox_height;
 netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
@@ -697,7 +698,7 @@ sc1_rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width ne
 % % pass rewBox to timer, set rewBox time to be lo
 % sc1_rewBox_tc = TimeCounter(sc1_rewBox);
 % sc1_rewBox_tc.Duration = times.sc1_rewBox_ms;
-% 
+%
 % % combine eyejoy and rewBox
 % sc1_eyejoy_rewBox = Concurrent(sc1_wtHold);
 % sc1_eyejoy_rewBox.add = sc1_rewBox_tc;
@@ -709,36 +710,124 @@ scene1 = create_scene(sc1_rewBox);
 % of scene transitions
 scene1_start = run_scene(scene1, TrialRecord.User.codes.gazeFixAcq); %'pretrial'
 
+% --- CHECK BEHAVIORAL OUTCOMES
+% Note: this status checking structure copied from ML documentation on
+% WaitThenHold()
+if sc1_wtHold.Success
+    dashboard(4, 'PRECUE FIX sc1_wtHold: Success');
+elseif sc1_wtHold.Waiting
+    idle(0, [], TrialRecord.User.codes.neverFix);
+    trialerror(4); %'No fixation'
+    abortTrial = true;
+    trialResult = 'noEyeJoyFix';
+    resultScene = 'preCue';
+    dashboard(4, 'PRECUE FIX sc1_wtHold: Waiting');
+else  % fixation acquired but broken
+    trialerror(3);    %'Break fixation'
+    abortTrial = true;
+    dashboard(4, 'PRECUE FIX sc1_wtHold: Broken fixation');
+    % figure out which fixation was broken, eye or joy, by checking last
+    % sampled value of Success property at time that adapter chain
+    % terminated
+    if sc1_eyeCenter.Success && ~sc1_joyCenter.Success
+        dashboard(5, 'sc1_eyeCenter: Success');
+        dashboard(6, 'sc1_joyCenter: Fail');
+        trialResult = 'breakFix_joy';
+        resultScene = 'preCue';
+        idle(0, [], codes.brokeJoyFix);
+    elseif ~sc1_eyeCenter.Success && sc1_joyCenter.Success
+        dashboard(5, 'sc1_eyeCenter: Fail');
+        dashboard(6, 'sc1_joyCenter: Success');
+        trialResult = 'breakFix_eye';
+        resultScene = 'preCue';
+        idle(0, [], TrialRecord.User.codes.brokeGazeFix);
+    elseif ~sc1_eyeCenter.Success && ~sc1_joyCenter.Success % not likely, but possible
+        dashboard(5, 'sc1_eyeCenter: Fail');
+        dashboard(6, 'sc1_joyCenter: Success');
+        trialResult = 'breakFix_eye_joy';
+        resultScene = 'preCue';
+        idle(0, [], TrialRecord.User.codes.brokeBothFix);
+    end
+end
+
+% bomb trial if error
+if abortTrial
+    % --- SAVE USER VARS
+    bhv_variable( ...
+        'TrialRecord', TrialRecord, ...
+        'choices', choices, ...
+        'condArray', TrialRecord.User.condArray, ...
+        'params', TrialRecord.User.params, ...
+        'movieFrames', TrialRecord.User.movieFrames);
+    return;
+end
+
+
+
 % -------------------------------------------------------------------------
 % SCENE 2: PRESENT STIM MOVIE, ERROR IF KEY RESPONSE
 
 % --- MAKE ADAPTOR(S)
-% --- 1. key checking adaptor
-sc2_key1 = KeyChecker(mouse_);
-sc2_key1.KeyNum = 1;  % 1st keycode in GUI
-sc2_key2 = KeyChecker(mouse_);
-sc2_key2.KeyNum = 2;  % 2nd keycode in GUI
-sc2_watchKeys = OrAdapter(sc2_key1);
-sc2_watchKeys.add(sc2_key2);
+% --- 1. eye joy control
+% present fix target, activatate eye window
+sc2_eyeCenter = SingleTarget(eye_);
+sc2_eyeCenter.Target = taskObj_fix;
+sc2_eyeCenter.Threshold = eye_radius;
 
-% --- 3. movie adaptor
-sc2_movie = ImageChanger(sc1_rewBox);
+% write event code for acquiring eye fixation
+sc2_eyeCenter_oom = OnOffMarker(sc2_eyeCenter);
+sc2_eyeCenter_oom.OnMarker = TrialRecord.User.codes.gazeFixAcq;
+sc2_eyeCenter_oom.ChildProperty = 'Success';
+
+% present joystick target, activate joystick window
+sc2_joyCenter = SingleTarget(joy_);
+sc2_joyCenter.Target = taskObj_fix; % redundant
+sc2_joyCenter.Threshold = joy_radius;
+
+% write event code for acquiring joy fixation
+sc2_joyCenter_oom = OnOffMarker(sc2_joyCenter);
+sc2_joyCenter_oom.OnMarker = TrialRecord.User.codes.joyFixAcq;
+sc2_joyCenter_oom.ChildProperty = 'Success';
+
+% 'and' eye and joy together
+sc2_eyejoy = AndAdapter(sc2_eyeCenter_oom);
+sc2_eyejoy.add(sc2_joyCenter_oom);
+
+% pass eyejoy to WaitThenHold, require eye and joy fixation for a period
+sc2_wtHold = WaitThenHold(sc2_eyejoy);  % WaitThenHold will trigger once both the eye and the joystick are in the center and will make sure that they are held there for the duration of this scene
+sc2_wtHold.WaitTime = times.sc2_precue_eyejoy_waitTime_ms;
+sc2_wtHold.HoldTime = times.sc2_precue_eyejoy_holdTime_ms;
+
+% draw rewBox to indicate accumulated rewards
+% NOTE: PASS wtHold INTO BoxGraphic
+sc2_rewBox = BoxGraphic(sc2_wtHold);
+netWinBox_height = TrialRecord.User.params.rewBox_height;
+netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
+maxWinBox_width = TrialRecord.User.params.rewBox_width;
+% orange
+% netWinBox_edgeColor = [0.9290 0.6940 0.1250];
+% netWinBox_faceColor = [0.9290 0.6940 0.1250];
+% light blue
+netWinBox_edgeColor = [0.3010 0.7459 0.9330];
+netWinBox_faceColor = [0.3010 0.7459 0.9330];
+
+% figure out where to print white netWin reward box so it is left aligned
+% with left edge of black maxWin reward box.  X position coordinate
+% specifies screen coordinates of center of rectangle graphic. The center
+% of the white bar is screen center -1/2 black bar width +1/2 white bar
+% width
+netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
+
+% rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
+sc2_rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
+
+% --- 2. movie adaptor
+sc2_movie = ImageChanger(sc2_rewBox);
 sc2_movie.List = movieFrames;
 sc2_movie.Repetition = 1;
 
-% --- COMBINE ADAPTORS
-% use AllContinue to combine WaitThenHold and KeyChecker, so adaptor
-% terminates if either fixation is broken or key is pressed
-% sc2_fc_key = AllContinue(sc2_fc);
-% sc2_fc_key.add(sc2_watchKeys);
-% add choice image using Concurrent, but add sc2_eye_key first so eye fixation /
-% key press controls scene timing
-% sc2_movie_key = Concurrent(sc2_watchKeys);
-sc2_movie_key = AllContinue(sc2_watchKeys);
-sc2_movie_key.add(sc2_movie);
-
 % --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
-scene2 = create_scene(sc2_movie_key, taskObj_fix);
+scene2 = create_scene(sc2_movie);
 scene2_start = run_scene(scene2);
 
 % --- SAVE FRAME TIMES IN MOVIE
@@ -748,57 +837,116 @@ TrialRecord.User.movieFrameTimes = sc2_movie.Time;
 % in the list of variables saved to include it in the bhv2 behavioral
 % outfile
 
-% --- TERMINATE TRIAL IF EARLY RESPONSE
-if sc2_key1.Success || sc2_key2.Success
-    % requiring response AFTER movie
-    trialerror('earlyResp');
-    choices.madeValidResp = false;
-
-    % --- CREATE AND RUN ERROR SCENE
-    scError_tc = TimeCounter(rewBox);
-    scError_tc.Duration = times.scError_ms;
-
-    rewText = TextGraphic(null_);
-    rewText.Position = [0 TrialRecord.User.params.rewBox_yPos - 5];
-    rewText.FontSize = 42;
-    rewText.FontColor = [0 0 0];
-    rewText.HorizontalAlignment = 'center';
-    rewText.VerticalAlignment = 'middle';
-    rewText.Text = 'EARLY RESPONSE';
-
-    scError_tc_text = AndAdapter(scError_tc);
-    scError_tc_text.add(rewText);
-
-    errorScene = create_scene(scError_tc_text);
-    errorStart = run_scene(errorScene);
-
-    % --- SAVE BEHAVIORAL DATA
-    switch TrialRecord.User.params.stimulusType
-
-        case 'bars'
-            bhv_variable( ...
-                'TrialRecord', TrialRecord, ...
-                'choices', choices, ...
-                'condArray', TrialRecord.User.condArray, ...
-                'params', TrialRecord.User.params, ...
-                'movieFrames', TrialRecord.User.movieFrames, ...
-                'movieFrameTimes', TrialRecord.User.movieFrameTimes);
-
-        case 'curves'
-            bhv_variable( ...
-                'TrialRecord', TrialRecord, ...
-                'choices', choices, ...
-                'condArray', TrialRecord.User.condArray, ...
-                'params', TrialRecord.User.params, ...
-                'movieFrames', TrialRecord.User.movieFrames, ...
-                'movieFrameTimes', TrialRecord.User.movieFrameTimes, ...
-                'movieParams', TrialRecord.User.movieParams);
+% --- CHECK BEHAVIORAL OUTCOMES
+% Note: this status checking structure copied from ML documentation on
+% WaitThenHold()
+if sc2_wtHold.Success
+    dashboard(4, 'PRECUE FIX sc2_wtHold: Success');
+elseif sc2_wtHold.Waiting
+    idle(0, [], TrialRecord.User.codes.neverFix);
+    trialerror(4); %'No fixation'
+    abortTrial = true;
+    trialResult = 'noEyeJoyFix';
+    resultScene = 'preCue';
+    dashboard(4, 'PRECUE FIX sc2_wtHold: Waiting');
+else  % fixation acquired but broken
+    trialerror(3);    %'Break fixation'
+    abortTrial = true;
+    dashboard(4, 'PRECUE FIX sc2_wtHold: Broken fixation');
+    % figure out which fixation was broken, eye or joy, by checking last
+    % sampled value of Success property at time that adapter chain
+    % terminated
+    if sc2_eyeCenter.Success && ~sc2_joyCenter.Success
+        dashboard(5, 'sc2_eyeCenter: Success');
+        dashboard(6, 'sc2_joyCenter: Fail');
+        trialResult = 'breakFix_joy';
+        resultScene = 'preCue';
+        idle(0, [], codes.brokeJoyFix);
+    elseif ~sc2_eyeCenter.Success && sc2_joyCenter.Success
+        dashboard(5, 'sc2_eyeCenter: Fail');
+        dashboard(6, 'sc2_joyCenter: Success');
+        trialResult = 'breakFix_eye';
+        resultScene = 'preCue';
+        idle(0, [], TrialRecord.User.codes.brokeGazeFix);
+    elseif ~sc2_eyeCenter.Success && ~sc2_joyCenter.Success % not likely, but possible
+        dashboard(5, 'sc2_eyeCenter: Fail');
+        dashboard(6, 'sc2_joyCenter: Success');
+        trialResult = 'breakFix_eye_joy';
+        resultScene = 'preCue';
+        idle(0, [], TrialRecord.User.codes.brokeBothFix);
     end
+end
 
-
-    % --- 'RETURN' CALL TERMINATES TRIAL EARLY
+% bomb trial if error
+if abortTrial
+    % --- SAVE USER VARS
+    bhv_variable( ...
+        'TrialRecord', TrialRecord, ...
+        'choices', choices, ...
+        'condArray', TrialRecord.User.condArray, ...
+        'params', TrialRecord.User.params, ...
+        'movieFrames', TrialRecord.User.movieFrames, ...
+        'movieFrameTimes', TrialRecord.User.movieFrameTimes);
     return;
 end
+
+
+
+
+
+
+% 
+% % --- TERMINATE TRIAL IF EARLY RESPONSE
+% if sc2_key1.Success || sc2_key2.Success
+%     % requiring response AFTER movie
+%     trialerror('earlyResp');
+%     choices.madeValidResp = false;
+% 
+%     % --- CREATE AND RUN ERROR SCENE
+%     scError_tc = TimeCounter(rewBox);
+%     scError_tc.Duration = times.scError_ms;
+% 
+%     rewText = TextGraphic(null_);
+%     rewText.Position = [0 TrialRecord.User.params.rewBox_yPos - 5];
+%     rewText.FontSize = 42;
+%     rewText.FontColor = [0 0 0];
+%     rewText.HorizontalAlignment = 'center';
+%     rewText.VerticalAlignment = 'middle';
+%     rewText.Text = 'EARLY RESPONSE';
+% 
+%     scError_tc_text = AndAdapter(scError_tc);
+%     scError_tc_text.add(rewText);
+% 
+%     errorScene = create_scene(scError_tc_text);
+%     errorStart = run_scene(errorScene);
+% 
+%     % --- SAVE BEHAVIORAL DATA
+%     switch TrialRecord.User.params.stimulusType
+% 
+%         case 'bars'
+%             bhv_variable( ...
+%                 'TrialRecord', TrialRecord, ...
+%                 'choices', choices, ...
+%                 'condArray', TrialRecord.User.condArray, ...
+%                 'params', TrialRecord.User.params, ...
+%                 'movieFrames', TrialRecord.User.movieFrames, ...
+%                 'movieFrameTimes', TrialRecord.User.movieFrameTimes);
+% 
+%         case 'curves'
+%             bhv_variable( ...
+%                 'TrialRecord', TrialRecord, ...
+%                 'choices', choices, ...
+%                 'condArray', TrialRecord.User.condArray, ...
+%                 'params', TrialRecord.User.params, ...
+%                 'movieFrames', TrialRecord.User.movieFrames, ...
+%                 'movieFrameTimes', TrialRecord.User.movieFrameTimes, ...
+%                 'movieParams', TrialRecord.User.movieParams);
+%     end
+% 
+% 
+%     % --- 'RETURN' CALL TERMINATES TRIAL EARLY
+%     return;
+% end
 
 
 
@@ -1038,7 +1186,7 @@ switch TrialRecord.User.params.stimulusType
             'movieFrameTimes', TrialRecord.User.movieFrameTimes);
 
     case 'curves'
-        
+
         bhv_variable( ...
             'TrialRecord', TrialRecord, ...
             'choices', choices, ...
