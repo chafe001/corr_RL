@@ -5,25 +5,24 @@ COMPUTER = getenv('COMPUTERNAME');
 
 switch COMPUTER
     case 'MATTWALLIN'
+        % video runs at 60 Hz
         
         % --- sc1: preTrial
         times.sc1_preTrial_ms = 1000;
 
         % --- sc2: fix
-        times.sc1_precue_eyejoy_waitTime_ms = 1000;     % Time allowed to acquire eye and joystick fixation
-        times.sc1_precue_eyejoy_holdTime_ms = 500;      % Time required to hold center eye and joystick at screen center before cue
-        times.sc1_rewBox_ms = 2000;                     % make sure longer than eyejoy_holdTime
+        times.sc2_precue_eyejoy_waitTime_ms = 1000;    
+        times.sc2_precue_eyejoy_holdTime_ms = 500;      
 
-        % --- s2: movie
-        times.sc2_precue_eyejoy_waitTime_ms = 1000;     % Time allowed to acquire eye and joystick fixation
-        times.sc2_precue_eyejoy_holdTime_ms = 500;      % Time required to hold center eye and joystick at screen center before cue
-        % times.sc2_rewBox_ms = 2000;
-        times.sc2_preMovie_frames = 20;  % fix targ and choices
-        times.sc2_stim_frames = 4;  % 17 ms
-        times.sc2_soa_frames = 4; % 25 ms
-        times.sc2_interPair_frames = 30; % 500 ms
-        times.sc2_curve_frames = 10; % times for curve stimuli
-        times.sc2_postMovie_frames = 20;
+        % --- s3: stimulus movie
+        times.sc3_precue_eyejoy_waitTime_ms = 1000;     
+        times.sc3_precue_eyejoy_holdTime_ms = 10000; % movie will terminate scene, wtHold should be long      
+        times.sc3_preMovie_frames = 20;  
+        times.sc3_stim_frames = 4; 
+        times.sc3_soa_frames = 4; 
+        times.sc3_interPair_frames = 30; 
+        times.sc3_curve_frames = 10; 
+        times.sc3_postMovie_frames = 20;
 
         % --- s3: joystick response
         times.joy_waitTime_ms = 3000;

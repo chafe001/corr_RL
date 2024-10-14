@@ -162,9 +162,9 @@ end
 
 
 % --- DEFINE STANDARD IMAGES
-preMovie_img = {[], [], times.sc2_preMovie_frames, codes.preMovie};
-soa_img = {[], [], times.sc2_soa_frames, codes.img_off};
-interPair_img = {[], [], times.sc2_interPair_frames, codes.img_off};
+preMovie_img = {[], [], times.sc3_preMovie_frames, codes.preMovie};
+soa_img = {[], [], times.sc3_soa_frames, codes.img_off};
+interPair_img = {[], [], times.sc3_interPair_frames, codes.img_off};
 
 % --- PREALLOCATE FRAME CELL ARRAY
 % --- SET STIM PARAMS FOR imageChanger FUNCTION CALL TO CONTROL MOVIE
@@ -203,10 +203,10 @@ for p = 1 : length(pairs)
     rightImg_y = pairs(p).rightStim.Position(2);
 
     % --- BUILD SIMULTANEOUS AND SEQUENTIAL STIM FRAMES FOR EACH IMG PAIR
-    pair_img = {{leftImg_fn, rightImg_fn}, [leftImg_x leftImg_y; rightImg_x rightImg_y], times.sc2_stim_frames, codes.imgPair_on};
-    leftImg_frame = {{leftImg_fn}, [leftImg_x leftImg_y], times.sc2_stim_frames, codes.left_img_on};
-    rightImg_frame = {{rightImg_fn}, [rightImg_x rightImg_y], times.sc2_stim_frames, codes.right_img_on};
-    blankImg_frame = {[], [], times.sc2_stim_frames, []};
+    pair_img = {{leftImg_fn, rightImg_fn}, [leftImg_x leftImg_y; rightImg_x rightImg_y], times.sc3_stim_frames, codes.imgPair_on};
+    leftImg_frame = {{leftImg_fn}, [leftImg_x leftImg_y], times.sc3_stim_frames, codes.left_img_on};
+    rightImg_frame = {{rightImg_fn}, [rightImg_x rightImg_y], times.sc3_stim_frames, codes.right_img_on};
+    blankImg_frame = {[], [], times.sc3_stim_frames, []};
 
     % --- COMBINE FRAMES INTO SEQUENCE
     switch params.movieMode

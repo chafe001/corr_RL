@@ -701,7 +701,6 @@ end
 
 % bomb trial if error
 if abortTrial
-
     % --- SAVE USER VARS
     bhv_variable( ...
         'TrialRecord', TrialRecord, ...
@@ -709,88 +708,127 @@ if abortTrial
         'condArray', TrialRecord.User.condArray, ...
         'params', TrialRecord.User.params, ...
         'movieFrames', TrialRecord.User.movieFrames);
-
-    % --- ABORT TRIAL
+    
     return;
 end
 
+
+
 % -------------------------------------------------------------------------
-% SCENE 3: STIMULUS MOVIE
+% SCENE 2: STIMULUS MOVIE
 
-% --- BUILD ADAPTOR CHAINS
-
+% --- MAKE ADAPTOR(S)
 % --- 1. eye joy control
 % present fix target, activatate eye window
-sc3_eyeCenter = SingleTarget(eye_);
-sc3_eyeCenter.Target = taskObj_fix;
-sc3_eyeCenter.Threshold = eye_radius;
+sc2_eyeCenter = SingleTarget(eye_);
+sc2_eyeCenter.Target = taskObj_fix;
+sc2_eyeCenter.Threshold = eye_radius;
 
 % write event code for acquiring eye fixation
-sc3_eyeCenter_oom = OnOffMarker(sc3_eyeCenter);
-sc3_eyeCenter_oom.OnMarker = TrialRecord.User.codes.gazeFixAcq;
-sc3_eyeCenter_oom.ChildProperty = 'Success';
+sc2_eyeCenter_oom = OnOffMarker(sc2_eyeCenter);
+sc2_eyeCenter_oom.OnMarker = TrialRecord.User.codes.gazeFixAcq;
+sc2_eyeCenter_oom.ChildProperty = 'Success';
 
 % present joystick target, activate joystick window
-sc3_joyCenter = SingleTarget(joy_);
-sc3_joyCenter.Target = taskObj_fix; % redundant
-sc3_joyCenter.Threshold = joy_radius;
+sc2_joyCenter = SingleTarget(joy_);
+sc2_joyCenter.Target = taskObj_fix; % redundant
+sc2_joyCenter.Threshold = joy_radius;
 
 % write event code for acquiring joy fixation
-sc3_joyCenter_oom = OnOffMarker(sc3_joyCenter);
-sc3_joyCenter_oom.OnMarker = TrialRecord.User.codes.joyFixAcq;
-sc3_joyCenter_oom.ChildProperty = 'Success';
+sc2_joyCenter_oom = OnOffMarker(sc2_joyCenter);
+sc2_joyCenter_oom.OnMarker = TrialRecord.User.codes.joyFixAcq;
+sc2_joyCenter_oom.ChildProperty = 'Success';
 
 % 'and' eye and joy together
-sc3_eyejoy = AndAdapter(sc3_eyeCenter_oom);
-sc3_eyejoy.add(sc3_joyCenter_oom);
+sc2_eyejoy = AndAdapter(sc2_eyeCenter_oom);
+sc2_eyejoy.add(sc2_joyCenter_oom);
 
 % pass eyejoy to WaitThenHold, require eye and joy fixation for a period
-sc3_wtHold = WaitThenHold(sc3_eyejoy);  % WaitThenHold will trigger once both the eye and the joystick are in the center and will make sure that they are held there for the duration of this scene
-sc3_wtHold.WaitTime = times.sc3_precue_eyejoy_waitTime_ms;
-sc3_wtHold.HoldTime = times.sc3_precue_eyejoy_holdTime_ms;
+sc2_wtHold = WaitThenHold(sc2_eyejoy);  % WaitThenHold will trigger once both the eye and the joystick are in the center and will make sure that they are held there for the duration of this scene
+sc2_wtHold.WaitTime = times.sc2_precue_eyejoy_waitTime_ms;
+sc2_wtHold.HoldTime = times.sc2_precue_eyejoy_holdTime_ms;
+
+% draw rewBox to indicate accumulated rewards
+% NOTE: PASS wtHold INTO BoxGraphic
+sc2_rewBox = BoxGraphic(sc2_wtHold);
+netWinBox_height = TrialRecord.User.params.rewBox_height;
+netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
+maxWinBox_width = TrialRecord.User.params.rewBox_width;
+% orange
+% netWinBox_edgeColor = [0.9290 0.6940 0.1250];
+% netWinBox_faceColor = [0.9290 0.6940 0.1250];
+% light blue
+netWinBox_edgeColor = [0.3010 0.7459 0.9330];
+netWinBox_faceColor = [0.3010 0.7459 0.9330];
+
+% figure out where to print white netWin reward box so it is left aligned
+% with left edge of black maxWin reward box.  X position coordinate
+% specifies screen coordinates of center of rectangle graphic. The center
+% of the white bar is screen center -1/2 black bar width +1/2 white bar
+% width
+netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
+
+% rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
+sc2_rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 
 % --- 2. movie adaptor
-sc3_movie = ImageChanger(null_);
-sc3_movie.List = movieFrames;
-sc3_movie.Repetition = 1;
-
-% --- 3. combine movie, wtHold and rewbox, base duration on movie (first added)
-sc3_wtHold_movie = Concurrent(sc3_movie);
-sc3_wtHold_movie.add(sc3_wtHold);
-sc3_wtHold_movie.add(rewBox);
+sc2_movie = ImageChanger(sc2_rewBox);
+sc2_movie.List = movieFrames;
+sc2_movie.Repetition = 1;
 
 % --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
-scene3 = create_scene(sc3_wtHold_movie);
-scene3_start = run_scene(scene3);
+scene2 = create_scene(sc2_movie);
+scene2_start = run_scene(scene2);
 
 % --- SAVE FRAME TIMES IN MOVIE
-TrialRecord.User.movieFrameTimes = sc3_movie.Time;
+TrialRecord.User.movieFrameTimes = sc2_movie.Time;
+% NOTE: each new User VAR has to be explicitly included in bhv_variable fx
+% call at end of this script, so essential to include TrialRecord.User.movieFrameTimes
+% in the list of variables saved to include it in the bhv2 behavioral
+% outfile
 
 % --- CHECK BEHAVIORAL OUTCOMES
 % Note: this status checking structure copied from ML documentation on
 % WaitThenHold()
-if sc3_wtHold.Success
-    % do nothing, advance to next scene
-elseif sc3_wtHold.Waiting
+if sc2_wtHold.Success
+    dashboard(4, 'PRECUE FIX sc2_wtHold: Success');
+elseif sc2_wtHold.Waiting
     idle(0, [], TrialRecord.User.codes.neverFix);
-    trialerror(4); 
-    trialResult = 'neverFix';
+    trialerror(4); %'No fixation'
     abortTrial = true;
-else  % broke fix, eye or joy
-    trialerror(3);    
-    if sc3_eyeCenter.Success && ~sc3_joyCenter.Success
-        trialResult = 'brokeJoy';
+    trialResult = 'noEyeJoyFix';
+    resultScene = 'preCue';
+    dashboard(4, 'PRECUE FIX sc2_wtHold: Waiting');
+else  % fixation acquired but broken
+    trialerror(3);    %'Break fixation'
+    abortTrial = true;
+    dashboard(4, 'PRECUE FIX sc2_wtHold: Broken fixation');
+    % figure out which fixation was broken, eye or joy, by checking last
+    % sampled value of Success property at time that adapter chain
+    % terminated
+    if sc2_eyeCenter.Success && ~sc2_joyCenter.Success
+        dashboard(5, 'sc2_eyeCenter: Success');
+        dashboard(6, 'sc2_joyCenter: Fail');
+        trialResult = 'breakFix_joy';
+        resultScene = 'preCue';
         idle(0, [], codes.brokeJoyFix);
-    elseif ~sc3_eyeCenter.Success && sc3_joyCenter.Success
-        trialResult = 'brokeEye';
+    elseif ~sc2_eyeCenter.Success && sc2_joyCenter.Success
+        dashboard(5, 'sc2_eyeCenter: Fail');
+        dashboard(6, 'sc2_joyCenter: Success');
+        trialResult = 'breakFix_eye';
+        resultScene = 'preCue';
         idle(0, [], TrialRecord.User.codes.brokeGazeFix);
+    elseif ~sc2_eyeCenter.Success && ~sc2_joyCenter.Success % not likely, but possible
+        dashboard(5, 'sc2_eyeCenter: Fail');
+        dashboard(6, 'sc2_joyCenter: Success');
+        trialResult = 'breakFix_eye_joy';
+        resultScene = 'preCue';
+        idle(0, [], TrialRecord.User.codes.brokeBothFix);
     end
-    abortTrial = true;
 end
 
 % bomb trial if error
 if abortTrial
-
     % --- SAVE USER VARS
     bhv_variable( ...
         'TrialRecord', TrialRecord, ...
@@ -799,8 +837,6 @@ if abortTrial
         'params', TrialRecord.User.params, ...
         'movieFrames', TrialRecord.User.movieFrames, ...
         'movieFrameTimes', TrialRecord.User.movieFrameTimes);
-
-    % --- ABORT TRIAL
     return;
 end
 
