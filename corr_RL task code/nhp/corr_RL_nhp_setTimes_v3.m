@@ -5,26 +5,60 @@ COMPUTER = getenv('COMPUTERNAME');
 
 switch COMPUTER
     case 'MATTWALLIN'
-        times.stim_frames = 2;
-        times.soa_frames = 2;
-        times.interPair_frames = 10;
+        
+        % --- sc1: preTrial
+        times.sc1_preTrial_ms = 1000;
 
-        % times for curve stimuli
-        times.curve_frames = 3;
 
-        % times below specified in screen refresh units, absolute time depends on
-        % graphics refresh rate, 60 Hz in desktop workstations (typically), 120 Hz
-        % in new laptops, etc
-        % scene 1 is pretrial
-        % times.fixDur_ms = 20;  % fix targ only
-        times.preMovie_frames = 20;  % fix targ and choices
-        times.postMovie_frames = 20;
-        times.sc1_pretrial_ms = 20;
+        % --- sc2: fix
+        times.sc1_precue_eyejoy_waitTime_ms = 1000;     % Time allowed to acquire eye and joystick fixation
+        times.sc1_precue_eyejoy_holdTime_ms = 300;      % Time required to hold center eye and joystick at screen center before cue
+        times.sc1_rewBox_ms = 2000;                     % make sure longer than eyejoy_holdTime
+
+        % --- s2: movie
+        times.sc2_precue_eyejoy_waitTime_ms = 1000;     % Time allowed to acquire eye and joystick fixation
+        times.sc2_precue_eyejoy_holdTime_ms = 300;      % Time required to hold center eye and joystick at screen center before cue
+        times.sc2_rewBox_ms = 2000;
+        times.sc2_preMovie_frames = 20;  % fix targ and choices
+        times.sc2_stim_frames = 4;  % 17 ms
+        times.sc2_soa_frames = 4; % 25 ms
+        times.sc2_interPair_frames = 30; % 500 ms
+        times.sc2_curve_frames = 10; % times for curve stimuli
+        times.sc2_postMovie_frames = 20;
+
+        % --- s3: joystick response
+        times.joy_waitTime_ms = 3000;
+        times.joy_holdTime_ms = 75;
+        times.joy_waitTime_ms = 2000;
+        times.joy_holdTime_ms = 75;
+
+        % MOVIE DURATION with these parameters
+        % Triplet duration (17 + 25 + 17 ms) = 59 ms
+        % Triplet + interPair duration = 59 + 100 ms = 159 ms
+        % Movie duration (10 pairs) = 1590 ms
+
         times.sc3_response_ms = 2500;
         times.sc4_feedback_frames = 20; % duration of scene depends on choice ring timing
         times.choiceRing_frames = 10;
         times.rewRing_frames = 10;
         times.scError_ms = 1000;
+
+
+
+
+        % stimDur = 2000;                      % Duration stimulus is on the screen in ms
+        % afterStim = 100000;                 % Duration of blank screen after stimulus presentation while waiting for joy; should be very long
+        times.stim_joy_waitTime_ms = 5000;          % Time allowed to make post-probe response to one of the stim targets (MultiTarget) % was 2000, increased to get rid of speed causing side bias
+        times.stim_joy_holdTime_ms = 75;          % Time required to hold chosen peripheral target
+        times.postResp_joy_waitTime_ms = 2000;           % Time to get joy back to center
+        times.postResp_joy_holdTime_ms = 75;         % Time required to hold center joystick fixation after probe response and before feedback
+        % times.beforeFeedback = 200;                   % Time in ms before feedback ring
+        % feedbackTime = 300;                   % Time in ms of feedback ring
+        % afterFeedback = 200;                   % Time in ms after feedback ring
+        % feedback_eyejoy_waitTime = 0;           % waitTime is 0 because eye and joystick are already on central target from prior scene
+        % feedback_eyejoy_holdTime = beforeFeedback + feedbackTime + afterFeedback;         % TOTAL FEEDBACK DURATION: Time required to hold eye and joystick fixation at center while feedback ring appears.
+
+
 
     case 'DESKTOP-7CHQEHS'
         % laptop at 120 Hz
@@ -66,8 +100,8 @@ switch COMPUTER
         % - SOA 10-100 ms
         % - stimulus duration 10 ms
         % - SOA and stimulus order A->B, B->A, held constant in ea sessio
-      
-        % --- sc1: preTrial time   
+
+        % --- sc1: preTrial time
         times.sc1_precue_eyejoy_waitTime_ms = 1000;     % Time allowed to acquire eye and joystick fixation
         times.sc1_precue_eyejoy_holdTime_ms = 300;      % Time required to hold center eye and joystick at screen center before cue
         times.sc1_rewBox_ms = 2000;                     % make sure longer than eyejoy_holdTime
@@ -75,26 +109,24 @@ switch COMPUTER
         % --- s2: movie
         times.sc2_precue_eyejoy_waitTime_ms = 1000;     % Time allowed to acquire eye and joystick fixation
         times.sc2_precue_eyejoy_holdTime_ms = 300;      % Time required to hold center eye and joystick at screen center before cue
-        times.sc2_rewBox_ms = 2000;     
-        
+        times.sc2_rewBox_ms = 2000;
+        times.sc2_preMovie_frames = 20;  % fix targ and choices
         times.sc2_stim_frames = 4;  % 17 ms
         times.sc2_soa_frames = 4; % 25 ms
         times.sc2_interPair_frames = 30; % 500 ms
         times.sc2_curve_frames = 10; % times for curve stimuli
-        times.sc2_preMovie_frames = 20;  % fix targ and choices
         times.sc2_postMovie_frames = 20;
 
         % --- s3: joystick response
-        times.joy_waitTime_ms = 3000;          
-        times.joy_holdTime_ms = 75;            
-        times.oy_waitTime_ms = 2000;           
-        times.oy_holdTime_ms = 75;
+        times.joy_waitTime_ms = 3000;
+        times.joy_holdTime_ms = 75;
+        times.joy_waitTime_ms = 2000;
+        times.joy_holdTime_ms = 75;
 
         % MOVIE DURATION with these parameters
         % Triplet duration (17 + 25 + 17 ms) = 59 ms
         % Triplet + interPair duration = 59 + 100 ms = 159 ms
         % Movie duration (10 pairs) = 1590 ms
-
 
         times.sc3_response_ms = 2500;
         times.sc4_feedback_frames = 20; % duration of scene depends on choice ring timing
