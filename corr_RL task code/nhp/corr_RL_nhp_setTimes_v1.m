@@ -27,15 +27,12 @@ switch COMPUTER
         times.sc3_postMovie_frames = 20;
 
         % --- s4: joystick response
-        times.joy_waitTime_ms = 3000;
-        times.joy_holdTime_ms = 75;
-        times.joy_waitTime_ms = 2000;
-        times.joy_holdTime_ms = 75;
+        times.sc4_eye_waitTime_ms = 2000;
+        times.sc4_eye_holdTime_ms = 75;
+        times.sc4_joy_waitTime_ms = 2000;
+        times.sc4_joy_holdTime_ms = 75;
 
-        % MOVIE DURATION with these parameters
-        % Triplet duration (17 + 25 + 17 ms) = 59 ms
-        % Triplet + interPair duration = 59 + 100 ms = 159 ms
-        % Movie duration (10 pairs) = 1590 ms
+
 
         times.sc3_response_ms = 2500;
         times.sc4_feedback_frames = 20; % duration of scene depends on choice ring timing

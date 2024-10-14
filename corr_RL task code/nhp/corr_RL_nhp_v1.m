@@ -231,9 +231,9 @@ switch TrialRecord.User.params.stimulusType
             '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.FaceColor), ...
             '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(2).rightStim.FileName);
 
-        dashboard(2, trlInfoStr, [1 1 1], 'FontSize', 8);
-        % dashboard(3, pair1_Angles_str, [1 1 1], 'FontSize', 8);
-        % dashboard(4, pair2_Angles_str, [1 1 1], 'FontSize', 8);
+        dashboard(3, trlInfoStr, [1 1 1], 'FontSize', 8);
+        % dashboard(4, pair1_Angles_str, [1 1 1], 'FontSize', 8);
+        % dashboard(5, pair2_Angles_str, [1 1 1], 'FontSize', 8);
 
     case 'curves'
         trlInfoStr = strcat(keyStr, ...
@@ -365,18 +365,22 @@ scene2_start = run_scene(scene2, TrialRecord.User.codes.fixTargOn);
 % WaitThenHold()
 if sc2_wtHold.Success
     % do nothing, advance to next scene
+    dashboard(2, 'trialResult: success', 'FontSize', 8);
 elseif sc2_wtHold.Waiting
-    idle(0, [], TrialRecord.User.codes.neverFix);
     trialerror(4); 
     trialResult = 'neverFix';
+    dashboard(2, 'sc2 trialResult: neverFix', 'FontSize', 8);
     abortTrial = true;
+    idle(0, [], TrialRecord.User.codes.neverFix);
 else  % broke fix, eye or joy
     trialerror(3);    
     if sc2_eyeCenter.Success && ~sc2_joyCenter.Success
         trialResult = 'brokeJoy';
+        dashboard(2, 'sc2 trialResult: brokeJoy', 'FontSize', 8);
         idle(0, [], codes.brokeJoyFix);
     elseif ~sc2_eyeCenter.Success && sc2_joyCenter.Success
         trialResult = 'brokeEye';
+        dashboard(2, 'sc2 trialResult: brokeEye', 'FontSize', 8);
         idle(0, [], TrialRecord.User.codes.brokeGazeFix);
     end
     abortTrial = true;
@@ -457,18 +461,22 @@ TrialRecord.User.movieFrameTimes = sc3_movie.Time;
 % WaitThenHold()
 if sc3_wtHold.Success
     % do nothing, advance to next scene
+    dashboard(2, 'sc3 trialResult: success', 'FontSize', 8);
 elseif sc3_wtHold.Waiting
-    idle(0, [], TrialRecord.User.codes.neverFix);
     trialerror(4); 
     trialResult = 'neverFix';
+    dashboard(2, 'sc3 trialResult: neverFix', 'FontSize', 8);
+    idle(0, [], TrialRecord.User.codes.neverFix);
     abortTrial = true;
 else  % broke fix, eye or joy
     trialerror(3);    
     if sc3_eyeCenter.Success && ~sc3_joyCenter.Success
         trialResult = 'brokeJoy';
+        dashboard(2, 'sc3 trialResult: brokeJoy', 'FontSize', 8);
         idle(0, [], codes.brokeJoyFix);
     elseif ~sc3_eyeCenter.Success && sc3_joyCenter.Success
         trialResult = 'brokeEye';
+        dashboard(2, 'sc3 trialResult: brokeEye', 'FontSize', 8);
         idle(0, [], TrialRecord.User.codes.brokeGazeFix);
     end
     abortTrial = true;
@@ -502,15 +510,15 @@ sc4_eyeCenter.Threshold = TrialRecord.User.params.eye_radius;
 
 % pass eye to WaitThenHold
 sc4_wtHold = WaitThenHold(sc4_eyeCenter);
-sc4_wtHold.WaitTime = probe_eye_waitTime;
-sc4_wtHold.HoldTime = probe_eye_holdTime; % entire duration of scene
+sc4_wtHold.WaitTime = times.sc4_eye_waitTime;
+sc4_wtHold.HoldTime = times.sc4_eye_holdTime; % entire duration of scene
 
 % MultiTarget()
 sc4_mTarg_joy = MultiTarget(joy_);
 sc4_mTarg_joy.Target = [TrialRecord.User.params.leftJoyRespWin; TrialRecord.User.params.rightJoyRespWin];
-sc4_mTarg_joy.Threshold = TrialRecord.User.params.joy_radius;
-sc4_mTarg_joy.WaitTime = times.joy_waitTime;
-sc4_mTarg_joy.HoldTime = times.joy_holdTime;
+sc4_mTarg_joy.Threshold = params.joy_radius;
+sc4_mTarg_joy.WaitTime = times.sc4_joy_waitTime;
+sc4_mTarg_joy.HoldTime = times.sc4_joy_holdTime;
 
 % Mark behavioral event:
 sc4_mTarg_joy_oom = OnOffMarker(sc4_mTarg_joy);
@@ -526,7 +534,7 @@ sc4_joyResp.add(sc4_wtHold);
 % --- RUN SCENE
 dashboard(1, 'Scene 4: joystick response', 'FontSize', 8);
 scene4 = create_scene(sc4_joyResp);
-scene4_start = run_scene(scene3, codes.beginRespWin);
+scene4_start = run_scene(scene4, codes.beginRespWin);
 
 % --- CHECK BEHAVIORAL OUTCOMES
 % evaluate multiTarget output properties
