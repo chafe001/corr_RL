@@ -130,10 +130,12 @@ if TrialRecord.CurrentTrialNumber == 1
 
     switch TrialRecord.User.params.stimulusType
         case 'bars'
-            TrialRecord.User.codes = corr_RL_nhp_setBarCodes_v1();
+            codes = corr_RL_nhp_setBarCodes_v1();
         case 'curves'
-            TrialRecord.User.codes = corr_RL_setCurveCodes_v3();
+            codes = corr_RL_setCurveCodes_v3();
     end
+
+    TrialRecord.User.codes = codes;
 
 end
 
@@ -305,12 +307,12 @@ netWinBox_faceColor = [0.3010 0.7459 0.9330];
 % width
 netWindBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
 
-% rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
+% rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWinBox_height], [netWindBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 
 % pass rewBox to TimeCounter
 sc1_tc = TimeCounter(rewBox);
-sc1_tc.Duration = TrialRecord.User.times.sc1_preTrial_ms;
+sc1_tc.Duration = times.sc1_preTrial_ms;
 
 % --- RUN SCENE
 dashboard(1, 'Scene 1: pretrial', 'FontSize', 8);
@@ -365,7 +367,7 @@ scene2_start = run_scene(scene2, TrialRecord.User.codes.fixTargOn);
 % WaitThenHold()
 if sc2_wtHold.Success
     % do nothing, advance to next scene
-    dashboard(2, 'trialResult: success', 'FontSize', 8);
+    dashboard(2, 'sc2 trialResult: success', 'FontSize', 8);
 elseif sc2_wtHold.Waiting
     trialerror(4); 
     trialResult = 'neverFix';
@@ -373,17 +375,18 @@ elseif sc2_wtHold.Waiting
     abortTrial = true;
     idle(0, [], TrialRecord.User.codes.neverFix);
 else  % broke fix, eye or joy
-    trialerror(3);    
+    trialerror(3);   
+    abortTrial = true;
     if sc2_eyeCenter.Success && ~sc2_joyCenter.Success
         trialResult = 'brokeJoy';
         dashboard(2, 'sc2 trialResult: brokeJoy', 'FontSize', 8);
-        idle(0, [], codes.brokeJoyFix);
+        idle(0, [], TrialRecord.User.codes.brokeJoyFix);
     elseif ~sc2_eyeCenter.Success && sc2_joyCenter.Success
         trialResult = 'brokeEye';
         dashboard(2, 'sc2 trialResult: brokeEye', 'FontSize', 8);
         idle(0, [], TrialRecord.User.codes.brokeGazeFix);
     end
-    abortTrial = true;
+    
 end
 
 % bomb trial if error
@@ -473,7 +476,7 @@ else  % broke fix, eye or joy
     if sc3_eyeCenter.Success && ~sc3_joyCenter.Success
         trialResult = 'brokeJoy';
         dashboard(2, 'sc3 trialResult: brokeJoy', 'FontSize', 8);
-        idle(0, [], codes.brokeJoyFix);
+        idle(0, [], TrialRecord.User.codes.brokeJoyFix);
     elseif ~sc3_eyeCenter.Success && sc3_joyCenter.Success
         trialResult = 'brokeEye';
         dashboard(2, 'sc3 trialResult: brokeEye', 'FontSize', 8);
@@ -510,19 +513,19 @@ sc4_eyeCenter.Threshold = TrialRecord.User.params.eye_radius;
 
 % pass eye to WaitThenHold
 sc4_wtHold = WaitThenHold(sc4_eyeCenter);
-sc4_wtHold.WaitTime = times.sc4_eye_waitTime;
-sc4_wtHold.HoldTime = times.sc4_eye_holdTime; % entire duration of scene
+sc4_wtHold.WaitTime = times.sc4_eye_waitTime_ms;
+sc4_wtHold.HoldTime = times.sc4_eye_holdTime_ms; % entire duration of scene
 
 % MultiTarget()
 sc4_mTarg_joy = MultiTarget(joy_);
 sc4_mTarg_joy.Target = [TrialRecord.User.params.leftJoyRespWin; TrialRecord.User.params.rightJoyRespWin];
-sc4_mTarg_joy.Threshold = params.joy_radius;
-sc4_mTarg_joy.WaitTime = times.sc4_joy_waitTime;
-sc4_mTarg_joy.HoldTime = times.sc4_joy_holdTime;
+sc4_mTarg_joy.Threshold = TrialRecord.User.params.joy_radius;
+sc4_mTarg_joy.WaitTime = times.sc4_joy_waitTime_ms;
+sc4_mTarg_joy.HoldTime = times.sc4_joy_holdTime_ms;
 
 % Mark behavioral event:
 sc4_mTarg_joy_oom = OnOffMarker(sc4_mTarg_joy);
-sc4_mTarg_joy_oom.OffMarker = codes.joyEnterRespWin;
+sc4_mTarg_joy_oom.OffMarker = TrialRecord.User.codes.joyEnterRespWin;
 % Mark event when waiting goes from true to false
 sc4_mTarg_joy_oom.ChildProperty = 'Waiting';
 
@@ -534,7 +537,7 @@ sc4_joyResp.add(sc4_wtHold);
 % --- RUN SCENE
 dashboard(1, 'Scene 4: joystick response', 'FontSize', 8);
 scene4 = create_scene(sc4_joyResp);
-scene4_start = run_scene(scene4, codes.beginRespWin);
+scene4_start = run_scene(scene4, TrialRecord.User.codes.beginRespWin);
 
 % --- CHECK BEHAVIORAL OUTCOMES
 % evaluate multiTarget output properties

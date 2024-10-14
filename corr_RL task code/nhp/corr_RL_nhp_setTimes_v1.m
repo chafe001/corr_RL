@@ -12,13 +12,13 @@ switch COMPUTER
 
         % --- sc2: fix
         times.sc2_precue_eyejoy_waitTime_ms = 1000;    
-        times.sc2_precue_eyejoy_holdTime_ms = 500;      
+        times.sc2_precue_eyejoy_holdTime_ms = 5000;      
 
         % --- s3: stimulus movie
         times.sc3_precue_eyejoy_waitTime_ms = 1000; 
         % holdTime has to be >> movie duration so
         % movie can complete and end scene
-        times.sc3_precue_eyejoy_holdTime_ms = 10000; 
+        times.sc3_precue_eyejoy_holdTime_ms = 5000; 
         times.sc3_preMovie_frames = 20;  
         times.sc3_stim_frames = 4; 
         times.sc3_soa_frames = 4; 
@@ -29,7 +29,7 @@ switch COMPUTER
         % --- s4: joystick response
         times.sc4_eye_waitTime_ms = 2000;
         times.sc4_eye_holdTime_ms = 75;
-        times.sc4_joy_waitTime_ms = 2000;
+        times.sc4_joy_waitTime_ms = 6000;
         times.sc4_joy_holdTime_ms = 75;
 
 
