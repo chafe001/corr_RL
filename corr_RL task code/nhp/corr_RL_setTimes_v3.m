@@ -84,6 +84,12 @@ switch COMPUTER
         times.sc2_preMovie_frames = 20;  % fix targ and choices
         times.sc2_postMovie_frames = 20;
 
+        % --- s3: joystick response
+        times.joy_waitTime_ms = 3000;          
+        times.joy_holdTime_ms = 75;            
+        times.oy_waitTime_ms = 2000;           
+        times.oy_holdTime_ms = 75;
+
         % MOVIE DURATION with these parameters
         % Triplet duration (17 + 25 + 17 ms) = 59 ms
         % Triplet + interPair duration = 59 + 100 ms = 159 ms
