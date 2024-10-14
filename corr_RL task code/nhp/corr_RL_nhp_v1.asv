@@ -444,8 +444,7 @@ sc3_wtHold_movie = AllContinue(sc3_wtHold);
 sc3_wtHold_movie.add(sc3_movie);
 sc3_wtHold_movie.add(rewBox);
 
-% --- RUN SCENE
-dashboard(1, 'Scene 3: movie', 'FontSize', 8);
+% --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
 scene3 = create_scene(sc3_wtHold_movie);
 scene3_start = run_scene(scene3);
 
@@ -495,6 +494,7 @@ end
 % SCENE 4: JOYSTICK RESPONSE
 
 % --- BUILD ADAPTOR CHAINS
+
 % Present fixation target and establish XY position window for eye
 sc4_eyeCenter = SingleTarget(eye_);
 sc4_eyeCenter.Target = taskObj_fix;
@@ -523,12 +523,18 @@ sc4_mTarg_joy_oom.ChildProperty = 'Waiting';
 sc4_joyResp = AllContinue(sc4_mTarg_joy_oom); 
 sc4_joyResp.add(sc4_wtHold);
 
-% --- RUN SCENE
-dashboard(1, 'Scene 4: joystick response', 'FontSize', 8);
+% --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
+% scene6 will terminate when gaze hold at center is complete, hold time is
+% 250 ms, which corresponds to probe duration
 scene4 = create_scene(sc4_joyResp);
 scene4_start = run_scene(scene3, codes.beginRespWin);
 
 % --- CHECK BEHAVIORAL OUTCOMES
+
+% determine what the correct response is for this condition
+choices.corrResp = TrailRecord.User.condarray(TrialRecord.CurrentCondition).state;
+% state defines correct response (1, left) or (2, right) for movie shown
+
 % evaluate multiTarget output properties
 if sc4_mTarg_joy.Waiting  % no response made
     choices.RT = NaN;
@@ -541,6 +547,7 @@ elseif sc4_mTarg_joy.ChosenTarget == 1 % ordinal position 1, first target entere
     choices.respDir = LEFT;
     choices.madeValidResp = true;
     trialerror('validResp')
+
 elseif sc4_mTarg_joy.ChosenTarget == 2 % ordinal position 2, second target enetered, RIGHT
     choices.RT = sc4_mTarg_joy.RT;
     choices.respDir = RIGHT;
@@ -551,6 +558,7 @@ end
 if abortTrial
 
     switch TrialRecord.User.params.stimulusType
+
         case 'bars'
             bhv_variable( ...
                 'TrialRecord', TrialRecord, ...
@@ -577,14 +585,207 @@ if abortTrial
 end
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if sc4_mTarg_joy.Success % response made to one of two response windows
+    rt = sc4_mTarg_joy.RT;
+    if sc4_mTarg_joy.ChosenTarget == TrialRecord.User.params.leftJoyRespWin 
+        successiveHits = successiveHits + 1;
+        trialResult = 'correctChoice';
+        resultScene = 'post_probe_resp';
+        dashboard(4,sprintf('sc4_mTarg_joy: Correct choice'));
+        probeRespChoice = 'correctChoice';
+        % --- WRITE EVENT CODE specifying correct response to ML and NI DAQ
+        if correctDir == LEFT
+            eventmarker(leftCorrResp_eventCode);
+        elseif correctDir == RIGHT
+            eventmarker(rightCorrResp_eventCode);
+        end
+        dashboard(3,sprintf('sc4_wtHold: Correct target (x,y) = %d %d', sc4_mTarg_joy.Target(1), sc4_mTarg_joy.Target(2)));
+        dashboard(4,sprintf('sc4_wtHold: Chosen target = %d', sc4_mTarg_joy.ChosenTarget));
+        dashboard(5,sprintf('sc4_wtHold: Correct choice'));
+        dashboard(6,sprintf('sc4_successiveHits = %d', successiveHits));
+
+    elseif sc4_mTarg_joy.ChosenTarget == 2 % incorrect target
+        successiveHits = 0;
+        successiveErrors = successiveErrors + 1;
+        trialResult = 'incorrectChoice';
+        resultScene = 'post_probe_resp';
+        dashboard(4,sprintf('sc4_mTarg_joy: Incorrect choice'));
+        probeRespChoice = 'incorrectChoice';
+        % --- WRITE EVENT CODE specifying error response to ML and NI DAQ
+        if correctDir == LEFT
+            eventmarker(rightErrResp_eventCode); % WRONG DIRECTION
+        elseif correctDir == RIGHT
+            eventmarker(leftErrResp_eventCode);  % WRONG DIRECTION
+        end
+        trialerror(6);  %'Incorrect'
+        dashboard(3,sprintf('sc4_wtHold: Incorrect target (x,y) = %d %d', sc4_mTarg_joy.Target(1), sc4_mTarg_joy.Target(2)));
+        dashboard(4,sprintf('sc4_wtHold: Chosen target = %d', sc4_mTarg_joy.ChosenTarget));
+        dashboard(5,sprintf('sc4_wtHold: Incorrect choice'));
+    end
+elseif sc4_mTarg_joy.Waiting
+    idle(0, [], noJoy_eventCode);
+    trialerror(1);  %'No response'
+    abortTrial = true;
+    trialResult = 'noResponse';
+    resultScene = 'post_probe_resp';
+    dashboard(4, 'sc4_mTarg_joy: Waiting');
+elseif sc4_eyeCenter.Success
+    % scene terminated with eye in window. Therefore eye did not cause
+    % scene to terminate. The joystick caused the scene to terminate.
+    % Joystick not success, not waiting, therefore joystick must have
+    % acquired target but not been held for HoldTime
+    idle(0, [], brokeJoyFix_eventCode);
+    trialerror(3);  %'Break fixation'
+    abortTrial = true;
+    trialResult = 'breakFix_joy';
+    resultScene = 'post_probe_resp';
+    dashboard(4, 'sc4_mTarg_joy: Fail');
+    dashboard(5, 'sc4_eyeCenter: Success');
+elseif ~sc4_eyeCenter.Success
+    % scene terminated with eye outside of window, eye fixation error
+    idle(0, [], brokeGazeFix_eventCode);
+    trialerror(3);  %'Break fixation'
+    abortTrial = true;
+    trialResult = 'breakFix_eye';
+    resultScene = 'post_probe_resp';
+    dashboard(4, 'sc4_mTarg_joy: In window, holding');
+    dashboard(5, 'sc4_eyeCenter: Fail');
+end
+
+% bomb trial if error
+if abortTrial
+    % --- SAVE USER VARS
+    bhv_variable(...
+        'cuePos', cuePos, ...
+        'probePos', probePos, ...
+        'cueID', cueID, ...
+        'cueStr', cueStr, ...
+        'cueFileName', cue_pic, ...
+        'probeID', probeID, ...
+        'probeStr', probeStr, ...
+        'probeFileName', probe_pic, ...
+        'trialID', trialTypeID, ...
+        'chosenTarget', nan, ...
+        'trialResult', trialResult, ...
+        'resultScene', resultScene, ...
+        'isiTime', isiTime, ...
+        'itiTime', itiTime, ...
+        'probeRespRT', nan, ...
+        'probeReturnRT', nan, ...
+        'probeRespChoice', nan, ...
+        'probeRespCompleted', probeRespCompleted, ...
+        'trialSet', trialSet, ...
+        'numConds', TrialRecord.User.numConds, ...
+        'condAra', TrialRecord.User.condAra, ...
+        'condAraLabel', TrialRecord.User.condAraLabel, ...
+        'masterTrialAra', TrialRecord.User.masterTrialAra, ...
+        'trialsLeft', TrialRecord.User.trialsLeft);
+    return;
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% --- ANALYZE SCENE OUTCOME
+if sc3_mTarg_joy.Success && ~sc3_key2.Success
+    choices.madeValidResp = true;
+    choices.responseKey = 1;
+    choices.chosenSide = 'left';
+    eventmarker(TrialRecord.User.codes.response_key1);
+    % --- COMPUTE RT
+    rt = sc3_key1.Time - scene3_start;
+    % --- LOG CORRECT TRIAL IN TRIALRECORD
+    trialerror('validResp');
+
+    % DECREMENT REP COUNTER FOR THIS CONDITION, c is condition number in
+    % TrialRecord.User.condRepsRem(c) = TrialRecord.User.condRepsRem(c) - 1;
+
+elseif sc3_key2.Success && ~sc3_key1.Success
+    choices.madeValidResp = true;
+    choices.responseKey = 2;
+    choices.chosenSide = 'right';
+    eventmarker(TrialRecord.User.codes.response_key2);
+    % --- See comments above for rt
+    rt = sc3_key2.Time - scene3_start;
+    % --- LOG CORRECT TRIAL IN TRIALRECORD
+    trialerror('validResp')
+
+    % DECREMENT REP COUNTER FOR THIS CONDITION, c is condition number in
+    % TrialRecord.User.condRepsRem(c) = TrialRecord.User.condRepsRem(c) - 1;
+
+elseif ~sc3_key1.Success && ~sc3_key2.Success
+    choices.madeValidResp = false;
+    trialerror('noResp');  % no response
+    choices.responseKey = 0;
+
+    switch TrialRecord.User.params.stimulusType
+
+        case 'bars'
+            bhv_variable( ...
+                'TrialRecord', TrialRecord, ...
+                'choices', choices, ...
+                'condArray', TrialRecord.User.condArray, ...
+                'params', TrialRecord.User.params, ...
+                'movieFrames', TrialRecord.User.movieFrames, ...
+                'movieFrameTimes', TrialRecord.User.movieFrameTimes);
+
+        case 'curves'
+            bhv_variable( ...
+                'TrialRecord', TrialRecord, ...
+                'choices', choices, ...
+                'condArray', TrialRecord.User.condArray, ...
+                'params', TrialRecord.User.params, ...
+                'movieFrames', TrialRecord.User.movieFrames, ...
+                'movieFrameTimes', TrialRecord.User.movieFrameTimes, ...
+                'movieParams', TrialRecord.User.movieParams);
+    end
+
+
+    % --- 'RETURN' CALL TERMINATES TRIAL EARLY
+    return;
+end
+
 % -------------------------------------------------------------------------
-% SCENE 5: GIVE PROBABILISTIC REWARD AND DISPLAY FEEDBACK
-
-
-% determine what the correct response is for this condition
-choices.corrResp = TrailRecord.User.condarray(TrialRecord.CurrentCondition).state;
-% state defines correct response (1, left) or (2, right) for movie shown
-
+% SCENE 4: GIVE PROBABILISTIC REWARD AND DISPLAY FEEDBACK
 
 % --- DETERMINE WHETHER TO REWARD TRIAL
 % select random number between 0 and 1 to determine probabilistic reward

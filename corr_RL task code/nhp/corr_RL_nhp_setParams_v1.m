@@ -2,9 +2,7 @@ function [params] = corr_RL_nhp_setParams_v1()
 
 % VERSION HISTORY
 
-% v1-v3: used through corr_RL v4
-% v4: written to support corr_RL v5, switch to randomized list system for
-% pair generation (rather than xPairs). Removing easyStim option
+% v1: porting human v6 to NHP
 
 % --- STIMULUS FEATURE SPACE
 
@@ -59,6 +57,14 @@ params.choice_y = 0;
 % params.lowRewProb = 0.2;
 params.highRewProb = 1;
 params.lowRewProb = 0;
+
+% --- JOYSTICK RESPONSE
+params.leftJoyRespWin = [-9.5, 0];
+params.rightJoyRespWin = [9.5, 0];
+
+% --- FIX WINDOW DIMENSIONS
+params.eye_radius = 3;
+params.joy_radius = 3;
 
 % --- FEEDBACK
 params.rewBox_width = 10; % degrees visual angle

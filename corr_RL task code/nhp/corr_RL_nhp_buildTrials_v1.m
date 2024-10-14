@@ -84,7 +84,6 @@ switch params.stimulusType
                             case LEFT
                                 condArrayTemp(bn, rs).cuePairs = stateA_pairs;
                             case RIGHT
-
                                 condArrayTemp(bn, rs).cuePairs = stateB_pairs;
                         end
                     end
