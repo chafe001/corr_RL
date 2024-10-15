@@ -14,7 +14,7 @@
 % This will display the joystick cursor, but for both the experimenter and
 % subject screen. Not sure there's a way to only display to experimenter
 % screen, but I think the joystick cursor should show in replay.
-showcursor(false);
+showcursor(true);
 
 % --- Multiple hits
 % require that 2-n correct trials are performed in a row before delivering
@@ -350,8 +350,8 @@ sc2_eyejoy.add(sc2_joyCenter_oom);
 
 % require maintaining eye and gaze fixation for holdTime
 sc2_wtHold = WaitThenHold(sc2_eyejoy);  % WaitThenHold will trigger once both the eye and the joystick are in the center and will make sure that they are held there for the duration of this scene
-sc2_wtHold.WaitTime = times.sc2_precue_eyejoy_waitTime_ms;
-sc2_wtHold.HoldTime = times.sc2_precue_eyejoy_holdTime_ms;
+sc2_wtHold.WaitTime = times.sc2_fix_eyejoy_waitTime_ms;
+sc2_wtHold.HoldTime = times.sc2_fix_eyejoy_holdTime_ms;
 
 % combine wtHold with rewbox
 sc2_wtHold_rewBox = Concurrent(sc2_wtHold);
@@ -359,7 +359,8 @@ sc2_wtHold_rewBox.add(rewBox);
 
 % --- RUN SCENE
 dashboard(1, 'Scene 2: fix', 'FontSize', 8);
-scene2 = create_scene(sc2_wtHold_rewBox);
+% scene2 = create_scene(sc2_wtHold_rewBox);
+scene2 = create_scene(sc2_wtHold);
 scene2_start = run_scene(scene2, TrialRecord.User.codes.fixTargOn); 
 
 % --- CHECK BEHAVIORAL OUTCOMES
@@ -436,8 +437,8 @@ sc3_eyejoy.add(sc3_joyCenter_oom);
 
 % pass eyejoy to WaitThenHold, require eye and joy fixation for hold time
 sc3_wtHold = WaitThenHold(sc3_eyejoy);  % WaitThenHold will trigger once both the eye and the joystick are in the center and will make sure that they are held there for the duration of this scene
-sc3_wtHold.WaitTime = times.sc3_precue_eyejoy_waitTime_ms;
-sc3_wtHold.HoldTime = times.sc3_precue_eyejoy_holdTime_ms;
+sc3_wtHold.WaitTime = times.sc3_movie_eyejoy_waitTime_ms;
+sc3_wtHold.HoldTime = times.sc3_movie_eyejoy_holdTime_ms;
 
 % --- 2. movie adaptor
 sc3_movie = ImageChanger(null_);
@@ -460,19 +461,13 @@ scene3_start = run_scene(scene3);
 TrialRecord.User.movieFrameTimes = sc3_movie.Time;
 
 % --- CHECK BEHAVIORAL OUTCOMES
-% Note: this status checking structure copied from ML documentation on
-% WaitThenHold()
-if sc3_wtHold.Success
+
+if sc3_movie.Success  % movie completed without breaking eye or joy fix
     % do nothing, advance to next scene
     dashboard(2, 'sc3 trialResult: success', 'FontSize', 8);
-elseif sc3_wtHold.Waiting
-    trialerror(4); 
-    trialResult = 'neverFix';
-    dashboard(2, 'sc3 trialResult: neverFix', 'FontSize', 8);
-    idle(0, [], TrialRecord.User.codes.neverFix);
-    abortTrial = true;
 else  % broke fix, eye or joy
-    trialerror(3);    
+    trialerror(3);  
+    abortTrial = true;
     if sc3_eyeCenter.Success && ~sc3_joyCenter.Success
         trialResult = 'brokeJoy';
         dashboard(2, 'sc3 trialResult: brokeJoy', 'FontSize', 8);
@@ -482,7 +477,7 @@ else  % broke fix, eye or joy
         dashboard(2, 'sc3 trialResult: brokeEye', 'FontSize', 8);
         idle(0, [], TrialRecord.User.codes.brokeGazeFix);
     end
-    abortTrial = true;
+    
 end
 
 % bomb trial if error
