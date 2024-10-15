@@ -320,8 +320,8 @@ sc1_tc.Duration = times.sc1_preTrial_ms;
 
 % --- RUN SCENE
 dashboard(1, 'Scene 1: pretrial', 'FontSize', 8);
-scene1 = create_scene(sc1_tc, TrialRecord.User.codes.sc1_preTrialStart);
-run_scene(scene1);
+scene1 = create_scene(sc1_tc);
+run_scene(scene1, TrialRecord.User.codes.sc1_preTrialStart);
 
 % -------------------------------------------------------------------------
 % SCENE 2: FIX
@@ -450,7 +450,7 @@ sc3_wtHold_movie.add(rewBox);
 % --- RUN SCENE
 dashboard(1, 'Scene 3: movie', 'FontSize', 8);
 scene3 = create_scene(sc3_wtHold_movie);
-scene3_start = run_scene(scene3, codes.sc3_movieStart);
+scene3_start = run_scene(scene3, TrialRecord.User.codes.sc3_movieStart);
 
 % --- SAVE FRAME TIMES IN MOVIE
 TrialRecord.User.movieFrameTimes = sc3_movie.Time;
@@ -540,14 +540,14 @@ if sc4_mTarg_joy.Waiting  % no response made
     abortTrial = true;
 elseif sc4_mTarg_joy.ChosenTarget == LEFT % ordinal position 1, first target entered, LEFT
     choices.RT = sc4_mTarg_joy.RT;
-    eventmarker(codes.sc4_joyresp_moveLeft);
+    eventmarker(TrialRecord.User.codes.sc4_joyResp_moveLeft);
     choices.respDir = LEFT;
     choices.madeValidResp = true;
     dashboard(3, 'sc4 trialResult: chose LEFT', 'FontSize', 8);
     trialerror('validResp')
 elseif sc4_mTarg_joy.ChosenTarget == RIGHT % ordinal position 2, second target enetered, RIGHT
     choices.RT = sc4_mTarg_joy.RT;
-    eventmarker(codes.sc4_joyresp_moveRight);
+    eventmarker(TrialRecord.User.codes.sc4_joyResp_moveRight);
     choices.respDir = RIGHT;
     choices.madeValidResp = true;
     dashboard(3, 'sc4 trialResult: chose RIGHT', 'FontSize', 8);
@@ -682,7 +682,7 @@ rew.pauseTime = 500;
 
 if choices.rewardTrial
 
-    if TrialRecord.User.newWins == TrialRecord.User.params.netWin_criterion
+    if TrialRecord.User.netWins == TrialRecord.User.params.netWin_criterion
         rew.dropsThisTrial = rew.numDropsBlock;
     else
         rew.dropsThisTrial = rew.numDropsEach;
