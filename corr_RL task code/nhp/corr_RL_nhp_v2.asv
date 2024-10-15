@@ -513,7 +513,7 @@ sc4_mTarg_joy.HoldTime = times.sc4_joy_holdTime_ms;
 
 % Mark behavioral event:
 sc4_mTarg_joy_oom = OnOffMarker(sc4_mTarg_joy);
-sc4_mTarg_joy_oom.OffMarker = TrialRecord.User.codes.sc4_joyResp_enterWindow;
+sc4_mTarg_joy_oom.OffMarker = TrialRecord.User.codes.sc4_joyResp;
 % Mark event when waiting goes from true to false
 sc4_mTarg_joy_oom.ChildProperty = 'Waiting';
 
@@ -524,8 +524,8 @@ sc4_joyResp.add(sc4_wtHold);
 
 % --- RUN SCENE
 dashboard(1, 'Scene 4: joystick response', 'FontSize', 8);
-scene4 = create_scene(sc4_joyResp);
-scene4_start = run_scene(scene4, TrialRecord.User.codes.sc4_joyResp_openWindows);
+scene4 = create_scene(sc4_joyResp,);
+scene4_start = run_scene(scene4, TrialRecord.User.codes.beginRespWin);
 
 % --- CHECK BEHAVIORAL OUTCOMES
 % evaluate multiTarget output properties
@@ -536,16 +536,14 @@ if sc4_mTarg_joy.Waiting  % no response made
     dashboard(3, 'sc4 trialResult: no resp', 'FontSize', 8);
     trialerror('noResp')
     abortTrial = true;
-elseif sc4_mTarg_joy.ChosenTarget == LEFT % ordinal position 1, first target entered, LEFT
+elseif sc4_mTarg_joy.ChosenTarget == 1 % ordinal position 1, first target entered, LEFT
     choices.RT = sc4_mTarg_joy.RT;
-    eventmarker(codes.sc4_joyresp_moveLeft);
     choices.respDir = LEFT;
     choices.madeValidResp = true;
     dashboard(3, 'sc4 trialResult: chose LEFT', 'FontSize', 8);
     trialerror('validResp')
-elseif sc4_mTarg_joy.ChosenTarget == RIGHT % ordinal position 2, second target enetered, RIGHT
+elseif sc4_mTarg_joy.ChosenTarget == 2 % ordinal position 2, second target enetered, RIGHT
     choices.RT = sc4_mTarg_joy.RT;
-    eventmarker(codes.sc4_joyresp_moveRight);
     choices.respDir = RIGHT;
     choices.madeValidResp = true;
     dashboard(3, 'sc4 trialResult: chose RIGHT', 'FontSize', 8);
