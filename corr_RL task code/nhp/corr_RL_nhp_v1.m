@@ -4,7 +4,13 @@
 
 % Version history
 % v1: porting human v6 into NHP version, reintroducing eye, joystick
-% control etc.
+% control etc.  v1 is a working version with joystick response and eye gaze
+% fixation implemented and tested in simulation.
+
+% v2: adding joystick return requirement, checking event codes, and running in 
+% normal mode with EyeLink and joystick in lab and integrity of bhv2
+% outfile.  This stage should be sufficient for training, can check
+% SpikeGadgets communication while training underway.
 
 % -------------------------------------------------------------------------
 % ---------------------- TASK CONTROL SWITCHES ----------------------------
