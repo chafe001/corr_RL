@@ -232,7 +232,7 @@ switch TrialRecord.User.params.stimulusType
             '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.FaceColor), ...
             '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(2).rightStim.FileName);
 
-        dashboard(3, trlInfoStr, [1 1 1], 'FontSize', 8);
+        dashboard(2, trlInfoStr, [1 1 1], 'FontSize', 8);
         % dashboard(4, pair1_Angles_str, [1 1 1], 'FontSize', 8);
         % dashboard(5, pair2_Angles_str, [1 1 1], 'FontSize', 8);
 
@@ -367,11 +367,11 @@ scene2_start = run_scene(scene2, TrialRecord.User.codes.fixTargOn);
 % WaitThenHold()
 if sc2_wtHold.Success
     % do nothing, advance to next scene
-    dashboard(2, 'sc2 trialResult: success', 'FontSize', 8);
+    dashboard(3, 'sc2 trialResult: success', 'FontSize', 8);
 elseif sc2_wtHold.Waiting
     trialerror(4); 
     trialResult = 'neverFix';
-    dashboard(2, 'sc2 trialResult: neverFix', 'FontSize', 8);
+    dashboard(3, 'sc2 trialResult: neverFix', 'FontSize', 8);
     abortTrial = true;
     idle(0, [], TrialRecord.User.codes.neverFix);
 else  % broke fix, eye or joy
@@ -379,11 +379,11 @@ else  % broke fix, eye or joy
     abortTrial = true;
     if sc2_eyeCenter.Success && ~sc2_joyCenter.Success
         trialResult = 'brokeJoy';
-        dashboard(2, 'sc2 trialResult: brokeJoy', 'FontSize', 8);
+        dashboard(3, 'sc2 trialResult: brokeJoy', 'FontSize', 8);
         idle(0, [], TrialRecord.User.codes.brokeJoyFix);
     elseif ~sc2_eyeCenter.Success && sc2_joyCenter.Success
         trialResult = 'brokeEye';
-        dashboard(2, 'sc2 trialResult: brokeEye', 'FontSize', 8);
+        dashboard(3, 'sc2 trialResult: brokeEye', 'FontSize', 8);
         idle(0, [], TrialRecord.User.codes.brokeGazeFix);
     end
     
@@ -463,17 +463,17 @@ TrialRecord.User.movieFrameTimes = sc3_movie.Time;
 
 if sc3_movie.Success  % movie completed without breaking eye or joy fix
     % do nothing, advance to next scene
-    dashboard(2, 'sc3 trialResult: success', 'FontSize', 8);
+    dashboard(3, 'sc3 trialResult: success', 'FontSize', 8);
 else  % broke fix, eye or joy
     trialerror(3);  
     abortTrial = true;
     if sc3_eyeCenter.Success && ~sc3_joyCenter.Success
         trialResult = 'brokeJoy';
-        dashboard(2, 'sc3 trialResult: brokeJoy', 'FontSize', 8);
+        dashboard(3, 'sc3 trialResult: brokeJoy', 'FontSize', 8);
         idle(0, [], TrialRecord.User.codes.brokeJoyFix);
     elseif ~sc3_eyeCenter.Success && sc3_joyCenter.Success
         trialResult = 'brokeEye';
-        dashboard(2, 'sc3 trialResult: brokeEye', 'FontSize', 8);
+        dashboard(3, 'sc3 trialResult: brokeEye', 'FontSize', 8);
         idle(0, [], TrialRecord.User.codes.brokeGazeFix);
     end
     
@@ -539,19 +539,20 @@ if sc4_mTarg_joy.Waiting  % no response made
     choices.RT = NaN;
     choices.respDir = NaN;
     choices.madeValidResp = false;
+    dashboard(3, 'sc4 trialResult: no resp', 'FontSize', 8);
     trialerror('noResp')
     abortTrial = true;
 elseif sc4_mTarg_joy.ChosenTarget == 1 % ordinal position 1, first target entered, LEFT
     choices.RT = sc4_mTarg_joy.RT;
     choices.respDir = LEFT;
     choices.madeValidResp = true;
-    dashboard(2, 'sc4 trialResult: chose LEFT', 'FontSize', 8);
+    dashboard(3, 'sc4 trialResult: chose LEFT', 'FontSize', 8);
     trialerror('validResp')
 elseif sc4_mTarg_joy.ChosenTarget == 2 % ordinal position 2, second target enetered, RIGHT
     choices.RT = sc4_mTarg_joy.RT;
     choices.respDir = RIGHT;
     choices.madeValidResp = true;
-    dashboard(2, 'sc4 trialResult: chose RIGHT', 'FontSize', 8);
+    dashboard(3, 'sc4 trialResult: chose RIGHT', 'FontSize', 8);
     trialerror('validResp')
 end
 
@@ -593,7 +594,7 @@ end
 choices.randNum_rew = rand();
 
 if choices.madeValidResp
-    if choices.moveDir == LEFT
+    if choices.respDir == LEFT
         choices.respStr = 'JOYSTICK: LEFT';
         % determine if correct (high value) choice was selected
         if TrialRecord.User.condArray(c).state == LEFT
@@ -624,8 +625,8 @@ if choices.madeValidResp
             end
         end
 
-    elseif choices.moveDir == RIGHT
-        choices.respStr = 'KEY HIT: RIGHT';
+    elseif choices.respDir == RIGHT
+        choices.respStr = 'JOYSTICK: RIGHT';
         % determine if correct (high value) choice was selected
         if TrialRecord.User.condArray(c).state == LEFT
             choices.choseCorrect = false;
@@ -680,10 +681,10 @@ respResStr = strcat(choices.respStr, '  ---  ', choices.resultStr);
 switch TrialRecord.User.params.stimulusType
 
     case 'bars'
-        dashboard(4, respResStr, [1 1 1], 'FontSize', 8);
+        dashboard(5, respResStr, [1 1 1], 'FontSize', 8);
 
     case 'curves'
-        dashboard(4, respResStr, [0 0 0], 'FontSize', 8);
+        dashboard(5, respResStr, [0 0 0], 'FontSize', 8);
 
 end
 
@@ -702,21 +703,22 @@ sc5_rewImg = ImageChanger(rewBox);
 if choices.madeValidResp
     if choices.rewardTrial
         sc5_rewImg.List = ...
-            {{choices.choiceImg}, [0 0], times.choiceRing_frames, TrialRecord.User.codes.choiceRing_on; ...
-            {choices.rewImg}, [0 0], times.rewRing_frames, TrialRecord.User.codes.rewRing_on};
+            {{choices.choiceImg}, [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.choiceRing_on; ...
+            {choices.rewImg}, [0 0], times.sc5_rewRing_frames, TrialRecord.User.codes.rewRing_on};
     else
         sc5_rewImg.List = ...
-            {{choices.choiceImg}, [0 0], times.choiceRing_frames, TrialRecord.User.codes.choiceRing_on};
+            {{choices.choiceImg}, [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.choiceRing_on};
     end
 else
     sc5_rewImg.List = ...
-        {[choices.errorImg], [0 0], times.choiceRing_frames, TrialRecord.User.codes.noResponse};
+        {[choices.errorImg], [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.noResponse};
 
 end
 
 % --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
-scene4 = create_scene(sc5_rewImg, taskObj_fix);
-scene4_start = run_scene(scene4);
+dashboard(1, 'Scene 5: feebdack', 'FontSize', 8);
+scene5 = create_scene(sc5_rewImg, taskObj_fix);
+scene5_start = run_scene(scene5);
 
 % --- SAVE DATA TO BHV2 FILE
 % NOTE!!: Make sure 'File type' dropdown in GUI is set to BHV2.  Matlab

@@ -7,14 +7,14 @@ switch COMPUTER
     case 'MATTWALLIN'
         % video runs at 60 Hz
         
-            % --- sc1: preTrial
+        % --- sc1: preTrial
         times.sc1_preTrial_ms = 1000;
 
         % --- sc2: fix
         times.sc2_fix_eyejoy_waitTime_ms = 1000;
         times.sc2_fix_eyejoy_holdTime_ms = 500;
 
-        % --- s3: stimulus movie
+        % --- sc3: stimulus movie
         times.sc3_movie_eyejoy_waitTime_ms = 1000;
         % holdTime has to be >> movie duration so
         % movie can complete and end scene
@@ -26,29 +26,24 @@ switch COMPUTER
         times.sc3_curve_frames = 10;
         times.sc3_postMovie_frames = 20;
 
-        % --- s4: joystick response
-        times.sc4_eye_waitTime_ms = 2000;
-        times.sc4_eye_holdTime_ms = 75;
+        % --- sc4: joystick response
+        times.sc4_eye_waitTime_ms = 6000;
+        times.sc4_eye_holdTime_ms = 6000;
         times.sc4_joy_waitTime_ms = 6000;
         times.sc4_joy_holdTime_ms = 75;
 
-
-
-        times.sc3_response_ms = 2500;
-        times.sc4_feedback_frames = 20; % duration of scene depends on choice ring timing
-        times.choiceRing_frames = 10;
-        times.rewRing_frames = 10;
-        times.scError_ms = 1000;
-
+        % --- sc5: feedback
+        times.sc5_choiceRing_frames = 10;
+        times.sc5_rewRing_frames = 10;
 
 
 
         % stimDur = 2000;                      % Duration stimulus is on the screen in ms
         % afterStim = 100000;                 % Duration of blank screen after stimulus presentation while waiting for joy; should be very long
-        times.stim_joy_waitTime_ms = 5000;          % Time allowed to make post-probe response to one of the stim targets (MultiTarget) % was 2000, increased to get rid of speed causing side bias
-        times.stim_joy_holdTime_ms = 75;          % Time required to hold chosen peripheral target
-        times.postResp_joy_waitTime_ms = 2000;           % Time to get joy back to center
-        times.postResp_joy_holdTime_ms = 75;         % Time required to hold center joystick fixation after probe response and before feedback
+        % times.stim_joy_waitTime_ms = 5000;          % Time allowed to make post-probe response to one of the stim targets (MultiTarget) % was 2000, increased to get rid of speed causing side bias
+        % times.stim_joy_holdTime_ms = 75;          % Time required to hold chosen peripheral target
+        % times.postResp_joy_waitTime_ms = 2000;           % Time to get joy back to center
+        % times.postResp_joy_holdTime_ms = 75;         % Time required to hold center joystick fixation after probe response and before feedback
         % times.beforeFeedback = 200;                   % Time in ms before feedback ring
         % feedbackTime = 300;                   % Time in ms of feedback ring
         % afterFeedback = 200;                   % Time in ms after feedback ring
@@ -83,7 +78,7 @@ switch COMPUTER
         times.sc2_fix_eyejoy_waitTime_ms = 1000;
         times.sc2_fix_eyejoy_holdTime_ms = 500;
 
-        % --- s3: stimulus movie
+        % --- sc3: stimulus movie
         times.sc3_movie_eyejoy_waitTime_ms = 1000;
         % holdTime has to be >> movie duration so
         % movie can complete and end scene
@@ -95,11 +90,13 @@ switch COMPUTER
         times.sc3_curve_frames = 10;
         times.sc3_postMovie_frames = 20;
 
-        % --- s4: joystick response
+        % --- sc4: joystick response
         times.sc4_eye_waitTime_ms = 2000;
         times.sc4_eye_holdTime_ms = 75;
         times.sc4_joy_waitTime_ms = 6000;
         times.sc4_joy_holdTime_ms = 75;
+
+        % --- sc5: feedback
 
 
 
