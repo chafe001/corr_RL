@@ -364,7 +364,7 @@ sc2_wtHold_rewBox.add(rewBox);
 % --- RUN SCENE
 dashboard(1, 'Scene 2: fix', 'FontSize', 8);
 % scene2 = create_scene(sc2_wtHold_rewBox);
-scene2 = create_scene(sc2_wtHold);
+scene2 = create_scene(sc2_wtHold_rewBox);
 scene2_start = run_scene(scene2, TrialRecord.User.codes.sc2_fixTargOn); 
 
 % --- CHECK BEHAVIORAL OUTCOMES

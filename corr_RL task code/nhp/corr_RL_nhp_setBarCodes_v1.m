@@ -29,6 +29,8 @@ codes.sc5_joyResp_rewDrop = 38;
 codes.sc5_joyResp_choiceRingOn = 40;
 codes.sc5_joyResp_rewRingOn = 41;
 codes.sc5_joyResp_noResp = 41;
+codes.brokegazeFix = 50;
 codes.abortTrial = 100;
+
 
 end
