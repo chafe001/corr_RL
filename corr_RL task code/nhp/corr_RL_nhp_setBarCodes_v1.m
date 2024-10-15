@@ -28,8 +28,11 @@ codes.sc5_joyResp_probNoRew = 37;
 codes.sc5_joyResp_rewDrop = 38;
 codes.sc5_joyResp_choiceRingOn = 40;
 codes.sc5_joyResp_rewRingOn = 41;
-codes.sc5_joyResp_noResp = 41;
-codes.brokegazeFix = 50;
+% error codes
+codes.neverFix = 50;
+codes.brokeGazeFix = 51;
+codes.brokeJoyFix = 52;
+codes.noResp = 53;
 codes.abortTrial = 100;
 
 

@@ -746,7 +746,7 @@ if choices.madeValidResp
     end
 else
     sc5_rewImg.List = ...
-        {[choices.errorImg], [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.sc5_joyResp_noResp};
+        {[choices.errorImg], [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.noResp};
 
 end
 
