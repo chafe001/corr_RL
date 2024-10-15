@@ -7,23 +7,23 @@ switch COMPUTER
     case 'MATTWALLIN'
         % video runs at 60 Hz
         
-        % --- sc1: preTrial
+            % --- sc1: preTrial
         times.sc1_preTrial_ms = 1000;
 
         % --- sc2: fix
-        times.sc2_precue_eyejoy_waitTime_ms = 1000;    
-        times.sc2_precue_eyejoy_holdTime_ms = 500;      
+        times.sc2_fix_eyejoy_waitTime_ms = 1000;
+        times.sc2_fix_eyejoy_holdTime_ms = 500;
 
         % --- s3: stimulus movie
-        times.sc3_precue_eyejoy_waitTime_ms = 1000; 
+        times.sc3_movie_eyejoy_waitTime_ms = 1000;
         % holdTime has to be >> movie duration so
         % movie can complete and end scene
-        times.sc3_precue_eyejoy_holdTime_ms = 5000; 
-        times.sc3_preMovie_frames = 20;  
-        times.sc3_stim_frames = 4; 
-        times.sc3_soa_frames = 4; 
-        times.sc3_interPair_frames = 30; 
-        times.sc3_curve_frames = 10; 
+        times.sc3_movie_eyejoy_holdTime_ms = 5000;
+        times.sc3_preMovie_frames = 20;
+        times.sc3_stim_frames = 2;
+        times.sc3_soa_frames = 2;
+        times.sc3_interPair_frames = 15;
+        times.sc3_curve_frames = 10;
         times.sc3_postMovie_frames = 20;
 
         % --- s4: joystick response
@@ -76,23 +76,23 @@ switch COMPUTER
         times.rewRing_frames = 10;
 
     case 'MATT_MICRO'
-  % --- sc1: preTrial
+        % --- sc1: preTrial
         times.sc1_preTrial_ms = 1000;
 
         % --- sc2: fix
-        times.sc2_fix_eyejoy_waitTime_ms = 1000;    
-        times.sc2_fix_eyejoy_holdTime_ms = 500;      
+        times.sc2_fix_eyejoy_waitTime_ms = 1000;
+        times.sc2_fix_eyejoy_holdTime_ms = 500;
 
         % --- s3: stimulus movie
-        times.sc3_movie_eyejoy_waitTime_ms = 1000; 
+        times.sc3_movie_eyejoy_waitTime_ms = 1000;
         % holdTime has to be >> movie duration so
         % movie can complete and end scene
-        times.sc3_movie_eyejoy_holdTime_ms = 5000; 
-        times.sc3_preMovie_frames = 20;  
-        times.sc3_stim_frames = 4; 
-        times.sc3_soa_frames = 4; 
-        times.sc3_interPair_frames = 30; 
-        times.sc3_curve_frames = 10; 
+        times.sc3_movie_eyejoy_holdTime_ms = 5000;
+        times.sc3_preMovie_frames = 20;
+        times.sc3_stim_frames = 4;
+        times.sc3_soa_frames = 4;
+        times.sc3_interPair_frames = 30;
+        times.sc3_curve_frames = 10;
         times.sc3_postMovie_frames = 20;
 
         % --- s4: joystick response
