@@ -27,8 +27,10 @@ codes.sc5_joyResp_probRew = 36;
 codes.sc5_joyResp_probNoRew = 37;
 codes.sc5_joyResp_rewDrop = 38;
 codes.sc5_joyResp_choiceRingOn = 40;
-codes.sc5_joyResp_rewRingOn = 41;
 codes.sc5_joyResp_noResp = 41;
+
 codes.abortTrial = 100;
+
+
 
 end

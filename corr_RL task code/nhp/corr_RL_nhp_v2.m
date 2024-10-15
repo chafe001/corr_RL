@@ -739,14 +739,14 @@ if choices.madeValidResp
     if choices.rewardTrial
         sc5_rewImg.List = ...
             {{choices.choiceImg}, [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.choiceRing_on; ...
-            {choices.rewImg}, [0 0], times.sc5_rewRing_frames, TrialRecord.User.codes.rewRing_on};
+            {choices.rewImg}, [0 0], times.sc5_rewRing_frames, TrialRecord.User.codes.sc5_joyResp_rewRingOn};
     else
         sc5_rewImg.List = ...
-            {{choices.choiceImg}, [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.choiceRing_on};
+            {{choices.choiceImg}, [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.sc5_joyResp_choiceRingOn};
     end
 else
     sc5_rewImg.List = ...
-        {[choices.errorImg], [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.noResponse};
+        {[choices.errorImg], [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.sc5_joyResp_noResp};
 
 end
 
