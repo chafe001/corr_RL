@@ -406,6 +406,7 @@ if abortTrial
         'movieFrames', TrialRecord.User.movieFrames);
 
     % --- ABORT TRIAL
+    eventmarker(TrialRecord.User.codes.abortTrial)
     return;
 end
 
@@ -486,6 +487,7 @@ if abortTrial
         'movieFrameTimes', TrialRecord.User.movieFrameTimes);
 
     % --- ABORT TRIAL
+    eventmarker(TrialRecord.User.codes.abortTrial);
     return;
 end
 
@@ -576,6 +578,7 @@ if abortTrial
     end
 
     % --- 'RETURN' CALL TERMINATES TRIAL EARLY
+    eventmarker(TrialRecord.User.codes.abortTrial)
     return;
 
 end
@@ -595,26 +598,32 @@ if choices.madeValidResp
         % determine if correct (high value) choice was selected
         if TrialRecord.User.condArray(c).state == LEFT
             choices.choseCorrect = true;
+            eventmarker(TrialRecord.User.codes.sc5_joyResp_correctChoice);
             if choices.randNum_rew < TrialRecord.User.params.highRewProb  % --- WIN, HIGH PROB ---
                 choices.rewardTrial = true;
+                eventmarker(TrialRecord.User.codes.sc5_joyResp_probRew);
                 TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  WIN, SELECTED HIGH PROB';
             else  % --- LOSS, HIGH PROB ---
                 choices.rewardTrial = false;
+                eventmarker(TrialRecord.User.codes.sc5_joyResp_probNoRew);
                 TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  LOSS, SELECTED HIGH PROB';
             end
         elseif TrialRecord.User.condArray(c).state == RIGHT
             choices.choseCorrect = false;
+            eventmarker(TrialRecord.User.codes.sc5_incorrectChoice);
             if choices.randNum_rew < TrialRecord.User.params.lowRewProb  % --- WIN, LOW PROB ---
                 choices.rewardTrial = true;
+                eventmarker(TrialRecord.User.codes.sc5_joyResp_probRew);
                 TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  WIN, SELECTED LOW PROB';
             else  % --- LOSS, LOW PROB ---
                 choices.rewardTrial = false;
+                eventmarker(TrialRecord.User.codes.sc5_joyResp_probNoRew);
                 TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  LOSS, SELECTED LOW PROB';
@@ -626,26 +635,32 @@ if choices.madeValidResp
         % determine if correct (high value) choice was selected
         if TrialRecord.User.condArray(c).state == LEFT
             choices.choseCorrect = false;
+            eventmarker(TrialRecord.User.codes.sc5_incorrectChoice);
             if choices.randNum_rew < TrialRecord.User.params.lowRewProb  % --- WIN, LOW PROB ---
                 choices.rewardTrial = true;
+                eventmarker(TrialRecord.User.codes.sc5_joyResp_probRew);
                 TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  WIN, SELECTED LOW PROB';
             else  % --- LOSS, LOW PROB ---
                 choices.rewardTrial = false;
+                eventmarker(TrialRecord.User.codes.sc5_joyResp_probNoRew);
                 TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  LOSS, SELECTED LOW PROB';
             end
         elseif TrialRecord.User.condArray(c).state == RIGHT
             choices.choseCorrect = true;
+            eventmarker(TrialRecord.User.codes.sc5_joyResp_correctChoice);
             if choices.randNum_rew < TrialRecord.User.params.highRewProb  % --- WIN, HIGH PROB ---
                 choices.rewardTrial = true;
+                eventmarker(TrialRecord.User.codes.sc5_joyResp_probRew);
                 TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  WIN, SELECTED HIGH PROB';
             else  % --- LOSS, HIGH PROB ---
                 choices.rewardTrial = false;
+                eventmarker(TrialRecord.User.codes.sc5_joyResp_probNoRew);
                 TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  LOSS, SELECTED HIGH PROB';
@@ -659,6 +674,26 @@ else  % NO VALID RESPONSE
     choices.resultStr = ' NO RESULT';
 end
 
+% --- DELIVER REWARDS 
+rew.numDropsEach = 1;
+rew.numDropsBlock = 5;
+rew.dur = 85;
+rew.pauseTime = 500;
+
+if choices.rewardTrial
+
+    if TrialRecord.User.newWins == TrialRecord.User.params.netWin_criterion
+        rew.dropsThisTrial = rew.numDropsBlock;
+    else
+        rew.dropsThisTrial = rew.numDropsEach;
+    end
+
+    % --- give reward
+    goodmonkey(rew.dur, 'juiceline', 1, 'numreward', rew.dropsThisTrial, 'pausetime',...
+        rew.pauseTime, 'eventmarker', TrialRecord.User.codes.sc5_joyResp_rewDrop);
+
+end
+
 % --- if blockLosses > blockWins, reset counters to 0 to prevent
 % accumulation of a deficit, don't want a hole subj has to dig out of
 % before display shows accumulation of additional wins
@@ -670,6 +705,9 @@ end
 
 % --- SAVE CHOICE INFORMATION to TrialRecord
 TrialRecord.User.Choices = choices;
+
+% --- SAVE REWARD INFORMATION to Trialrecord
+TrialRecord.User.rewardInfo = rew;
 
 % --- OUTPUT CHOICE REWARD RESULT TO USER SCREEN
 respResStr = strcat(choices.respStr, '  ---  ', choices.resultStr);

@@ -406,6 +406,7 @@ if abortTrial
         'movieFrames', TrialRecord.User.movieFrames);
 
     % --- ABORT TRIAL
+    eventmarker(TrialRecord.User.codes.abortTrial)
     return;
 end
 
@@ -486,6 +487,7 @@ if abortTrial
         'movieFrameTimes', TrialRecord.User.movieFrameTimes);
 
     % --- ABORT TRIAL
+    eventmarker(TrialRecord.User.codes.abortTrial);
     return;
 end
 
@@ -513,7 +515,7 @@ sc4_mTarg_joy.HoldTime = times.sc4_joy_holdTime_ms;
 
 % Mark behavioral event:
 sc4_mTarg_joy_oom = OnOffMarker(sc4_mTarg_joy);
-sc4_mTarg_joy_oom.OffMarker = TrialRecord.User.codes.sc4_joyResp;
+sc4_mTarg_joy_oom.OffMarker = TrialRecord.User.codes.sc4_joyResp_enterWindow;
 % Mark event when waiting goes from true to false
 sc4_mTarg_joy_oom.ChildProperty = 'Waiting';
 
@@ -524,8 +526,8 @@ sc4_joyResp.add(sc4_wtHold);
 
 % --- RUN SCENE
 dashboard(1, 'Scene 4: joystick response', 'FontSize', 8);
-scene4 = create_scene(sc4_joyResp,);
-scene4_start = run_scene(scene4, TrialRecord.User.codes.beginRespWin);
+scene4 = create_scene(sc4_joyResp);
+scene4_start = run_scene(scene4, TrialRecord.User.codes.sc4_joyResp_openWindows);
 
 % --- CHECK BEHAVIORAL OUTCOMES
 % evaluate multiTarget output properties
@@ -536,14 +538,16 @@ if sc4_mTarg_joy.Waiting  % no response made
     dashboard(3, 'sc4 trialResult: no resp', 'FontSize', 8);
     trialerror('noResp')
     abortTrial = true;
-elseif sc4_mTarg_joy.ChosenTarget == 1 % ordinal position 1, first target entered, LEFT
+elseif sc4_mTarg_joy.ChosenTarget == LEFT % ordinal position 1, first target entered, LEFT
     choices.RT = sc4_mTarg_joy.RT;
+    eventmarker(codes.sc4_joyresp_moveLeft);
     choices.respDir = LEFT;
     choices.madeValidResp = true;
     dashboard(3, 'sc4 trialResult: chose LEFT', 'FontSize', 8);
     trialerror('validResp')
-elseif sc4_mTarg_joy.ChosenTarget == 2 % ordinal position 2, second target enetered, RIGHT
+elseif sc4_mTarg_joy.ChosenTarget == RIGHT % ordinal position 2, second target enetered, RIGHT
     choices.RT = sc4_mTarg_joy.RT;
+    eventmarker(codes.sc4_joyresp_moveRight);
     choices.respDir = RIGHT;
     choices.madeValidResp = true;
     dashboard(3, 'sc4 trialResult: chose RIGHT', 'FontSize', 8);
@@ -574,6 +578,7 @@ if abortTrial
     end
 
     % --- 'RETURN' CALL TERMINATES TRIAL EARLY
+    eventmarker(TrialRecord.User.codes.abortTrial)
     return;
 
 end
@@ -593,26 +598,32 @@ if choices.madeValidResp
         % determine if correct (high value) choice was selected
         if TrialRecord.User.condArray(c).state == LEFT
             choices.choseCorrect = true;
+            eventmarker(TrialRecord.User.codes.sc5_joyResp_correctChoice);
             if choices.randNum_rew < TrialRecord.User.params.highRewProb  % --- WIN, HIGH PROB ---
                 choices.rewardTrial = true;
+                eventmarker(TrialRecord.User.codes.sc5_joyResp_probRew);
                 TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  WIN, SELECTED HIGH PROB';
             else  % --- LOSS, HIGH PROB ---
                 choices.rewardTrial = false;
+                eventmarker(TrialRecord.User.codes.sc5_joyResp_probNoRew);
                 TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  LOSS, SELECTED HIGH PROB';
             end
         elseif TrialRecord.User.condArray(c).state == RIGHT
             choices.choseCorrect = false;
+            eventmarker(TrialRecord.User.codes.sc5_incorrectChoice);
             if choices.randNum_rew < TrialRecord.User.params.lowRewProb  % --- WIN, LOW PROB ---
                 choices.rewardTrial = true;
+                eventmarker(TrialRecord.User.codes.sc5_joyResp_probRew);
                 TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  WIN, SELECTED LOW PROB';
             else  % --- LOSS, LOW PROB ---
                 choices.rewardTrial = false;
+                eventmarker(TrialRecord.User.codes.sc5_joyResp_probNoRew);
                 TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  LOSS, SELECTED LOW PROB';
@@ -624,26 +635,32 @@ if choices.madeValidResp
         % determine if correct (high value) choice was selected
         if TrialRecord.User.condArray(c).state == LEFT
             choices.choseCorrect = false;
+            eventmarker(TrialRecord.User.codes.sc5_incorrectChoice);
             if choices.randNum_rew < TrialRecord.User.params.lowRewProb  % --- WIN, LOW PROB ---
                 choices.rewardTrial = true;
+                eventmarker(TrialRecord.User.codes.sc5_joyResp_probRew);
                 TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  WIN, SELECTED LOW PROB';
             else  % --- LOSS, LOW PROB ---
                 choices.rewardTrial = false;
+                eventmarker(TrialRecord.User.codes.sc5_joyResp_probNoRew);
                 TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  LOSS, SELECTED LOW PROB';
             end
         elseif TrialRecord.User.condArray(c).state == RIGHT
             choices.choseCorrect = true;
+            eventmarker(TrialRecord.User.codes.sc5_joyResp_correctChoice);
             if choices.randNum_rew < TrialRecord.User.params.highRewProb  % --- WIN, HIGH PROB ---
                 choices.rewardTrial = true;
+                eventmarker(TrialRecord.User.codes.sc5_joyResp_probRew);
                 TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  WIN, SELECTED HIGH PROB';
             else  % --- LOSS, HIGH PROB ---
                 choices.rewardTrial = false;
+                eventmarker(TrialRecord.User.codes.sc5_joyResp_probNoRew);
                 TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = '  LOSS, SELECTED HIGH PROB';
@@ -656,6 +673,31 @@ else  % NO VALID RESPONSE
     choices.respStr = ' NO RESP';
     choices.resultStr = ' NO RESULT';
 end
+
+% --- DELIVER REWARDS 
+rew.numDropsEach = 1;
+rew.numDropsBlock = 5;
+rew.dur = 85;
+
+if choices.rewardTrial
+
+    if TrialRecord.User.newWins = TrialRecord.User.params.netWin_criterion
+        rew.dropsThisTrial = rew.numDropsBlock;
+    else
+
+
+    end
+
+
+
+goodmonkey(rew.dur, 'juiceline', 1, 'numreward', rew.dropsThisTrial, 'pausetime',...
+    500, 'eventmarker', TrialRecord.User.codes.sc5_joyResp_rewDrop);
+
+
+end
+
+
+
 
 % --- if blockLosses > blockWins, reset counters to 0 to prevent
 % accumulation of a deficit, don't want a hole subj has to dig out of

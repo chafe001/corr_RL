@@ -21,7 +21,13 @@ codes.sc4_joyResp_openWindows = 30;
 codes.sc4_joyResp_enterWindow = 31;
 codes.sc4_joyResp_moveLeft = 32;
 codes.sc4_joyResp_moveRight = 33;
+codes.sc5_joyResp_correctChoice = 34;
+codes.sc5_joyResp_incorrectChoice = 35;
+codes.sc5_joyResp_probRew = 36;
+codes.sc5_joyResp_probNoRew = 37;
+codes.sc5_joyResp_rewDrop = 40;
 
+codes.abortTrial = 100;
 
 codes.beginRespWin = 40;
 codes.joyEnterRespWin = 41;
@@ -44,5 +50,7 @@ codes.brokeGazeFix = 80;
 codes.brokeJoyFix = 81;
 codes.neverFix = 83;
 codes.noJoy = 84;
+
+
 
 end
