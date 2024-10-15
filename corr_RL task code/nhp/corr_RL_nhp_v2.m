@@ -523,6 +523,7 @@ sc4_mTarg_joy_oom.ChildProperty = 'Waiting';
 % joy multitarget. It will stop once either of these stops 
 sc4_joyResp = AllContinue(sc4_mTarg_joy_oom); 
 sc4_joyResp.add(sc4_wtHold);
+sc4_joyResp.add(rewBox);
 
 % --- RUN SCENE
 dashboard(1, 'Scene 4: joystick response', 'FontSize', 8);
@@ -614,7 +615,7 @@ if choices.madeValidResp
             end
         elseif TrialRecord.User.condArray(c).state == RIGHT
             choices.choseCorrect = false;
-            eventmarker(TrialRecord.User.codes.sc5_incorrectChoice);
+            eventmarker(TrialRecord.User.codes.sc5_joyResp_incorrectChoice);
             if choices.randNum_rew < TrialRecord.User.params.lowRewProb  % --- WIN, LOW PROB ---
                 choices.rewardTrial = true;
                 eventmarker(TrialRecord.User.codes.sc5_joyResp_probRew);
@@ -635,7 +636,7 @@ if choices.madeValidResp
         % determine if correct (high value) choice was selected
         if TrialRecord.User.condArray(c).state == LEFT
             choices.choseCorrect = false;
-            eventmarker(TrialRecord.User.codes.sc5_incorrectChoice);
+            eventmarker(TrialRecord.User.codes.sc5_joyResp_incorrectChoice);
             if choices.randNum_rew < TrialRecord.User.params.lowRewProb  % --- WIN, LOW PROB ---
                 choices.rewardTrial = true;
                 eventmarker(TrialRecord.User.codes.sc5_joyResp_probRew);

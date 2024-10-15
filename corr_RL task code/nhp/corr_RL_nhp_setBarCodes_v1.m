@@ -25,31 +25,9 @@ codes.sc5_joyResp_correctChoice = 34;
 codes.sc5_joyResp_incorrectChoice = 35;
 codes.sc5_joyResp_probRew = 36;
 codes.sc5_joyResp_probNoRew = 37;
-codes.sc5_joyResp_rewDrop = 40;
+codes.sc5_joyResp_rewDrop = 38;
 
 codes.abortTrial = 100;
-
-codes.beginRespWin = 40;
-codes.joyEnterRespWin = 41;
-codes.joyLeft = 42;
-codes.joyRight = 43;
-codes.retStart = 44;
-codes.joyBack = 45;
-codes.choiceRing_on = 50;
-codes.rewRing_on = 50;
-codes.noRewRing_on = 51;
-codes.incrementRewBar = 60;
-codes.decrementRewBar = 61;
-codes.rewDrop1 = 71;
-codes.rewDrop2 = 72;
-codes.rewDrop3 = 73;
-codes.rewDrop4 = 74;
-codes.rewDrop5 = 75;
-codes.rewDrop6 = 76;
-codes.brokeGazeFix = 80;
-codes.brokeJoyFix = 81;
-codes.neverFix = 83;
-codes.noJoy = 84;
 
 
 
