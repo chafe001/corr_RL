@@ -86,21 +86,15 @@ switch COMPUTER
         % - stimulus duration 10 ms
         % - SOA and stimulus order A->B, B->A, held constant in ea session
 
-        times.stim_frames = 4;  % 17 ms
-        times.soa_frames = 4; % 25 ms
-        times.interPair_frames = 30; % 500 ms
-        % MOVIE DURATION with these parameters
-        % Triplet duration (17 + 25 + 17 ms) = 59 ms
-        % Triplet + interPair duration = 59 + 100 ms = 159 ms
-        % Movie duration (10 pairs) = 1590 ms
-
-        % times for curve stimuli
-        times.curve_frames = 10;
+        times.pretrial_ms = 20;
+        times.preMovie_frames = 20;
+        times.stim_frames = 4;  
+        times.soa_frames = 4; 
+        times.interPair_frames = 30; 
         times.postMovie_frames = 20;
-        times.sc1_pretrial_ms = 20;
-        times.sc2_preMovie_frames = 20;  % fix targ and choices
-        times.sc3_response_ms = 2500;
-        times.sc4_feedback_frames = 20; % duration of scene depends on choice ring timing
+        times.curve_frames = 10;
+        times.response_ms = 2500;
+        times.feedback_frames = 20; % duration of scene depends on choice ring timing
         times.choiceRing_frames = 10;
         times.rewRing_frames = 10;
         times.scError_ms = 1000;

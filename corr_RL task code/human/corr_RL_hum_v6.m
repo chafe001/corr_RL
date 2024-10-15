@@ -575,7 +575,7 @@ rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWin
 
 
 sc1_tc = TimeCounter(rewBox);
-sc1_tc.Duration = times.sc1_pretrial_ms;
+sc1_tc.Duration = times.pretrial_ms;
 
 % --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
 scene1 = create_scene(sc1_tc);
@@ -683,7 +683,7 @@ end
 % --- MAKE ADAPTOR(S)
 % --- 1. timeCounter
 sc3_tc = TimeCounter(rewBox);
-sc3_tc.Duration = times.sc3_response_ms;
+sc3_tc.Duration = times.response_ms;
 
 % --- 2. key checking adaptor
 sc3_key1 = KeyChecker(mouse_);
