@@ -697,25 +697,25 @@ rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWin
 
 
 % --- INSTANTIATE IMAGECHANGER OBJ for FEEDBACK MOVIE
-sc5_rewImg = ImageChanger(rewBox);
+sc4_rewImg = ImageChanger(rewBox);
 
 if choices.madeValidResp
     if choices.rewardTrial
-        sc5_rewImg.List = ...
+        sc4_rewImg.List = ...
             {{choices.choiceImg}, [0 0], times.choiceRing_frames, TrialRecord.User.codes.choiceRing_on; ...
             {choices.rewImg}, [0 0], times.rewRing_frames, TrialRecord.User.codes.rewRing_on};
     else
-        sc5_rewImg.List = ...
+        sc4_rewImg.List = ...
             {{choices.choiceImg}, [0 0], times.choiceRing_frames, TrialRecord.User.codes.choiceRing_on};
     end
 else
-    sc5_rewImg.List = ...
+    sc4_rewImg.List = ...
         {[choices.errorImg], [0 0], times.choiceRing_frames, TrialRecord.User.codes.noResponse};
 
 end
 
 % --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
-scene4 = create_scene(sc5_rewImg, taskObj_fix);
+scene4 = create_scene(sc4_rewImg, taskObj_fix);
 scene4_start = run_scene(scene4);
 
 % --- SAVE DATA TO BHV2 FILE
