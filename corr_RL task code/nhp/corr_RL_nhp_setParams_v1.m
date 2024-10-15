@@ -59,8 +59,11 @@ params.highRewProb = 1;
 params.lowRewProb = 0;
 
 % --- JOYSTICK RESPONSE
-params.leftJoyRespWin = [-9.5, 0];
-params.rightJoyRespWin = [9.5, 0];
+% params.leftJoyRespWin = [-9.5, 0];
+% params.rightJoyRespWin = [9.5, 0];
+
+params.leftJoyRespWin = [-5, 0];
+params.rightJoyRespWin = [5, 0];
 
 % --- FIX WINDOW DIMENSIONS
 params.eye_radius = 3;

@@ -546,11 +546,13 @@ elseif sc4_mTarg_joy.ChosenTarget == 1 % ordinal position 1, first target entere
     choices.RT = sc4_mTarg_joy.RT;
     choices.respDir = LEFT;
     choices.madeValidResp = true;
+    dashboard(2, 'sc4 trialResult: chose LEFT', 'FontSize', 8);
     trialerror('validResp')
 elseif sc4_mTarg_joy.ChosenTarget == 2 % ordinal position 2, second target enetered, RIGHT
     choices.RT = sc4_mTarg_joy.RT;
     choices.respDir = RIGHT;
     choices.madeValidResp = true;
+    dashboard(2, 'sc4 trialResult: chose RIGHT', 'FontSize', 8);
     trialerror('validResp')
 end
 
@@ -588,7 +590,7 @@ end
 
 
 % determine what the correct response is for this condition
-choices.corrResp = TrailRecord.User.condarray(TrialRecord.CurrentCondition).state;
+choices.corrResp = TrailRecord.User.condArray(TrialRecord.CurrentCondition).state;
 % state defines correct response (1, left) or (2, right) for movie shown
 
 
