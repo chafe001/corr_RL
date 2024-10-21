@@ -1,4 +1,4 @@
-function [stateA_pairs, stateB_pairs] = corr_RL_pairStimuli_v4(blockStim, params)
+function [stateA_pairs, stateB_pairs] = corr_RL_nhp_pairStimuli_v1(blockStim, params)
 % This function organizes blockStim into pairs
 
 % VERSION HISTORY
