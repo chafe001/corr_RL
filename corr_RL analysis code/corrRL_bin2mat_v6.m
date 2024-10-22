@@ -236,7 +236,7 @@ rt = inTrial.ReactionTime;
 bw = inTrial.UserVars.TrialRecord.User.blockWins;
 bl = inTrial.UserVars.TrialRecord.User.blockLosses;
 nw = inTrial.UserVars.TrialRecord.User.netWins;
-cc = inTrial.UserVars.choices.choseCorrect;
+cc = double(inTrial.UserVars.choices.choseCorrect);
 rk = inTrial.UserVars.choices.responseKey;
 % rnw = random number at runtime to determine whether to reward trial
 % according to reward state probabilities
@@ -259,7 +259,8 @@ stdcol.endChoiceData = stdcol.randNum_rew + 1;
 
 % --- AGGREGATE MOVIE DATA
 
-maxMovieFrames = 40;
+maxBars = 60;
+maxPairs = 60;
 
 % determine number of stimulus frames shown
 numFrames = size(inTrial.UserVars.TrialRecord.User.pairs, 2);
@@ -287,13 +288,13 @@ for p = 1 : numFrames
 
 end
 
-if length(leftID_vect) < maxMovieFrames
-    numPad = maxMovieFrames - length(leftID_vect);
+if length(leftID_vect) < maxBars
+    numPad = maxBars - length(leftID_vect);
     leftID_vect = [leftID_vect NaN(1, numPad)];
 end
 
-if length(rightID_vect) < maxMovieFrames
-    numPad = maxMovieFrames - length(rightID_vect);
+if length(rightID_vect) < maxBars
+    numPad = maxBars - length(rightID_vect);
     rightID_vect = [rightID_vect NaN(1, numPad)];
 end
 
@@ -308,15 +309,17 @@ stimRight = tblRight(:, 1)';
 repsRight = tblRight(:, 2)';
 
 pairSeq = inTrial.UserVars.TrialRecord.User.pairSeq;
+padVect = NaN(1,maxPairs - length(pairSeq));
+pairSeq = [pairSeq padVect];
 
 sep = params.sepValue;
 
 movieData  = [leftID_vect sep rightID_vect sep stimLeft sep repsLeft sep stimRight sep repsRight sep pairSeq];
 
 stdcol.firstLeftStim = stdcol.endChoiceData + 1;
-stdcol.endLeftStim = stdcol.firstLeftStim + maxMovieFrames;
+stdcol.endLeftStim = stdcol.firstLeftStim + maxBars;
 stdcol.firstRightStim = stdcol.endLeftStim + 1;
-stdcol.endRightStim = stdcol.firstRightStim + maxMovieFrames;
+stdcol.endRightStim = stdcol.firstRightStim + maxBars;
 stdcol.firstStimID_left = stdcol.endRightStim + 1;
 stdcol.endStimID_left = stdcol.firstStimID_left + length(stimLeft);
 stdcol.firstStimRep_left = stdcol.endStimID_left + 1;
