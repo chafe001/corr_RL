@@ -136,6 +136,13 @@ switch params.stimType
 
 end
 
+%%
+% --- PARAMS ---
+params.minTrials = 50;
+
+fit_HMM(bData, stdcol, params);
+
+
 end
 
 
@@ -627,8 +634,138 @@ bob = 1;
 
 end
 
+
+% ANALYZE BDATA -----------------------------------------------------------
+function [] = fit_HMM(bData, stdcol, params)
+
+keepData = [];
+
+% --- create consecutive trial numbers for each file/set
+filesHere = unique(bData(:, stdcol.fileNum));
+for f = 1 : numel(filesHere)
+    fileMat = bData(bData(:, stdcol.fileNum) == filesHere(f), :);
+    % overwrite trial numbers in this file's data so numbers are consecutive
+    consTrials = (1:size(fileMat, 1));
+    fileMat(:, stdcol.trial) = consTrials';
+    if numel(consTrials) < params.minTrials
+        continue
+    end
+    keepData = [keepData; fileMat];
+end
+
+% ---- Plot stim choice (A, B or C) on same axes, per file (day) in the
+% aggregated data
+left = 2.0;
+bottom = 2.0;
+width = 36.0;
+height = 6.0;
+trialStart = 0;
+% trialStop = 600;
+trialStop = size(bData, 1);
+
+% update filesHere in case some skipped above
+filesHere = unique(keepData(:, stdcol.fileNum));
+
+for f = 1 : numel(filesHere)
+    thisFile = keepData(keepData(:, stdcol.fileNum) == filesHere(f), :);
+
+    % --- RUN BECKET'S HMM CODE
+    choseCorrect = thisFile(:, stdcol.choseCorrect)';
+    choseCorrect = choseCorrect + 1;
+    [states,stateProbs,LL,nParams,Tall,Eall] = find2States_v1(choseCorrect);
+
+    explore = (states(:) == 1);
+    exploit = (states(:) == 2);
+
+    % --- shift explore/exploit values up for plotting with choices on same axes
+    explore = explore + 3.0;
+    exploit = exploit + 3.0;
+
+    % --- PLOT explore/exploit
+    figure;
+    pExplore = plot(explore);
+    pExplore.Color = "magenta";
+    pExplore.LineWidth = 1.5;
+    hold on;
+    pExploit = plot(exploit);
+    pExploit.Color = "black";
+    pExploit.LineWidth = 1.5;
+
+    % % --- ADD choice L, R, U (left, right, up)
+    % plotL = plot(thisFile(:, stdcol.choseLeft) + 1.5);
+    % plotL.Color = [0.4940 0.1840 0.5560];  % purple
+    % plotL.LineWidth = 1.5;
+    % 
+    % plotR = plot(thisFile(:, stdcol.choseRight) + 1.5);
+    % plotR.Color = [0.9290 0.6940 0.1250];  % orange
+    % plotR.LineWidth = 1.5;
+    % 
+    % plotR = plot(thisFile(:, stdcol.choseUp) + 1.5);
+    % plotR.Color = [0 0.4470 0.7410];  % blue
+    % plotR.LineWidth = 1.5;
+    % 
+    % % --- ADD choice A, B, C (greenpentagon, bluetriangle, orangerectangle)
+    % plotA = plot(thisFile(:, stdcol.choseA));
+    % plotA.Color = "green";
+    % plotA.LineWidth = 1.5;
+    % 
+    % hold on;
+    % plotB = plot(thisFile(:, stdcol.choseB));
+    % plotB.Color = "blue";
+    % plotB.LineWidth = 1.5;
+    % 
+    % plotC = plot(thisFile(:, stdcol.choseC));
+    % plotC.Color = [1 0.6 0];  % orange
+    % plotC.LineWidth = 1.5;
+
+    % --- add title, use cell array for multiple lines
+    title({"STATE (top) Explore=Magenta Exploit=Black", "DIRECTION (middle) chose Left=Purple, Right=Orange, Up=Dk Blue", "OBJECT (bottom) chose A=Green(pentagon) B=Blue(triangle) C=Orange(rectangle)"});
+
+    % reformat plot
+    axis([trialStart, trialStop, -0.5, 5.0]);  %  reset ranges for x and y axes
+    set(gca, 'Units', 'centimeters');
+    set(gca, 'FontName', 'Arial');
+    set(gca, 'FontSize', 9);
+    set(gca, 'FontSmoothing', 'off');
+    set(gca, 'TickDir', 'out');                     %  switch side of axis for tick marks
+    set(gca, 'Box', 'off');
+    set(gca, 'Position', [left bottom width height]);
+    set(gca, 'TickLength', [0.01 0.01]);
+    set(gca, 'xTick', trialStart:20:trialStop);
+
+end
+
+% --- plot response probability as a function of reward probability
+left = 2.0;
+bottom = 2.0;
+width = 4.0;
+height = 4.0;
+figure
+hist(keepData(:, stdcol.choseProb));
+set(gca, 'Units', 'centimeters');
+set(gca, 'FontName', 'Arial');
+set(gca, 'FontSize', 9);
+set(gca, 'FontSmoothing', 'off');
+set(gca, 'TickDir', 'out');                     %  switch side of axis for tick marks
+set(gca, 'Box', 'off');
+set(gca, 'Position', [left bottom width height]);
+set(gca, 'TickLength', [0.03 0.03]);
+set(gca, 'xTick', 0:0.1:1);
+set(gca, 'yTick', 0:250:1500);
+
+bob = 1;
+
+return;
+
+end
+
+
+
+
+
+
 % % ANALYZE BDATA -----------------------------------------------------------
-% function [] = analyze_bData(bData, stdcol, params)
+% function [] = fit_HMM(bData, stdcol, params)
 %
 % keepData = [];
 %

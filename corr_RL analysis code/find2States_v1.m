@@ -1,12 +1,15 @@
 function [states,stateProbs,LL,nParams,Tall,Eall] = find2States_v1(choices)
 % This fx derived from Beckett's find3states, altered transition (T) and
-% emission (E) matrices after reading matlab intro to HMM for 2 states
+% emission (E) matrices after reading matlab intro to HMM for 2 states, in
+% this case explore/exploit, operating on the choice data logged as
+% choseCorrect (or not). Model failed to converge when provided key 1 and 2
+% as choice data (of course), as this is random by design.  It is key 1 if
+% movie 1 (chose correct), or key 2 if movie 2.
 
-% seed the transition matrix for 3 states, random responding
+% seed the transition matrix for 2 states, random responding
 % (explore) and response 1 and 2 (exploit)
-T = [(1/3) (1/3) (1/3);...
-     (2/3) (1/3) (0/3);...
-     (2/3) (0/3) (1/3)];
+T = [(1/2) (1/2);...
+     (3/4) (1/4)];
 
 % Beckett's original
 % T = [(1/4) (1/4) (1/4) (1/4);...
@@ -17,7 +20,6 @@ T = [(1/3) (1/3) (1/3);...
 
 % Seed the emission matrix for 2 responses (2-arm bandit)
 E = [(1/2) (1/2);...
-        1     0;...
         0     1];
     
 % Beckett's original
