@@ -37,7 +37,7 @@ params.cuePercent_easy = max(params.cuePercentRange);
 params.cuePercent_hard = min(params.cuePercentRange);
 % params.movieMode = 'stdp';
 params.movieMode = 'simPairs';  % simultaneous pairs
-params.numCueStim = 2;  % new v5
+params.numCueStim = 4;  % new v5
 params.numCueReps = 3;  % new v5
 % adding new pairing algorithm
 % params.pairMode = 'xPairs'; 
