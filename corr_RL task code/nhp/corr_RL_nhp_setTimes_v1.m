@@ -262,6 +262,44 @@ switch COMPUTER
         times.sc5_choiceRing_frames = 10;
         times.sc5_rewRing_frames = 10;
 
+    case 'DESKTOP-RV80PF6'  % lab monkeyLogic computer
+
+          % video runs at 60 Hz
+        
+        % --- sc1: preTrial
+        times.sc1_preTrial_ms = 1000;
+
+        % --- sc2: fix
+        times.sc2_fix_eyejoy_waitTime_ms = 1000;
+        times.sc2_fix_eyejoy_holdTime_ms = 500;
+
+        % --- sc3: stimulus movie
+        times.sc3_movie_eyejoy_waitTime_ms = 1000;
+        % holdTime has to be >> movie duration so
+        % movie can complete and end scene
+        times.sc3_movie_eyejoy_holdTime_ms = 5000;
+        times.sc3_preMovie_frames = 20;
+        times.sc3_stim_frames = 2;
+        times.sc3_soa_frames = 2;
+        times.sc3_interPair_frames = 15;
+        times.sc3_curve_frames = 10;
+        times.sc3_postMovie_frames = 20;
+
+        % --- sc4: joystick response
+        % NOTE: imporatant that joy holdtime is the rate limiting step, that
+        % extra time is provided for eye holdtime, as given adaptor chain
+        % structure, clocking out on eye holdtime will terminate state
+        % before joystick response
+        times.sc4_eye_waitTime_ms = 6000;
+        times.sc4_eye_holdTime_ms = 6000;
+        times.sc4_joy_waitTime_ms = 6000;
+        times.sc4_joy_holdTime_ms = 75;
+
+        % --- sc5: feedback
+        times.sc5_choiceRing_frames = 10;
+        times.sc5_rewRing_frames = 10;
+
+
 
 
 end

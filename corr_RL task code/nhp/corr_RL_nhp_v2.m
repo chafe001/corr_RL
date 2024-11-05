@@ -438,7 +438,7 @@ sc3_wtHold.HoldTime = times.sc3_movie_eyejoy_holdTime_ms;
 % --- 2. movie adaptor
 sc3_movie = ImageChanger(null_);
 sc3_movie.List = movieFrames;
-sc3_movie.Repetition = 1;
+% sc3_movie.Repetition = 1;
 
 % --- 3. combine movie, wtHold and rewbox
 % use AllContinue so termination of any adaptor ends scene, either movie
