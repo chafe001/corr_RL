@@ -27,7 +27,6 @@ showcursor(true);
 % If multipleHits = 0, then disabled
 multipleHits = 0; %3
 
-
 % -------------------------------------------------------------------------
 % --------------------------- CONSTANTS -----------------------------------
 % -------------------------------------------------------------------------
@@ -588,7 +587,6 @@ end
 % -------------------------------------------------------------------------
 % SCENE 5: GIVE PROBABILISTIC REWARD AND DISPLAY FEEDBACK
 
-
 % --- DETERMINE WHETHER TO REWARD TRIAL
 % select random number between 0 and 1 to determine probabilistic reward
 choices.randNum_rew = rand();
@@ -671,6 +669,7 @@ if choices.madeValidResp
     end
 
 else  % NO VALID RESPONSE
+    choices.rewardTrial = false;
     choices.respStr = ' NO RESP';
     choices.resultStr = ' NO RESULT';
 end
