@@ -24,13 +24,14 @@ params.numBlocks = 10;  % WARNING: THIS NEEDS TO MATCH NUMBER OF BLOCKS IN CONDI
 params.repsPerCond = 4;
 params.blockChange = 'netWinsMode';
 % params.blockChange = 'condRepsMode';
-params.netWin_criterion = 10;  % number of netWins before switching block
+params.netWin_criterion = 5;  % number of netWins before switching block
 params.numStates = 2; % this overwritten by curveParams if curveMovie at present, but needed for bars
 
 % --- BAR CONTROL
 params.randCuePercent = false;
 params.numMoviePairs = 10;
-params.cuePercentRange = [0.3 0.5 0.7 0.9];
+% params.cuePercentRange = [0.3 0.5 0.7 0.9];
+params.cuePercentRange = [0.9];
 params.cuePercent_easy = max(params.cuePercentRange);
 params.cuePercent_hard = min(params.cuePercentRange);
 % params.movieMode = 'stdp';
@@ -40,6 +41,7 @@ params.numCueReps = 3;  % new v5
 % adding new pairing algorithm
 % params.pairMode = 'xPairs'; 
 params.pairMode = 'randList';  % new v5
+params.constantPairs = true;
 params.barNoiseMode = 'breakPairs';
 % params.barNoiseMode = 'noisePairs';
 
