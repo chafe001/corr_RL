@@ -41,6 +41,8 @@ params.numCueReps = 3;  % new v5
 % adding new pairing algorithm
 % params.pairMode = 'xPairs'; 
 params.pairMode = 'randList';  % new v5
+% constant pairs is a training feature, keeps bar pairs constant across
+% blocks
 params.constantPairs = true;
 params.barNoiseMode = 'breakPairs';
 % params.barNoiseMode = 'noisePairs';
