@@ -62,12 +62,12 @@ params.lowRewProb = 0;
 % params.leftJoyRespWin = [-9.5, 0];
 % params.rightJoyRespWin = [9.5, 0];
 
-params.leftJoyRespWin = [-5, 0];
-params.rightJoyRespWin = [5, 0];
+params.leftJoyRespWin = [-10, 0];
+params.rightJoyRespWin = [10, 0];
 
 % --- FIX WINDOW DIMENSIONS
-params.eye_radius = 3;
-params.joy_radius = 4;
+params.eye_radius = 6;
+params.joy_radius = 6;
 
 % --- FEEDBACK
 params.rewBox_width = 10; % degrees visual angle

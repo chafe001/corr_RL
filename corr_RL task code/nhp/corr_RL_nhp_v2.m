@@ -27,7 +27,6 @@ showcursor(true);
 % If multipleHits = 0, then disabled
 multipleHits = 0; %3
 
-
 % -------------------------------------------------------------------------
 % --------------------------- CONSTANTS -----------------------------------
 % -------------------------------------------------------------------------
@@ -553,6 +552,8 @@ elseif sc4_mTarg_joy.ChosenTarget == RIGHT % ordinal position 2, second target e
     choices.madeValidResp = true;
     dashboard(3, 'sc4 trialResult: chose RIGHT', 'FontSize', 8);
     trialerror('validResp')
+else
+    choices.madeValidResp = false;
 end
 
 if abortTrial
@@ -587,7 +588,6 @@ end
 
 % -------------------------------------------------------------------------
 % SCENE 5: GIVE PROBABILISTIC REWARD AND DISPLAY FEEDBACK
-
 
 % --- DETERMINE WHETHER TO REWARD TRIAL
 % select random number between 0 and 1 to determine probabilistic reward
@@ -671,6 +671,7 @@ if choices.madeValidResp
     end
 
 else  % NO VALID RESPONSE
+    choices.rewardTrial = false;
     choices.respStr = ' NO RESP';
     choices.resultStr = ' NO RESULT';
 end
@@ -678,7 +679,7 @@ end
 % --- DELIVER REWARDS 
 rew.numDropsEach = 1;
 rew.numDropsBlock = 5;
-rew.dur = 85;
+rew.dur = 200;
 rew.pauseTime = 500;
 
 if choices.rewardTrial
@@ -724,13 +725,11 @@ switch TrialRecord.User.params.stimulusType
 end
 
 
-
 % --- UPDATE REWARD BOX WITH THIS RESULT
 netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
 netWinBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
 % rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWinBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWinBox_height], [netWinBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
-
 
 % --- INSTANTIATE IMAGECHANGER OBJ for FEEDBACK MOVIE
 sc5_rewImg = ImageChanger(rewBox);
@@ -746,7 +745,7 @@ if choices.madeValidResp
     end
 else
     sc5_rewImg.List = ...
-        {[choices.errorImg], [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.noResp};
+        {[], [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.noResp};
 
 end
 
