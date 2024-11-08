@@ -36,11 +36,12 @@ params.cuePercent_hard = min(params.cuePercentRange);
 % params.movieMode = 'stdp';
 params.movieMode = 'simPairs';  % simultaneous pairs
 params.numCueStim = 2;  % new v5
-params.numCueReps = 3;  % new v5
+params.numCueReps = 1;  % new v5
 % adding new pairing algorithm
 % params.pairMode = 'xPairs'; 
 params.pairMode = 'randList';  % new v5
 params.barNoiseMode = 'breakPairs';
+params.constantPairs = true;
 % params.barNoiseMode = 'noisePairs';
 
 % --- CURVE CONTROL
@@ -66,7 +67,7 @@ params.leftJoyRespWin = [-10, 0];
 params.rightJoyRespWin = [10, 0];
 
 % --- FIX WINDOW DIMENSIONS
-params.eye_radius = 6;
+params.eye_radius = 10;
 params.joy_radius = 6;
 
 % --- FEEDBACK
