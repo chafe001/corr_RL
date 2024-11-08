@@ -15,7 +15,7 @@ UB = [2 Inf]; % upper bounds
 options=optimset('MaxFunEval',100000,'Display','off','algorithm','active-set');
 
 % load('D:\code\tasks\corr_RL\241014_all_bData.mat');
-load('D:\code\tasks\corr_RL\dave_bData.mat');
+load('D:\DATA\stdin\all_bData.mat');
 % load('D:\code\tasks\corr_RL\[mvc 2 colors 4 stim 3 reps .3 .9 cuePer .8 .2 rewProb] all_bData.mat');
 
 corrconditions = unique(bData(:,stdcol.cuePercent));
@@ -34,7 +34,7 @@ for cc = 1 : numel(corrconditions)
         choice(data(:,stdcol.rewardState) == 2 & data(:,stdcol.choseCorrect) == 0) = 3;
         choice(data(:,stdcol.rewardState) == 2 & data(:,stdcol.choseCorrect) == 1) = 4;
     end
-    rew = data(:,stdcol.choseCorrect);
+    rew = data(:,stdcol.rewardTrial);
     block = data(:,stdcol.block);
 
 

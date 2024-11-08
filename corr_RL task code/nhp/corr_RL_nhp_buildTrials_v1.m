@@ -52,13 +52,21 @@ switch params.stimulusType
                 % vary correlation pattern without varying feature
                 % information.
 
+                if params.constantPairs
+                    % -- 1. select feature combinations of individual stimuli for this block
+                    [blockStim] = corr_RL_nhp_sampleStimSpace_v1(params);  % new for corr_RL v5
+                    % --- 2. map orthogonal stimulus pairs to LEFT and RIGHT responses
+                    [stateA_pairs, stateB_pairs] = corr_RL_nhp_pairStimuli_v1(blockStim, params); % new for corr_RL v5
+                end
+
                 for bn = 1 : params.numBlocks
 
                     % -- 1. select feature combinations of individual stimuli for this block
-                    [blockStim] = corr_RL_nhp_sampleStimSpace_v1(params);  % new for corr_RL v5
-
-                    % --- 2. map orthogonal stimulus pairs to LEFT and RIGHT responses
-                    [stateA_pairs, stateB_pairs] = corr_RL_nhp_pairStimuli_v1(blockStim, params); % new for corr_RL v5
+                    if ~params.constantPairs
+                        [blockStim] = corr_RL_nhp_sampleStimSpace_v1(params);  % new for corr_RL v5
+                        % --- 2. map orthogonal stimulus pairs to LEFT and RIGHT responses
+                        [stateA_pairs, stateB_pairs] = corr_RL_nhp_pairStimuli_v1(blockStim, params); % new for corr_RL v5
+                    end
 
                     % --- 3. select number of cue pairs for this block, and hence degree of
                     % visual noise (number of noise pairs) added to the movie
