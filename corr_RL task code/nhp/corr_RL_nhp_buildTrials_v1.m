@@ -110,6 +110,17 @@ switch params.stimulusType
                     end
                 end
 
+                % if blockCond enabled, assign 1 condition per block for
+                % training
+                if params.blockCond
+                    nCond =  size(condArray, 1);
+                    % create sequential block count, 1 block per condition
+                    blockVect = 1 : nCond;
+                    for c = 1 : nCond
+                        condArray(c).blockNum = blockVect(c);
+                    end
+                end
+
 
 
             case 'xPairs'

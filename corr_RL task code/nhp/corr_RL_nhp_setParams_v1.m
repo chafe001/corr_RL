@@ -44,6 +44,13 @@ params.barNoiseMode = 'breakPairs';
 params.constantPairs = true;
 % params.barNoiseMode = 'noisePairs';
 
+% --- TRAINING FEATURES
+% blockCond sets 1 condition per block, which would require a left or right
+% response throughout the block.  This is intended to help associate
+% changes in the visual display (movie) with changes in the response
+% direction by blocking response direction.
+params.blockCond = true;
+
 % --- CURVE CONTROL
 % determine whether to use bars with xPairs algorithm or curves with Dave's
 % curve generating code and Thomas' algorithm
@@ -67,8 +74,11 @@ params.leftJoyRespWin = [-10, 0];
 params.rightJoyRespWin = [10, 0];
 
 % --- FIX WINDOW DIMENSIONS
-params.eye_radius = 10;
-params.joy_radius = 6;
+% params.eye_radius = 10;
+% params.joy_radius = 6;
+params.eye_radius = 4;
+params.joy_radius = 3;
+
 
 % --- FEEDBACK
 params.rewBox_width = 10; % degrees visual angle
