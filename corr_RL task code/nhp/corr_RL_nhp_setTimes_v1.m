@@ -264,24 +264,24 @@ switch COMPUTER
 
     case 'DESKTOP-RV80PF6'  % lab monkeyLogic computer
 
-          % video runs at 60 Hz
+       % video runs at 60 Hz
         
         % --- sc1: preTrial
-        times.sc1_preTrial_ms = 1000;
+        times.sc1_preTrial_ms = 250;
 
         % --- sc2: fix
         times.sc2_fix_eyejoy_waitTime_ms = 1000;
-        times.sc2_fix_eyejoy_holdTime_ms = 500;
+        times.sc2_fix_eyejoy_holdTime_ms = 250;
 
         % --- sc3: stimulus movie
         times.sc3_movie_eyejoy_waitTime_ms = 1000;
         % holdTime has to be >> movie duration so
         % movie can complete and end scene
         times.sc3_movie_eyejoy_holdTime_ms = 5000;
-        times.sc3_preMovie_frames = 20;
-        times.sc3_stim_frames = 2;
+        times.sc3_preMovie_frames = 10;
+        times.sc3_stim_frames = 20;  % 2
         times.sc3_soa_frames = 2;
-        times.sc3_interPair_frames = 15;
+        times.sc3_interPair_frames = 10;  % 15
         times.sc3_curve_frames = 10;
         times.sc3_postMovie_frames = 20;
 
