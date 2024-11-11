@@ -41,7 +41,6 @@ switch COMPUTER
         times.sc5_rewRing_frames = 10;
 
 
-
     case 'DESKTOP-7CHQEHS'
                % video runs at 60 Hz
         
