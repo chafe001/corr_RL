@@ -79,7 +79,7 @@ switch COMPUTER
         times.sc5_rewRing_frames = 10;
 
     case 'MATT_MICRO'
-               % video runs at 60 Hz
+        % video runs at 120 Hz
         
         % --- sc1: preTrial
         times.sc1_preTrial_ms = 1000;
@@ -94,9 +94,9 @@ switch COMPUTER
         % movie can complete and end scene
         times.sc3_movie_eyejoy_holdTime_ms = 5000;
         times.sc3_preMovie_frames = 20;
-        times.sc3_stim_frames = 2;
+        times.sc3_stim_frames = 20;
         times.sc3_soa_frames = 2;
-        times.sc3_interPair_frames = 15;
+        times.sc3_interPair_frames = 40;
         times.sc3_curve_frames = 10;
         times.sc3_postMovie_frames = 20;
 

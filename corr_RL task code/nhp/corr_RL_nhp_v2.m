@@ -671,6 +671,7 @@ if choices.madeValidResp
     end
 
 else  % NO VALID RESPONSE
+    choices.rewardTrial = false;
     choices.respStr = ' NO RESP';
     choices.resultStr = ' NO RESULT';
 end
