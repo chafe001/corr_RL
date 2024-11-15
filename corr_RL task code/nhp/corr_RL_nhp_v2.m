@@ -677,8 +677,8 @@ else  % NO VALID RESPONSE
 end
 
 % --- DELIVER REWARDS 
-rew.numDropsEach = 1;
-rew.numDropsBlock = 5;
+rew.numDropsEach = 2;
+rew.numDropsBlock = 6;
 rew.dur = 200;
 rew.pauseTime = 500;
 

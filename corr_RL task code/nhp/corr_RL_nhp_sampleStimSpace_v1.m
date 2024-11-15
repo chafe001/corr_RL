@@ -1,4 +1,4 @@
-function [blockStim] = corr_RL_sampleStimSpace_v2(params)
+function [blockStim] = corr_RL_nhp_sampleStimSpace_v1(params)
 % corr_RL_sampleStimSpace defines the stimulus feature values of stimuli
 % for this block
 

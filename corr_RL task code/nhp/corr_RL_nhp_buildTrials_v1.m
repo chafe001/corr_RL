@@ -53,10 +53,15 @@ switch params.stimulusType
                 % information.
 
                 if params.constantPairs
-                    % -- 1. select feature combinations of individual stimuli for this block
+                    % --- 1. select feature combinations of individual stimuli for this block
                     [blockStim] = corr_RL_nhp_sampleStimSpace_v1(params);  % new for corr_RL v5
                     % --- 2. map orthogonal stimulus pairs to LEFT and RIGHT responses
                     [stateA_pairs, stateB_pairs] = corr_RL_nhp_pairStimuli_v1(blockStim, params); % new for corr_RL v5
+                    % --- 3. recolor stateA or stateB pairs if color cue enabled
+                    if params.colorCue
+                        [stateA_pairs] = recolorStim(stateA_pairs);
+
+                    end
                 end
 
                 for bn = 1 : params.numBlocks
@@ -120,7 +125,6 @@ switch params.stimulusType
                         condArray(c).blockNum = blockVect(c);
                     end
                 end
-
 
 
             case 'xPairs'
@@ -255,6 +259,36 @@ switch params.stimulusType
 end
 
 bob = 3;
+
+
+end
+
+% --- UTILITY FUNCTIONS
+
+function [outPairs] = recolorStim(inPairs)
+% provide color cue for stateA (left resp) and stateB (right resp) pairs
+
+suffix = '100.png';
+
+% initialize outpairs to inpairs
+outPairs = inPairs;
+
+% change stimulus color for outpairs
+for p = 1 : size(outPairs, 2)
+
+    % overwrite filename for LEFT stim of pair with new color
+    oldLeftFN = inPairs(p).leftStim.FileName;
+    indx = strfind(oldLeftFN, 'rgb_') + 3;
+    newLeftFN = strcat(oldLeftFN(1:indx), suffix);
+    outPairs(p).leftStim.FileName = newLeftFN;
+
+    % overwrite filename for RIGHT stim of pair with new color
+    oldRightFN = inPairs(p).rightStim.FileName;
+    indx = strfind(oldRightFN, 'rgb_') + 3;
+    newRightFN = strcat(oldRightFN(1:indx), suffix);
+    outPairs(p).rightStim.FileName = newRightFN;
+
+end
 
 
 end

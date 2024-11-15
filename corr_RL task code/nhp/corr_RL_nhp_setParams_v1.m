@@ -24,13 +24,15 @@ params.numBlocks = 10;  % WARNING: THIS NEEDS TO MATCH NUMBER OF BLOCKS IN CONDI
 params.repsPerCond = 4;
 params.blockChange = 'netWinsMode';
 % params.blockChange = 'condRepsMode';
-params.netWin_criterion = 10;  % number of netWins before switching block
+params.netWin_criterion = 25;  % number of netWins before switching block
+% params.netWin_criterion = 5;  % number of netWins before switching block
 params.numStates = 2; % this overwritten by curveParams if curveMovie at present, but needed for bars
 
 % --- BAR CONTROL
 params.randCuePercent = false;
 params.numMoviePairs = 10;
-params.cuePercentRange = [0.3 0.5 0.7 0.9];
+% params.cuePercentRange = [0.3 0.5 0.7 0.9];
+params.cuePercentRange = 1.0;
 params.cuePercent_easy = max(params.cuePercentRange);
 params.cuePercent_hard = min(params.cuePercentRange);
 % params.movieMode = 'stdp';
@@ -41,7 +43,6 @@ params.numCueReps = 1;  % new v5
 % params.pairMode = 'xPairs'; 
 params.pairMode = 'randList';  % new v5
 params.barNoiseMode = 'breakPairs';
-params.constantPairs = true;
 % params.barNoiseMode = 'noisePairs';
 
 % --- TRAINING FEATURES
@@ -50,6 +51,8 @@ params.constantPairs = true;
 % changes in the visual display (movie) with changes in the response
 % direction by blocking response direction.
 params.blockCond = true;
+params.constantPairs = true;
+params.colorCue = true;
 
 % --- CURVE CONTROL
 % determine whether to use bars with xPairs algorithm or curves with Dave's

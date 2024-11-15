@@ -684,7 +684,7 @@ end
 rew.numDropsEach = 1;
 rew.numDropsBlock = 5;
 rew.dur = 200;
-rew.pauseTime = 500;
+rew.pauseTime = 750;
 
 if choices.rewardTrial
 

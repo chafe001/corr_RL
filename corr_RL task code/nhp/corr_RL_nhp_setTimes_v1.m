@@ -270,7 +270,7 @@ switch COMPUTER
 
         % --- sc2: fix
         times.sc2_fix_eyejoy_waitTime_ms = 1000;
-        times.sc2_fix_eyejoy_holdTime_ms = 250;
+        times.sc2_fix_eyejoy_holdTime_ms = 500;
 
         % --- sc3: stimulus movie
         times.sc3_movie_eyejoy_waitTime_ms = 1000;
