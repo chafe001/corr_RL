@@ -19,7 +19,7 @@
 % This will display the joystick cursor, but for both the experimenter and
 % subject screen. Not sure there's a way to only display to experimenter
 % screen, but I think the joystick cursor should show in replay.
-showcursor(true);
+showcursor(false);
 
 % --- Multiple hits
 % require that 2-n correct trials are performed in a row before delivering
@@ -39,7 +39,7 @@ taskObj_fix = 1;
 trialerror(0, 'validResp', 1, 'earlyResp', 2, 'noResp');
 
 % Reward sizes
-rewDur1 = 85;
+rewDur1 = 100;
 numDrops1 = 2;
 
 % make sure these match values in buildTrials where they are associated
@@ -679,7 +679,7 @@ end
 % --- DELIVER REWARDS 
 rew.numDropsEach = 2;
 rew.numDropsBlock = 6;
-rew.dur = 200;
+rew.dur = 100;
 rew.pauseTime = 500;
 
 if choices.rewardTrial

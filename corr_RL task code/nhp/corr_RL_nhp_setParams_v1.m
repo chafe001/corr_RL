@@ -79,8 +79,8 @@ params.rightJoyRespWin = [10, 0];
 % --- FIX WINDOW DIMENSIONS
 % params.eye_radius = 10;
 % params.joy_radius = 6;
-params.eye_radius = 4;
-params.joy_radius = 3;
+params.eye_radius = 5;
+params.joy_radius = 5;
 
 
 % --- FEEDBACK
