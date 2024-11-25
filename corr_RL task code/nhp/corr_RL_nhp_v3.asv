@@ -232,7 +232,7 @@ switch TrialRecord.User.params.stimulusType
             '  BLOCK:', num2str(b), ...
             '  COND:', num2str(c));
 
-        dashboard(5, trlInfoStr, [0 0 0], 'FontSize', 8);
+        dashboard(3, trlInfoStr, [1 1 1], 'FontSize', 8);
 
 
 
@@ -387,9 +387,11 @@ scene2_start = run_scene(scene2, TrialRecord.User.codes.sc2_fixTargOn);
 % WaitThenHold()
 if sc2_wtHold.Success
     % do nothing, advance to next scene
+    dashboard(3, 'sc2 trialResult: success', 'FontSize', 8);
 elseif sc2_wtHold.Waiting
     trialerror(4); 
     trialResult = 'neverFix';
+    dashboard(3, 'sc2 trialResult: neverFix', 'FontSize', 8);
     abortTrial = true;
     idle(0, [], TrialRecord.User.codes.neverFix);
 else  % broke fix, eye or joy
@@ -397,9 +399,11 @@ else  % broke fix, eye or joy
     abortTrial = true;
     if sc2_eyeCenter.Success && ~sc2_joyCenter.Success
         trialResult = 'brokeJoy';
+        dashboard(3, 'sc2 trialResult: brokeJoy', 'FontSize', 8);
         idle(0, [], TrialRecord.User.codes.brokeJoyFix);
     elseif ~sc2_eyeCenter.Success && sc2_joyCenter.Success
         trialResult = 'brokeEye';
+        dashboard(3, 'sc2 trialResult: brokeEye', 'FontSize', 8);
         idle(0, [], TrialRecord.User.codes.brokeGazeFix);
     end
     
@@ -469,14 +473,17 @@ TrialRecord.User.movieFrameTimes = sc3_movie.Time;
 % --- CHECK BEHAVIORAL OUTCOMES
 if sc3_movie.Success  % movie completed without breaking eye or joy fix
     % do nothing, advance to next scene
+    dashboard(3, 'sc3 trialResult: success', 'FontSize', 8);
 else  % broke fix, eye or joy
     trialerror(3);  
     abortTrial = true;
     if sc3_eyeCenter.Success && ~sc3_joyCenter.Success
         trialResult = 'brokeJoy';
+        dashboard(3, 'sc3 trialResult: brokeJoy', 'FontSize', 8);
         idle(0, [], TrialRecord.User.codes.brokeJoyFix);
     elseif ~sc3_eyeCenter.Success && sc3_joyCenter.Success
         trialResult = 'brokeEye';
+        dashboard(3, 'sc3 trialResult: brokeEye', 'FontSize', 8);
         idle(0, [], TrialRecord.User.codes.brokeGazeFix);
     end
     
@@ -544,6 +551,7 @@ if sc4_mTarg_joy.Waiting  % no response made
     choices.RT = NaN;
     choices.respDir = NaN;
     choices.madeValidResp = false;
+    dashboard(3, 'sc4 trialResult: no resp', 'FontSize', 8);
     trialerror('noResp')
     abortTrial = true;
 elseif sc4_mTarg_joy.ChosenTarget == LEFT % ordinal position 1, first target entered, LEFT
@@ -551,12 +559,14 @@ elseif sc4_mTarg_joy.ChosenTarget == LEFT % ordinal position 1, first target ent
     eventmarker(TrialRecord.User.codes.sc4_joyResp_moveLeft);
     choices.respDir = LEFT;
     choices.madeValidResp = true;
+    dashboard(3, 'sc4 trialResult: chose LEFT', 'FontSize', 8);
     trialerror('validResp')
 elseif sc4_mTarg_joy.ChosenTarget == RIGHT % ordinal position 2, second target enetered, RIGHT
     choices.RT = sc4_mTarg_joy.RT;
     eventmarker(TrialRecord.User.codes.sc4_joyResp_moveRight);
     choices.respDir = RIGHT;
     choices.madeValidResp = true;
+    dashboard(3, 'sc4 trialResult: chose RIGHT', 'FontSize', 8);
     trialerror('validResp')
 else
     choices.madeValidResp = false;
@@ -670,7 +680,7 @@ if choices.madeValidResp
                 eventmarker(TrialRecord.User.codes.sc5_joyResp_probNoRew);
                 TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-                choices.resultStr = 'RESULT: LOSS SELECTING HIGH PROB';
+                choices.resultStr = 'RESULT: LOSS SELECTED HIGH PROB';
             end
         end
 
@@ -678,8 +688,8 @@ if choices.madeValidResp
 
 else  % NO VALID RESPONSE
     choices.rewardTrial = false;
-    choices.respStr = 'JOYSTICK: NO VALID RESP';
-    choices.resultStr = 'RESULT: NO VALID RESP';
+    choices.respStr = ' NO RESP';
+    choices.resultStr = ' NO RESULT';
 end
 
 % --- DELIVER REWARDS 
