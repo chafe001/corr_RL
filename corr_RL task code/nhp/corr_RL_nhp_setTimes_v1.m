@@ -266,11 +266,11 @@ switch COMPUTER
        % video runs at 60 Hz
         
         % --- sc1: preTrial
-        times.sc1_preTrial_ms = 250;
+        times.sc1_preTrial_ms = 500;
 
         % --- sc2: fix
         times.sc2_fix_eyejoy_waitTime_ms = 1000;
-        times.sc2_fix_eyejoy_holdTime_ms = 500;
+        times.sc2_fix_eyejoy_holdTime_ms = 150;
 
         % --- sc3: stimulus movie
         times.sc3_movie_eyejoy_waitTime_ms = 1000;
@@ -278,7 +278,7 @@ switch COMPUTER
         % movie can complete and end scene
         times.sc3_movie_eyejoy_holdTime_ms = 5000;
         times.sc3_preMovie_frames = 10;
-        times.sc3_stim_frames = 20;  % 2
+        times.sc3_stim_frames = 18;  % 2
         times.sc3_soa_frames = 2;
         times.sc3_interPair_frames = 10;  % 15
         times.sc3_curve_frames = 10;

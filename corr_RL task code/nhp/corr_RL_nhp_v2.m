@@ -39,7 +39,7 @@ taskObj_fix = 1;
 trialerror(0, 'validResp', 1, 'earlyResp', 2, 'noResp');
 
 % Reward sizes
-rewDur1 = 100;
+rewDur1 = 120;
 numDrops1 = 2;
 
 % make sure these match values in buildTrials where they are associated
@@ -679,7 +679,7 @@ end
 % --- DELIVER REWARDS 
 rew.numDropsEach = 2;
 rew.numDropsBlock = 6;
-rew.dur = 100;
+rew.dur = 120;
 rew.pauseTime = 500;
 
 if choices.rewardTrial

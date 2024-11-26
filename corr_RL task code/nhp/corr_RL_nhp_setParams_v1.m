@@ -24,7 +24,7 @@ params.numBlocks = 10;  % WARNING: THIS NEEDS TO MATCH NUMBER OF BLOCKS IN CONDI
 params.repsPerCond = 4;
 params.blockChange = 'netWinsMode';
 % params.blockChange = 'condRepsMode';
-params.netWin_criterion = 25;  % number of netWins before switching block
+params.netWin_criterion = 20;  % number of netWins before switching block
 % params.netWin_criterion = 5;  % number of netWins before switching block
 params.numStates = 2; % this overwritten by curveParams if curveMovie at present, but needed for bars
 
