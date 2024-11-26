@@ -19,7 +19,7 @@
 % This will display the joystick cursor, but for both the experimenter and
 % subject screen. Not sure there's a way to only display to experimenter
 % screen, but I think the joystick cursor should show in replay.
-showcursor(false);
+showcursor(true);
 
 % --- Multiple hits
 % require that 2-n correct trials are performed in a row before delivering

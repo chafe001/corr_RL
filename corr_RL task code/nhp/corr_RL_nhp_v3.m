@@ -7,13 +7,13 @@
 % control etc.  v1 is a working version with joystick response and eye gaze
 % fixation implemented and tested in simulation.
 
-% v2: checking event codes, and running in normal mode with EyeLink and joystick 
-% in lab and integrity of bhv2 outfile.  This stage should be sufficient for 
-% training, can check SpikeGadgets communication while training underway.
+% v2: Training stage.  Conditions (bar orientations) presented in blocks.
+% Bars associated with different conditions are different colors.  Eye
+% fixation implemented.
 
-% v3: adding training features for Dan.  First is to alternate conditions
-% in blocks to be able to form association between visual stimuli and
-% direction of response
+% v3: Training stage.  Adding auditory feedback for correct (and
+% optionally) error movements at the time that the joystick cursor enters
+% the response window
 
 % -------------------------------------------------------------------------
 % ---------------------- TASK CONTROL SWITCHES ----------------------------
@@ -21,9 +21,9 @@
 
 % --- Display joystick
 % This will display the joystick cursor, but for both the experimenter and
-% subject screen. Not sure there's a way to only display to experimenter
+% subject screen. Not sure there's a way to only display to experimeeer
 % screen, but I think the joystick cursor should show in replay.
-showcursor(false);
+showcursor(true);
 
 % --- Multiple hits
 % require that 2-n correct trials are performed in a row before delivering
@@ -43,7 +43,7 @@ taskObj_fix = 1;
 trialerror(0, 'validResp', 1, 'earlyResp', 2, 'noResp');
 
 % Reward sizes
-rewDur1 = 85;
+rewDur1 = 100;
 numDrops1 = 2;
 
 % make sure these match values in buildTrials where they are associated
@@ -209,43 +209,54 @@ choices.madeValidResp = [];
 % ----------------- PRINT TRIAL INFO TO USER SCREEN -----------------------
 % -------------------------------------------------------------------------
 
-switch TrialRecord.User.condArray(c).state
-    case 1
-        keyStr = 'Correct Key: LEFT';
-    case 2
-        keyStr = 'Correct Key: RIGHT';
-end
+
 
 switch TrialRecord.User.params.stimulusType
 
     case 'bars'
-        trlInfoStr = strcat(keyStr, ...
-            '  Trial:', num2str(t), ...
-            '  Block:', num2str(b), ...
-            '  Cond:', num2str(c), ...
-            '  Cue percent:', num2str(TrialRecord.User.condArray(c).cuePercent), ...
-            '  Total pairs: ', num2str(TrialRecord.User.params.numMoviePairs));
+        switch TrialRecord.User.condArray(c).state
+            case 1
+                corrStr = 'CORRECT: LEFT';
+            case 2
+                corrStr = 'CORRECT: RIGHT';
+        end
 
-        pair1_Angles_str = strcat('Pair1 L_ang:', num2str(TrialRecord.User.condArray(c).cuePairs(1).leftStim.Angle), ...
-            '  L_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).leftStim.FaceColor), ...
-            '  L_FN: ', TrialRecord.User.condArray(c).cuePairs(1).leftStim.FileName, ...
-            '  R_ang: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).rightStim.Angle), ...
-            '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).rightStim.FaceColor), ...
-            '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(1).rightStim.FileName);
+        % --- print correct response direction
+        dashboard(1, corrStr, [1 1 1], 'FontSize', 8);
 
-        pair2_Angles_str = strcat('Pair2 L_ang:', num2str(TrialRecord.User.condArray(c).cuePairs(2).leftStim.Angle), ...
-            '  L_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).leftStim.FaceColor), ...
-            '  L_FN: ', TrialRecord.User.condArray(c).cuePairs(2).leftStim.FileName, ...
-            '  R_ang: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.Angle), ...
-            '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.FaceColor), ...
-            '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(2).rightStim.FileName);
+        % --- overwrite JOYSTICK entry from last trial
+        dashboard(2, 'JOYSTICK:', [1 1 1], 'FontSize', 8);
 
-        dashboard(2, trlInfoStr, [1 1 1], 'FontSize', 8);
+        % overwrite RESULT entry from last trial
+        dashboard(3, 'RESULT:', [1 1 1], 'FontSize', 8);
+
+        % --- print trial info
+        trlInfoStr = strcat('TRIAL:', num2str(t), ...
+            '  BLOCK:', num2str(b), ...
+            '  COND:', num2str(c));
+
+        dashboard(5, trlInfoStr, [0 0 0], 'FontSize', 8);
+
+        % --- stimulus pair details
+        % pair1_Angles_str = strcat('Pair1 L_ang:', num2str(TrialRecord.User.condArray(c).cuePairs(1).leftStim.Angle), ...
+        %     '  L_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).leftStim.FaceColor), ...
+        %     '  L_FN: ', TrialRecord.User.condArray(c).cuePairs(1).leftStim.FileName, ...
+        %     '  R_ang: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).rightStim.Angle), ...
+        %     '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(1).rightStim.FaceColor), ...
+        %     '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(1).rightStim.FileName);
+        %
+        % pair2_Angles_str = strcat('Pair2 L_ang:', num2str(TrialRecord.User.condArray(c).cuePairs(2).leftStim.Angle), ...
+        %     '  L_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).leftStim.FaceColor), ...
+        %     '  L_FN: ', TrialRecord.User.condArray(c).cuePairs(2).leftStim.FileName, ...
+        %     '  R_ang: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.Angle), ...
+        %     '  R_RGB: ', num2str(TrialRecord.User.condArray(c).cuePairs(2).rightStim.FaceColor), ...
+        %     '  R_FN: ', TrialRecord.User.condArray(c).cuePairs(2).rightStim.FileName);
+
         % dashboard(4, pair1_Angles_str, [1 1 1], 'FontSize', 8);
         % dashboard(5, pair2_Angles_str, [1 1 1], 'FontSize', 8);
 
     case 'curves'
-        trlInfoStr = strcat(keyStr, ...
+        trlInfoStr = strcat(corrStr, ...
             '  Trial:', num2str(t), ...
             '  Block:', num2str(b), ...
             '  Cond:', num2str(c), ...
@@ -322,7 +333,7 @@ sc1_tc = TimeCounter(rewBox);
 sc1_tc.Duration = times.sc1_preTrial_ms;
 
 % --- RUN SCENE
-dashboard(1, 'Scene 1: pretrial', 'FontSize', 8);
+dashboard(4, 'SCENE: PRETRIAL (1)', 'FontSize', 8);
 scene1 = create_scene(sc1_tc);
 run_scene(scene1, TrialRecord.User.codes.sc1_preTrialStart);
 
@@ -365,36 +376,32 @@ sc2_wtHold_rewBox = Concurrent(sc2_wtHold);
 sc2_wtHold_rewBox.add(rewBox);
 
 % --- RUN SCENE
-dashboard(1, 'Scene 2: fix', 'FontSize', 8);
+dashboard(4, 'SCENE: FIX (2)', 'FontSize', 8);
 % scene2 = create_scene(sc2_wtHold_rewBox);
 scene2 = create_scene(sc2_wtHold_rewBox);
-scene2_start = run_scene(scene2, TrialRecord.User.codes.sc2_fixTargOn); 
+scene2_start = run_scene(scene2, TrialRecord.User.codes.sc2_fixTargOn);
 
 % --- CHECK BEHAVIORAL OUTCOMES
 % Note: this status checking structure copied from ML documentation on
 % WaitThenHold()
 if sc2_wtHold.Success
     % do nothing, advance to next scene
-    dashboard(3, 'sc2 trialResult: success', 'FontSize', 8);
 elseif sc2_wtHold.Waiting
-    trialerror(4); 
+    trialerror(4);
     trialResult = 'neverFix';
-    dashboard(3, 'sc2 trialResult: neverFix', 'FontSize', 8);
     abortTrial = true;
     idle(0, [], TrialRecord.User.codes.neverFix);
 else  % broke fix, eye or joy
-    trialerror(3);   
+    trialerror(3);
     abortTrial = true;
     if sc2_eyeCenter.Success && ~sc2_joyCenter.Success
         trialResult = 'brokeJoy';
-        dashboard(3, 'sc2 trialResult: brokeJoy', 'FontSize', 8);
         idle(0, [], TrialRecord.User.codes.brokeJoyFix);
     elseif ~sc2_eyeCenter.Success && sc2_joyCenter.Success
         trialResult = 'brokeEye';
-        dashboard(3, 'sc2 trialResult: brokeEye', 'FontSize', 8);
         idle(0, [], TrialRecord.User.codes.brokeGazeFix);
     end
-    
+
 end
 
 % bomb trial if error
@@ -451,7 +458,7 @@ sc3_wtHold_movie.add(sc3_movie);
 sc3_wtHold_movie.add(rewBox);
 
 % --- RUN SCENE
-dashboard(1, 'Scene 3: movie', 'FontSize', 8);
+dashboard(4, 'SCENE: CUE MOVIE (3)', 'FontSize', 8);
 scene3 = create_scene(sc3_wtHold_movie);
 scene3_start = run_scene(scene3, TrialRecord.User.codes.sc3_movieStart);
 
@@ -461,20 +468,17 @@ TrialRecord.User.movieFrameTimes = sc3_movie.Time;
 % --- CHECK BEHAVIORAL OUTCOMES
 if sc3_movie.Success  % movie completed without breaking eye or joy fix
     % do nothing, advance to next scene
-    dashboard(3, 'sc3 trialResult: success', 'FontSize', 8);
 else  % broke fix, eye or joy
-    trialerror(3);  
+    trialerror(3);
     abortTrial = true;
     if sc3_eyeCenter.Success && ~sc3_joyCenter.Success
         trialResult = 'brokeJoy';
-        dashboard(3, 'sc3 trialResult: brokeJoy', 'FontSize', 8);
         idle(0, [], TrialRecord.User.codes.brokeJoyFix);
     elseif ~sc3_eyeCenter.Success && sc3_joyCenter.Success
         trialResult = 'brokeEye';
-        dashboard(3, 'sc3 trialResult: brokeEye', 'FontSize', 8);
         idle(0, [], TrialRecord.User.codes.brokeGazeFix);
     end
-    
+
 end
 
 % bomb trial if error
@@ -523,13 +527,13 @@ sc4_mTarg_joy_oom.OffMarker = TrialRecord.User.codes.sc4_joyResp_enterWindow;
 sc4_mTarg_joy_oom.ChildProperty = 'Waiting';
 
 % AllContinue will be used to continue eye fix, and
-% joy multitarget. It will stop once either of these stops 
-sc4_joyResp = AllContinue(sc4_mTarg_joy_oom); 
+% joy multitarget. It will stop once either of these stops
+sc4_joyResp = AllContinue(sc4_mTarg_joy_oom);
 sc4_joyResp.add(sc4_wtHold);
 sc4_joyResp.add(rewBox);
 
 % --- RUN SCENE
-dashboard(1, 'Scene 4: joystick response', 'FontSize', 8);
+dashboard(4, 'SCENE: JOY RESPONSE (4)', 'FontSize', 8);
 scene4 = create_scene(sc4_joyResp);
 scene4_start = run_scene(scene4, TrialRecord.User.codes.sc4_joyResp_openWindows);
 
@@ -539,7 +543,6 @@ if sc4_mTarg_joy.Waiting  % no response made
     choices.RT = NaN;
     choices.respDir = NaN;
     choices.madeValidResp = false;
-    dashboard(3, 'sc4 trialResult: no resp', 'FontSize', 8);
     trialerror('noResp')
     abortTrial = true;
 elseif sc4_mTarg_joy.ChosenTarget == LEFT % ordinal position 1, first target entered, LEFT
@@ -547,14 +550,12 @@ elseif sc4_mTarg_joy.ChosenTarget == LEFT % ordinal position 1, first target ent
     eventmarker(TrialRecord.User.codes.sc4_joyResp_moveLeft);
     choices.respDir = LEFT;
     choices.madeValidResp = true;
-    dashboard(3, 'sc4 trialResult: chose LEFT', 'FontSize', 8);
     trialerror('validResp')
 elseif sc4_mTarg_joy.ChosenTarget == RIGHT % ordinal position 2, second target enetered, RIGHT
     choices.RT = sc4_mTarg_joy.RT;
     eventmarker(TrialRecord.User.codes.sc4_joyResp_moveRight);
     choices.respDir = RIGHT;
     choices.madeValidResp = true;
-    dashboard(3, 'sc4 trialResult: chose RIGHT', 'FontSize', 8);
     trialerror('validResp')
 else
     choices.madeValidResp = false;
@@ -609,13 +610,13 @@ if choices.madeValidResp
                 eventmarker(TrialRecord.User.codes.sc5_joyResp_probRew);
                 TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-                choices.resultStr = '  WIN, SELECTED HIGH PROB';
+                choices.resultStr = 'RESULT: WIN SELECTING HIGH PROB';
             else  % --- LOSS, HIGH PROB ---
                 choices.rewardTrial = false;
                 eventmarker(TrialRecord.User.codes.sc5_joyResp_probNoRew);
                 TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-                choices.resultStr = '  LOSS, SELECTED HIGH PROB';
+                choices.resultStr = 'RESULT: LOSS SELECTING HIGH PROB';
             end
         elseif TrialRecord.User.condArray(c).state == RIGHT
             choices.choseCorrect = false;
@@ -625,13 +626,13 @@ if choices.madeValidResp
                 eventmarker(TrialRecord.User.codes.sc5_joyResp_probRew);
                 TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-                choices.resultStr = '  WIN, SELECTED LOW PROB';
+                choices.resultStr = 'RESULT: WIN SELECTING LOW PROB';
             else  % --- LOSS, LOW PROB ---
                 choices.rewardTrial = false;
                 eventmarker(TrialRecord.User.codes.sc5_joyResp_probNoRew);
                 TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-                choices.resultStr = '  LOSS, SELECTED LOW PROB';
+                choices.resultStr = 'RESULT: LOSS SELECTING LOW PROB';
             end
         end
 
@@ -646,13 +647,13 @@ if choices.madeValidResp
                 eventmarker(TrialRecord.User.codes.sc5_joyResp_probRew);
                 TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-                choices.resultStr = '  WIN, SELECTED LOW PROB';
+                choices.resultStr = 'RESULT: WIN SELECTING LOW PROB';
             else  % --- LOSS, LOW PROB ---
                 choices.rewardTrial = false;
                 eventmarker(TrialRecord.User.codes.sc5_joyResp_probNoRew);
                 TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-                choices.resultStr = '  LOSS, SELECTED LOW PROB';
+                choices.resultStr = 'RESULT: LOSS SELECTING LOW PROB';
             end
         elseif TrialRecord.User.condArray(c).state == RIGHT
             choices.choseCorrect = true;
@@ -662,13 +663,13 @@ if choices.madeValidResp
                 eventmarker(TrialRecord.User.codes.sc5_joyResp_probRew);
                 TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-                choices.resultStr = '  WIN, SELECTED HIGH PROB';
+                choices.resultStr = 'RESULT: WIN SELECTING HIGH PROB';
             else  % --- LOSS, HIGH PROB ---
                 choices.rewardTrial = false;
                 eventmarker(TrialRecord.User.codes.sc5_joyResp_probNoRew);
                 TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-                choices.resultStr = '  LOSS, SELECTED HIGH PROB';
+                choices.resultStr = 'RESULT: LOSS SELECTING HIGH PROB';
             end
         end
 
@@ -676,15 +677,76 @@ if choices.madeValidResp
 
 else  % NO VALID RESPONSE
     choices.rewardTrial = false;
-    choices.respStr = ' NO RESP';
-    choices.resultStr = ' NO RESULT';
+    choices.respStr = 'JOYSTICK: NO VALID RESP';
+    choices.resultStr = 'RESULT: NO VALID RESP';
 end
 
-% --- DELIVER REWARDS 
+% --- if blockLosses > blockWins, reset counters to 0 to prevent
+% accumulation of a deficit, don't want a hole subj has to dig out of
+% before display shows accumulation of additional wins
+if TrialRecord.User.netWins < 0
+    TrialRecord.User.blockWins = 0;
+    TrialRecord.User.blockLosses = 0;
+    TrialRecord.User.netWins = 0;
+end
+
+% --- SAVE CHOICE INFORMATION to TrialRecord
+TrialRecord.User.Choices = choices;
+
+
+% --- UPDATE REWARD BOX WITH THIS RESULT
+netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
+netWinBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
+% rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWinBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
+rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWinBox_height], [netWinBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
+
+% --- INSTANTIATE IMAGECHANGER OBJ for FEEDBACK MOVIE
+sc5_rewImg = ImageChanger(rewBox);
+if choices.madeValidResp
+    if choices.rewardTrial
+        sc5_rewImg.List = ...
+            {{choices.choiceImg}, [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.sc5_joyResp_choiceRingOn; ...
+            {choices.rewImg}, [0 0], times.sc5_rewRing_frames, TrialRecord.User.codes.sc5_joyResp_rewRingOn};
+        
+    else
+        sc5_rewImg.List = ...
+            {{choices.choiceImg}, [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.sc5_joyResp_choiceRingOn};
+    end
+else
+    sc5_rewImg.List = ...
+        {[], [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.noResp};
+
+end
+
+% --- INSTANTIATE TONE FEEDBACK, IF ENABLED
+
+if TrialRecord.User.params.toneFeedback
+    sc5_tone_feedback = AudioSound(sc5_rewImg);
+    if choices.rewardTrial
+        sc5_tone_feedback.List = {[TrialRecord.User.params.correctToneDur, TrialRecord.User.params.correctToneFreq], false};
+    else
+        sc5_tone_feedback.List = {[TrialRecord.User.params.errorToneDur, TrialRecord.User.params.errorToneFreq], false};
+
+    end
+    scene5 = create_scene(sc5_tone_feedback, taskObj_fix);
+
+else
+    scene5 = create_scene(sc5_rewImg, taskObj_fix);
+end
+
+% --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
+dashboard(4, 'SCENE: FEEDBACK (5)', 'FontSize', 8);
+% create_scene in switch statement above
+scene5_start = run_scene(scene5);
+
+% --- DELIVER REWARDS
 rew.numDropsEach = 1;
-rew.numDropsBlock = 5;
+rew.numDropsBlock = 6;
 rew.dur = 200;
-rew.pauseTime = 750;
+rew.pauseTime = 100;
+
+% --- SAVE REWARD INFORMATION to Trialrecord
+TrialRecord.User.rewardInfo = rew;
 
 if choices.rewardTrial
 
@@ -700,63 +762,18 @@ if choices.rewardTrial
 
 end
 
-% --- if blockLosses > blockWins, reset counters to 0 to prevent
-% accumulation of a deficit, don't want a hole subj has to dig out of
-% before display shows accumulation of additional wins
-if TrialRecord.User.netWins < 0
-    TrialRecord.User.blockWins = 0;
-    TrialRecord.User.blockLosses = 0;
-    TrialRecord.User.netWins = 0;
-end
-
-% --- SAVE CHOICE INFORMATION to TrialRecord
-TrialRecord.User.Choices = choices;
-
-% --- SAVE REWARD INFORMATION to Trialrecord
-TrialRecord.User.rewardInfo = rew;
-
 % --- OUTPUT CHOICE REWARD RESULT TO USER SCREEN
-respResStr = strcat(choices.respStr, '  ---  ', choices.resultStr);
-
 switch TrialRecord.User.params.stimulusType
 
     case 'bars'
-        dashboard(5, respResStr, [1 1 1], 'FontSize', 8);
+        dashboard(2, choices.respStr, [1 1 1], 'FontSize', 8);
+        dashboard(3, choices.resultStr, [1 1 1], 'FontSize', 8);
 
     case 'curves'
-        dashboard(5, respResStr, [0 0 0], 'FontSize', 8);
+        dashboard(2, respStr, [0 0 0], 'FontSize', 8);
 
 end
 
-
-% --- UPDATE REWARD BOX WITH THIS RESULT
-netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
-netWinBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
-% rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWinBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
-rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWinBox_height], [netWinBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
-
-% --- INSTANTIATE IMAGECHANGER OBJ for FEEDBACK MOVIE
-sc5_rewImg = ImageChanger(rewBox);
-
-if choices.madeValidResp
-    if choices.rewardTrial
-        sc5_rewImg.List = ...
-            {{choices.choiceImg}, [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.sc5_joyResp_choiceRingOn; ...
-            {choices.rewImg}, [0 0], times.sc5_rewRing_frames, TrialRecord.User.codes.sc5_joyResp_rewRingOn};
-    else
-        sc5_rewImg.List = ...
-            {{choices.choiceImg}, [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.sc5_joyResp_choiceRingOn};
-    end
-else
-    sc5_rewImg.List = ...
-        {[], [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.noResp};
-
-end
-
-% --- CREATE AND RUN SCENE USING ADAPTOR CHAINS
-dashboard(1, 'Scene 5: feebdack', 'FontSize', 8);
-scene5 = create_scene(sc5_rewImg, taskObj_fix);
-scene5_start = run_scene(scene5);
 
 % --- SAVE DATA TO BHV2 FILE
 % NOTE!!: Make sure 'File type' dropdown in GUI is set to BHV2.  Matlab

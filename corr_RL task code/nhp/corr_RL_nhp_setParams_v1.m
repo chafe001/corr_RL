@@ -30,7 +30,7 @@ params.numStates = 2; % this overwritten by curveParams if curveMovie at present
 
 % --- BAR CONTROL
 params.randCuePercent = false;
-params.numMoviePairs = 10;
+% params.numMoviePairs = 10;
 % params.cuePercentRange = [0.3 0.5 0.7 0.9];
 params.cuePercentRange = 1.0;
 params.cuePercent_easy = max(params.cuePercentRange);
@@ -53,6 +53,11 @@ params.barNoiseMode = 'breakPairs';
 params.blockCond = true;
 params.constantPairs = true;
 params.colorCue = true;
+params.toneFeedback = true;
+params.correctToneDur = 500;
+params.correctToneFreq = 800;
+params.errorToneDur = 500;
+params.errorToneFreq = 0;
 
 % --- CURVE CONTROL
 % determine whether to use bars with xPairs algorithm or curves with Dave's
@@ -81,7 +86,6 @@ params.rightJoyRespWin = [10, 0];
 % params.joy_radius = 6;
 params.eye_radius = 5;
 params.joy_radius = 5;
-
 
 % --- FEEDBACK
 params.rewBox_width = 10; % degrees visual angle
