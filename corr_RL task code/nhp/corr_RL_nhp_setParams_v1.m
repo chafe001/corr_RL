@@ -7,8 +7,8 @@ function [params] = corr_RL_nhp_setParams_v1()
 % --- STIMULUS FEATURE SPACE
 
 % --- variable feature dimensions
-params.Angles = [0 45];
-% params.Angles = [0 45 90 135];  % *** HARD ***
+% params.Angles = [0 45];
+params.Angles = [0 45 90 135];  % *** HARD ***
 % params.Angles = [0 30 60 90 120 150];
 % params.FaceColors = [1 0 0; 0 0 1; 0 0 0; 1 1 1];  % red, blue, black, white
 % params.FaceColors = [0 0 0; 1 1 1];  
@@ -39,7 +39,7 @@ params.cuePercent_hard = min(params.cuePercentRange);
 params.movieMode = 'simPairs';  % simultaneous pairs
 params.numCueStim = 2;  % *** EASY ***
 % params.numCueStim = 4;  % *** HARD ***
-params.numCueReps = 3;  % new v5
+params.numCueReps = 1;  % new v5
 % adding new pairing algorithm
 % params.pairMode = 'xPairs'; 
 % params.pairMode = 'randList';  % new v5
@@ -47,7 +47,6 @@ params.pairMode = 'onePairCond'; % new training option
 
 params.barNoiseMode = 'breakPairs';
 % params.barNoiseMode = 'noisePairs';
-
 
 % --- TRAINING FEATURES
 % blockCond sets 1 condition per block, which would require a left or right
@@ -67,6 +66,7 @@ params.correctToneDur = 500;
 params.correctToneFreq = 800;
 params.errorToneDur = 500;
 params.errorToneFreq = 0;
+
 
 % --- CURVE CONTROL
 % determine whether to use bars with xPairs algorithm or curves with Dave's
