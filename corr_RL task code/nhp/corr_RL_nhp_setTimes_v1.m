@@ -42,7 +42,7 @@ switch COMPUTER
 
 
     case 'DESKTOP-7CHQEHS'
-               % video runs at 60 Hz
+        % video runs at 60 Hz
         
         % --- sc1: preTrial
         times.sc1_preTrial_ms = 1000;
@@ -278,9 +278,16 @@ switch COMPUTER
         % movie can complete and end scene
         times.sc3_movie_eyejoy_holdTime_ms = 5000;
         times.sc3_preMovie_frames = 10;
-        times.sc3_stim_frames = 18;  % 2
+
+        times.sc3_stim_frames = 18; % *** EASY ***
+        times.sc3_interPair_frames = 10; % *** EASY ***
+
+        % faster timing for more bars per trials
+%         times.sc3_stim_frames = 10;  % *** HARD ***
+%         times.sc3_interPair_frames = 5; % *** HARD ***
+
         times.sc3_soa_frames = 2;
-        times.sc3_interPair_frames = 10;  % 15
+
         times.sc3_curve_frames = 10;
         times.sc3_postMovie_frames = 20;
 

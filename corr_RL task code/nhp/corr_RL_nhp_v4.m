@@ -15,6 +15,10 @@
 % optionally) error movements at the time that the joystick cursor enters
 % the response window
 
+% v4: Training stage.  Making the movies visually simpler, single pair per
+% trial capable, fixed relation between pair orientation and response
+% direction.
+
 % -------------------------------------------------------------------------
 % ---------------------- TASK CONTROL SWITCHES ----------------------------
 % -------------------------------------------------------------------------
