@@ -46,7 +46,73 @@ switch params.stimulusType
                 % --- 1. select feature combinations of individual stimuli for this block
                 [blockStim] = corr_RL_nhp_sampleStimSpace_v1(params);  % new for corr_RL v5
                 % --- 2. map orthogonal stimulus pairs to LEFT and RIGHT responses
-                [stateA_pairs, stateB_pairs] = corr_RL_nhp_onePair_v1(blockStim, params); % new for corr_RL v5
+                [stateA_pairs, stateB_pairs] = corr_RL_nhp_onePairCond_v1(blockStim, params); % new for corr_RL v5
+
+                for bn = 1 : params.numBlocks
+
+                    % -- 1. select feature combinations of individual stimuli for this block
+                    if ~params.constantPairs
+                        [blockStim] = corr_RL_nhp_sampleStimSpace_v1(params);  % new for corr_RL v5
+                        % --- 2. map orthogonal stimulus pairs to LEFT and RIGHT responses
+                        [stateA_pairs, stateB_pairs] = corr_RL_nhp_pairStimuli_v1(blockStim, params); % new for corr_RL v5
+                    end
+
+                    % --- 3. select number of cue pairs for this block, and hence degree of
+                    % visual noise (number of noise pairs) added to the movie
+                    if params.randCuePercent
+                        % select random index into the numCuePairs array and retrieve value
+                        cuePercent = params.cuePercentRange(randi(size(params.cuePercentRange, 2)));
+                    else
+                        if mod(bn, 2) == 1 % odd block
+                            cuePercent = params.cuePercent_easy;
+                        else  % even block
+                            cuePercent = params.cuePercent_hard;
+                        end
+                    end
+
+                    % --- 4. assign each condition, associated with a unique cue movie, to
+                    % LEFT and RIGHT reward states
+
+                    for rs = LEFT:RIGHT
+                        condArrayTemp(bn, rs).blockNum = bn;
+                        condArrayTemp(bn, rs).state = rs;
+                        condArrayTemp(bn, rs).cuePercent = cuePercent;
+                        switch rs
+                            case LEFT
+                                condArrayTemp(bn, rs).cuePairs = stateA_pairs;
+                            case RIGHT
+                                condArrayTemp(bn, rs).cuePairs = stateB_pairs;
+                        end
+                    end
+
+                end  % for bn
+
+                % Convert conditions matrix into a one dimensional struct array
+                condArray = [];
+                condNo = 1;
+                for bs = 1 : params.numBlocks
+                    for rs = 1 : params.numStates
+                        thisCond = condArrayTemp(bs, rs);
+                        thisCond.condNo = condNo;
+                        condNo = condNo + 1;
+                        condArray = [condArray; thisCond];
+                    end
+                end
+
+                % if blockCond enabled, assign 1 condition per block for
+                % training
+                if params.blockCond
+                    nCond =  size(condArray, 1);
+                    % create sequential block count, 1 block per condition
+                    blockVect = 1 : nCond;
+                    for c = 1 : nCond
+                        condArray(c).blockNum = blockVect(c);
+                    end
+                end
+
+                bob = 1;
+
+                bob = 1;
 
             case 'randList'
                 % in randList pairMode, a fixed vector of bars is presented
@@ -59,8 +125,8 @@ switch params.stimulusType
                 % information.
 
                 % If constantPairs, select this once before building blocks
-                % and hold pairs constant across all blocks, otherwise, call 
-                % sampleStimSpace and pairStimuli once at the beginning of 
+                % and hold pairs constant across all blocks, otherwise, call
+                % sampleStimSpace and pairStimuli once at the beginning of
                 % each block to create new stimuli to learn
                 if params.constantPairs
                     % --- 1. select feature combinations of individual stimuli for this block
@@ -199,7 +265,7 @@ switch params.stimulusType
                     end
                 end
 
-                bob = 1;
+                bob = 2;
 
         end
 

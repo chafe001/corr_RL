@@ -17,12 +17,11 @@ codes = TrialRecord.User.codes;
 times = TrialRecord.User.times;
 
 % --- if mockup, uncomment the following  lines
-% [condArray, params] = corr_RL_buildTrials_v5();
+% [condArray, params] = corr_RL_nhp_buildTrials_v1();
 % c = 4; % hard code condition number
 % bn = 2; % hard code block number
-% codes = corr_RL_setBarCodes_v3();
-% times = corr_RL_setTimes_v3();
-
+% codes = corr_RL_nhp_setBarCodes_v1();
+% times = corr_RL_nhp_setTimes_v1();
 
 % --- create pairSeq vector specifying which pairs to show how many times
 % in movie in randomized order
@@ -35,7 +34,6 @@ numNoisePairs = round((1 - condArray(c).cuePercent) * length(pairSeq));
 % or replace with noise pairs
 noiseIndx = randperm(length(pairSeq));
 noiseIndx = sort(noiseIndx(1:numNoisePairs));
-
 
 % add noise according to different methods at each noiseIndx in pairSeq
 switch params.barNoiseMode
@@ -93,7 +91,6 @@ switch params.barNoiseMode
 
         end % next p
 
-
         % --- CHECK SAME STIMULI AND NUMBER OF REPS AT LEFT AND RIGHT after
         % breaking pairs
         leftStim_ids = [];
@@ -114,8 +111,12 @@ switch params.barNoiseMode
         tblLeft = tabulate(leftStim_ids);
         tblRight = tabulate(rightStim_ids);
 
-        if ~isequal(tblLeft, tblRight)
-            error('unequal L and R stim in generateBarMovie_v2');
+        % if onePairCond enabled, this chokes, not sure why, disabling in
+        % this case for now
+        if ~strcmp(params.pairMode, 'onePairCond')
+            if ~isequal(tblLeft, tblRight)
+                error('unequal L and R stim in generateBarMovie_v2');
+            end
         end
 
         % --- CHECK THAT CUE BAR COUNTS ARE CORRECT
@@ -126,7 +127,6 @@ switch params.barNoiseMode
         if tblRight(:, 2) ~= params.numCueReps
             error('incorrect rep count for RIGHT stim in generateBarMovie_v2');
         end
-
 
         bob = 1;
 

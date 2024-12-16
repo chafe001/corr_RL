@@ -1,4 +1,4 @@
-function [movieImages, pairSeq, pairs] = corr_RL_nhp_generateBarMovie_v1_mockup(TrialRecord)
+function [movieImages, pairSeq, pairs] = corr_RL_nhp_generateBarMovie_v1_mockup()
 % This function returns a cell array, movieImages, that is used to set the
 % 'List' property of a imageChanger() object.  This controls the sequence
 % of images presented in the movie, which controls the proportion of cue
@@ -19,8 +19,10 @@ function [movieImages, pairSeq, pairs] = corr_RL_nhp_generateBarMovie_v1_mockup(
 % --- if mockup, uncomment the following  lines
 [condArray, params] = corr_RL_nhp_buildTrials_v1();
 c = 4; % hard code condition number
+bn = 2; % hard code block number
 codes = corr_RL_nhp_setBarCodes_v1();
 times = corr_RL_nhp_setTimes_v1();
+
 
 % --- create pairSeq vector specifying which pairs to show how many times
 % in movie in randomized order

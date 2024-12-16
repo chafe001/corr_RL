@@ -155,6 +155,9 @@ switch TrialRecord.User.params.stimulusType
     case 'bars'
 
         switch TrialRecord.User.params.pairMode
+            case 'onePairCond'
+                [movieFrames, pairSeq, pairs] = corr_RL_nhp_generateBarMovie_v1(TrialRecord);
+
             case 'randList'
                 [movieFrames, pairSeq, pairs] = corr_RL_nhp_generateBarMovie_v1(TrialRecord);
 
