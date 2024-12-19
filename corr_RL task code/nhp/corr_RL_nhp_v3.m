@@ -743,9 +743,9 @@ dashboard(4, 'SCENE: FEEDBACK (5)', 'FontSize', 8);
 scene5_start = run_scene(scene5);
 
 % --- DELIVER REWARDS
-rew.numDropsEach = 0;
-rew.numDropsBlock = 10;
-rew.dur = 100;
+rew.numDropsEach = 1;
+rew.numDropsBlock = 15;
+rew.dur = 80;
 rew.pauseTime = 100;
 
 % --- SAVE REWARD INFORMATION to Trialrecord
