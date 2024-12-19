@@ -42,8 +42,8 @@ params.numCueStim = 2;  % *** EASY ***
 params.numCueReps = 1;  % new v5
 % adding new pairing algorithm
 % params.pairMode = 'xPairs'; 
-% params.pairMode = 'randList';  % new v5
-params.pairMode = 'onePairCond'; % new training option
+params.pairMode = 'randList';  % new v5
+% params.pairMode = 'onePairCond'; % new training option
 
 params.barNoiseMode = 'breakPairs';
 % params.barNoiseMode = 'noisePairs';
@@ -66,6 +66,7 @@ params.correctToneDur = 500;
 params.correctToneFreq = 800;
 params.errorToneDur = 500;
 params.errorToneFreq = 0;
+params.fixPairSeq = true;
 
 
 % --- CURVE CONTROL
