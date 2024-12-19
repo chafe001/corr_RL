@@ -1,4 +1,4 @@
-function [movieImages, pairSeq, pairs] = corr_RL_nhp_generateBarMovie_v1(TrialRecord)
+function [movieImages, pairSeq, pairs] = corr_RL_nhp_generateBarMovie_v2_mockup()
 % This function returns a cell array, movieImages, that is used to set the
 % 'List' property of a imageChanger() object.  This controls the sequence
 % of images presented in the movie, which controls the proportion of cue
@@ -9,18 +9,18 @@ function [movieImages, pairSeq, pairs] = corr_RL_nhp_generateBarMovie_v1(TrialRe
 % v2: implementing fixed pair sequence in movies
 
 % --- if real fx, uncomment the following  lines
-condArray = TrialRecord.User.condArray;
-params = TrialRecord.User.params;
-c = TrialRecord.CurrentCondition;
-codes = TrialRecord.User.codes;
-times = TrialRecord.User.times;
+% condArray = TrialRecord.User.condArray;
+% params = TrialRecord.User.params;
+% c = TrialRecord.CurrentCondition;
+% codes = TrialRecord.User.codes;
+% times = TrialRecord.User.times;
 
 % --- if mockup, uncomment the following  lines
-% [condArray, params] = corr_RL_nhp_buildTrials_v1();
-% c = 4; % hard code condition number
-% bn = 2; % hard code block number
-% codes = corr_RL_nhp_setBarCodes_v1();
-% times = corr_RL_nhp_setTimes_v1();
+[condArray, params] = corr_RL_nhp_buildTrials_v1();
+c = 4; % hard code condition number
+bn = 2; % hard code block number
+codes = corr_RL_nhp_setBarCodes_v1();
+times = corr_RL_nhp_setTimes_v1();
 
 % --- create pairSeq vector specifying which pairs to show how many times
 % in movie in randomized order
@@ -49,8 +49,10 @@ switch params.barNoiseMode
         pairSeq(noiseIndx) = [];
         % add left stim only and right stim only
         pairSeq = [pairSeq bp_left bp_right];
-        % randomize sequence
-        pairSeq = pairSeq(randperm(size(pairSeq, 2)));
+        % randomize sequence, if not fixed
+        if ~params.fixPairSeq
+            pairSeq = pairSeq(randperm(size(pairSeq, 2)));
+        end
         % NOTE: the above should hold constant features and repetitions of
         % individual bar stimuli shown at left and right positions, but
         % brake pairing of the selected pairs.  One way to degrade

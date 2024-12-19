@@ -1,4 +1,4 @@
-function [movieImages, pairSeq, pairs] = corr_RL_nhp_generateBarMovie_v1(TrialRecord)
+function [movieImages, pairSeq, pairs] = corr_RL_nhp_generateBarMovie_v2(TrialRecord)
 % This function returns a cell array, movieImages, that is used to set the
 % 'List' property of a imageChanger() object.  This controls the sequence
 % of images presented in the movie, which controls the proportion of cue
@@ -49,8 +49,10 @@ switch params.barNoiseMode
         pairSeq(noiseIndx) = [];
         % add left stim only and right stim only
         pairSeq = [pairSeq bp_left bp_right];
-        % randomize sequence
-        pairSeq = pairSeq(randperm(size(pairSeq, 2)));
+        % randomize sequence, if not fixed
+        if ~params.fixPairSeq
+            pairSeq = pairSeq(randperm(size(pairSeq, 2)));
+        end
         % NOTE: the above should hold constant features and repetitions of
         % individual bar stimuli shown at left and right positions, but
         % brake pairing of the selected pairs.  One way to degrade
