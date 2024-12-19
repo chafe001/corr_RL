@@ -27,8 +27,8 @@ params.numBlocks = 10;  % WARNING: THIS NEEDS TO MATCH NUMBER OF BLOCKS IN CONDI
 params.repsPerCond = 4;
 params.blockChange = 'netWinsMode';
 % params.blockChange = 'condRepsMode';
-params.netWin_criterion = 15;  % number of netWins before switching block
-% params.netWin_criterion = 5;  % number of netWins before switching block
+% params.netWin_criterion = 15;  % number of netWins before switching block
+params.netWin_criterion = 3;  % number of netWins before switching block
 params.numStates = 2; % this overwritten by curveParams if curveMovie at present, but needed for bars
 
 % --- BAR CONTROL
@@ -45,8 +45,8 @@ params.numCueStim = 2;  % *** EASY ***
 params.numCueReps = 1;  % new v5
 % adding new pairing algorithm
 % params.pairMode = 'xPairs'; 
-params.pairMode = 'randList';  % new v5
-% params.pairMode = 'onePairCond'; % new training option
+% params.pairMode = 'randList';  % new v5
+params.pairMode = 'onePairCond'; % new training option
 
 params.barNoiseMode = 'breakPairs';
 % params.barNoiseMode = 'noisePairs';
@@ -69,7 +69,8 @@ params.correctToneDur = 500;
 params.correctToneFreq = 800;
 params.errorToneDur = 500;
 params.errorToneFreq = 0;
-params.fixPairSeq = true;
+params.fixPairSeq = true;  % holds order of pairs in each movie constant
+params.errorZeroRew = true;
 
 % --- CURVE CONTROL
 % determine whether to use bars with xPairs algorithm or curves with Dave's

@@ -632,7 +632,7 @@ if choices.madeValidResp
                 choices.rewardTrial = true;
                 eventmarker(TrialRecord.User.codes.sc5_joyResp_probRew);
                 TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
-                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
+                TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses; 
                 choices.resultStr = 'RESULT: WIN SELECTING LOW PROB';
             else  % --- LOSS, LOW PROB ---
                 choices.rewardTrial = false;
@@ -640,6 +640,11 @@ if choices.madeValidResp
                 TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = 'RESULT: LOSS SELECTING LOW PROB';
+            end
+
+            % zero netWins if error
+            if TrialRecord.User.params.errorZeroRew
+                TrialRecord.User.netWins = 0;
             end
         end
 
@@ -662,6 +667,12 @@ if choices.madeValidResp
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = 'RESULT: LOSS SELECTING LOW PROB';
             end
+
+            % zero netWins if error
+            if TrialRecord.User.params.errorZeroRew
+                TrialRecord.User.netWins = 0;
+            end
+
         elseif TrialRecord.User.condArray(c).state == RIGHT
             choices.choseCorrect = true;
             eventmarker(TrialRecord.User.codes.sc5_joyResp_correctChoice);
@@ -749,7 +760,7 @@ scene5_start = run_scene(scene5);
 % --- DELIVER REWARDS
 rew.numDropsEach = 0;
 rew.numDropsBlock = 10;
-rew.dur = 100;
+rew.dur = 120;
 rew.pauseTime = 100;
 
 % --- SAVE REWARD INFORMATION to Trialrecord
