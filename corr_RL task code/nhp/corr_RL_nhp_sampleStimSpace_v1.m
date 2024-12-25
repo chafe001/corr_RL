@@ -78,10 +78,10 @@ RGB_str(isspace(RGB_str)) = [];
 
 angle_str = num2str(inStim.Angle);
 
-fileName = strcat('ang_', angle_str, '_rgb_', RGB_str, '_large.png');
+% fileName = strcat('ang_', angle_str, '_rgb_', RGB_str, '_large.png');
 
 
-% fileName = strcat('ang_', angle_str, '_rgb_', RGB_str, '.png');
+fileName = strcat('ang_', angle_str, '_rgb_', RGB_str, '.png');
 
 
 end

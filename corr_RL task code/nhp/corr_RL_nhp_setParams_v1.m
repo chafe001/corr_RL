@@ -43,33 +43,22 @@ params.movieMode = 'simPairs';  % simultaneous pairs
 params.numCueStim = 2;  % *** EASY ***
 % params.numCueStim = 4;  % *** HARD ***
 params.numCueReps = 1;  % new v5
-% adding new pairing algorithm
 % params.pairMode = 'xPairs'; 
-% params.pairMode = 'randList';  % new v5
-params.pairMode = 'onePairCond'; % new training option
-
+params.pairMode = 'randList';  % new v5
 params.barNoiseMode = 'breakPairs';
 % params.barNoiseMode = 'noisePairs';
 
-% --- TRAINING FEATURES
-% blockCond sets 1 condition per block, which would require a left or right
-% response throughout the block.  This is intended to help associate
-% changes in the visual display (movie) with changes in the response
-% direction by blocking response direction.
-params.blockCond = true;
-% constantPairs will hold the same stimulus pairs constant for State A and
-% B over blocks, so don't need to learn new pair-state mappings (same
-% mapping repeats).  In v4, constant pairs also fixes relationship between
-% stim pairs and state (left vs right response) over repeated runs of the
-% program
-params.constantPairs = true;
+% --- TRAINING OPTIONS
+params.constantPairs = true;  % show fixed stim pairs over blocks
+params.onePairPerCond = true;  % show one stim pair per trial
+params.fixPairSeq = true;  % holds order of pairs in each movie constant
 params.colorCue = false;
 params.toneFeedback = true;
 params.correctToneDur = 500;
 params.correctToneFreq = 800;
 params.errorToneDur = 500;
 params.errorToneFreq = 0;
-params.fixPairSeq = true;  % holds order of pairs in each movie constant
+
 params.errorZeroRew = true;
 
 % --- CURVE CONTROL

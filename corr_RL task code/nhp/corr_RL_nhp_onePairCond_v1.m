@@ -3,14 +3,7 @@ function [stateA_pairs, stateB_pairs] = corr_RL_nhp_onePairCond_v1(blockStim, pa
 
 % VERSION HISTORY
 
-% v1: original version implementing xPairs design. Blockstim input is 4
-% stimuli, 2 at left and 2 at right screen positions.  pairStimuli
-% organized these four stimuli into 4 orthogonal pairs.  Each stimulus
-% belongs to 2 pairs instructing the two different states. This dissociates
-% stimulus features from state
-
-% v2: new pairing scheme.  Blockstim input is no longer allocated to screen
-% positions left and right. The same vector of stimuli will be shown at
+% v1: The same vector of stimuli will be shown at
 % screen left and right every trial.  Only the order of presentation will
 % be controlled to alter pairing.  
 

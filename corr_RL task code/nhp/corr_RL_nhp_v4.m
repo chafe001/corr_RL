@@ -17,7 +17,8 @@
 % per trial to simplify visual-motor association
 
 % v4: Training stage. Implementing fixed pair sequence, correct and error
-% feedback rigns, and break between blocks as options
+% feedback rigns, multiple hits reset to 0 on error, and break between 
+% blocks as options
 
 % -------------------------------------------------------------------------
 % ---------------------- TASK CONTROL SWITCHES ----------------------------
@@ -28,12 +29,6 @@
 % subject screen. Not sure there's a way to only display to experimeeer
 % screen, but I think the joystick cursor should show in replay.
 showcursor(false);
-
-% --- Multiple hits
-% require that 2-n correct trials are performed in a row before delivering
-% reward drops equal to the number of successive trials on the last trial.
-% If multipleHits = 0, then disabled
-multipleHits = 0; %3
 
 % -------------------------------------------------------------------------
 % --------------------------- CONSTANTS -----------------------------------
