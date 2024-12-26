@@ -2,12 +2,13 @@
 % ----------------  CORR_RL_NHP TRAINING SEQUENCE -----------------------
 % -----------------------------------------------------------------------
 
-% stage 1: simplest movie-joystick direction training 
+% -------------------------------------------------------------------------
+% *** STAGE 1: simplest movie-joystick direction training 
 
 % INITIAL (most forgiving) SETTINGS: 
 
 % --- allocate one trial condition to each block
-% USE conditions file: corr_RL_np_v4.blockCond.txt
+% USE conditions file: corr_RL_np_v4_blockCond.txt
 
 % note: make sure the config file has the proper Diagonal Size, Viewing
 % Distance, Conditions, and Blocks settings (copy from other config
@@ -38,8 +39,52 @@
 % SET params.lowRewProb = 0;
 
 % --- reward every hit
+% SET params.numDropsEach = 1;
+
+% *** NOTE: reward every and number of bonus rewards, along with reward
+% pulse width and delay, are now set by the setParams function
 
 % PROGRESSION:
+% --- implement multiple hits required for any reward to discourage settling in a garbage strategy
+% SET params.numDropsEach = 0;
+% SET params.zero_netWins_onError = true;
+% note: this will require getting every response correct to achieve the
+% netWins criterion and get jackpot
+
+% -------------------------------------------------------------------------
+% *** STAGE 2: enforce movie-joystick direction switching 
+
+% --- allocate two trial conditions (L/R) to each block
+% USE conditions file: corr_RL_np_v4.txt
+
+% SET params.netWin_criterion = 2;
+% SET params.numDropsEach = 0;
+% SET params.zero_netWins_onError = true;
+% note: will have to get 2 in a row correct to get any reward, this will
+% require switching on ~ 1/2 of blocks 
+
+% PROGRESSION
+% SET params.netWin_criterion = 3-5;
+
+% -------------------------------------------------------------------------
+% *** STAGE 3: allow new pairs on different program runs 
+% SET params.pairMode = 'newPairs_each_run';
+% note: this should be minimally different from stage 2, but still could be
+% challenging
+
+% -------------------------------------------------------------------------
+% *** STAGE 4: allow new pairs on different blocks of the same run
+% SET params.pairMode = 'newPairs_each_block';
+% note: this will definitely be challenging
+
+% -------------------------------------------------------------------------
+% *** STAGE 5: increase movie complexity 
+% --- increase the number of distinct stimuli and hence number of different
+% stimulus pairs shown in each movie
+% SET params.Angles = [0 45 90]; 
+
+% PROGRESSION
+% SET params.Angles = [0 45 90 135];  
 
 
 % -----------------------------------------------------------------------
