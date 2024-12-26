@@ -49,7 +49,7 @@
 % SET params.numDropsEach = 0;
 % SET params.zero_netWins_onError = true;
 % note: this will require getting every response correct to achieve the
-% netWins criterion and get jackpot
+% netWins criterion and get jackpot, so no slacking
 
 % -------------------------------------------------------------------------
 % *** STAGE 2: enforce movie-joystick direction switching 
