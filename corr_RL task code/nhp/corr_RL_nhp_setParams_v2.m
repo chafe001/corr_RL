@@ -71,9 +71,7 @@ params.noRewImg = true;  % display feedback image indicating no reward
 % decrementing by 1
 params.zero_netWins_onError = true;
 
-% --- CURVE CONTROL
-% determine whether to use bars with xPairs algorithm or curves with Dave's
-% curve generating code and Thomas' algorithm
+% --- STIMULUS TYPE CONTROL (bars or curves) 
 params.stimulusType = 'bars';
 % params.stimulusType = 'curves';
 params.nCurvesPerMovie = 8;
