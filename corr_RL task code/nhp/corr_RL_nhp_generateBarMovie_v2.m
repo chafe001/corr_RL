@@ -49,15 +49,8 @@ switch params.barNoiseMode
         pairSeq(noiseIndx) = [];
         % add left stim only and right stim only
         pairSeq = [pairSeq bp_left bp_right];
-        % randomize sequence, if not fixed
-        if ~params.fixPairSeq
-            pairSeq = pairSeq(randperm(size(pairSeq, 2)));
-        end
-        % NOTE: the above should hold constant features and repetitions of
-        % individual bar stimuli shown at left and right positions, but
-        % brake pairing of the selected pairs.  One way to degrade
-        % correlation while keeping lower level visual features constant
-        % across all movies.
+        % randomize sequence
+        pairSeq = pairSeq(randperm(size(pairSeq, 2)));
 
         for p = 1 : length(pairSeq)
 
@@ -112,12 +105,8 @@ switch params.barNoiseMode
         tblLeft = tabulate(leftStim_ids);
         tblRight = tabulate(rightStim_ids);
 
-        % if onePairCond enabled, this chokes, not sure why, disabling in
-        % this case for now
-        if ~strcmp(params.pairMode, 'onePairCond')
-            if ~isequal(tblLeft, tblRight)
-                error('unequal L and R stim in generateBarMovie_v2');
-            end
+        if ~isequal(tblLeft, tblRight)
+            error('unequal L and R stim in generateBarMovie_v2');
         end
 
         % --- CHECK THAT CUE BAR COUNTS ARE CORRECT

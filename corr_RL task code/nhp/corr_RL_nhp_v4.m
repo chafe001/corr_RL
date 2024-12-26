@@ -18,16 +18,13 @@
 
 % v4: Training stage. Implementing fixed pair sequence, correct and error
 % feedback rigns, multiple hits reset to 0 on error, and break between 
-% blocks as options
+% blocks as options.  Removing xPairs as a way to construct movies.
 
 % -------------------------------------------------------------------------
 % ---------------------- TASK CONTROL SWITCHES ----------------------------
 % -------------------------------------------------------------------------
 
 % --- Display joystick
-% This will display the joystick cursor, but for both the experimenter and
-% subject screen. Not sure there's a way to only display to experimeeer
-% screen, but I think the joystick cursor should show in replay.
 showcursor(false);
 
 % -------------------------------------------------------------------------
@@ -121,7 +118,7 @@ TrialRecord.User.times = times;
 % each trial
 if TrialRecord.CurrentTrialNumber == 1
 
-    [condArray, params] = corr_RL_nhp_buildTrials_v1();
+    [condArray, params] = corr_RL_nhp_buildTrials_v2();
 
     % store output in TrialRecord so variables live (have scope) beyond
     % this trial.  Other variables in script are only defined during the
@@ -153,18 +150,7 @@ switch TrialRecord.User.params.stimulusType
 
     case 'bars'
 
-        switch TrialRecord.User.params.pairMode
-            case 'onePairCond'
-                [movieFrames, pairSeq, pairs] = corr_RL_nhp_generateBarMovie_v2(TrialRecord);
-
-            case 'randList'
-                [movieFrames, pairSeq, pairs] = corr_RL_nhp_generateBarMovie_v2(TrialRecord);
-
-            case 'xPairs'
-                [movieFrames, pairSeq, pairs] = corr_RL_generateBarMovie_v1(TrialRecord);
-
-        end
-
+        [movieFrames, pairSeq, pairs] = corr_RL_nhp_generateBarMovie_v2(TrialRecord);
         TrialRecord.User.movieFrames = movieFrames;
         TrialRecord.User.pairSeq = pairSeq;
         TrialRecord.User.pairs = pairs;

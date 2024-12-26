@@ -8,34 +8,18 @@ function [blockStim] = corr_RL_nhp_sampleStimSpace_v1(params)
 % the next 4 stimuli as noise stimuli for the block, and returns these in
 % blockstim.
 
-% VERSION HISTORY
-
-% v1: initial effort, easyStim enabled to ensure all cue stimuli have
-% different orientations to make perceptual discrimination easier, however
-% this reduces the task to 1D (orientation), making color a distractor
-% feature. Used up through corr_RL v4. Algorithm needs to specify 4 cue stim
-% and 4 noise stim, so combination of feature dimensions has to produce 8 stimuli
-% at a minimum
-
-% v2: written at time of corr_RL v5 development.  Switching from xCorr to randomized list algorithm
-% to define correlation patterns defining state.
-
-% --- COMPUTE DIMENSIONS OF FEATURE SPACE
-numAngles = size(params.Angles, 2);
-numColors = size(params.FaceColors, 1);
-
-% --- PERMUTE FEATURES
-for a = 1:numAngles
-    for c = 1:numColors
+% --- COMPUTE ALL COMBINATIONS OF ANGLES AND COLORS
+for a = 1:params.numAngles
+    for c = 1:params.numColors
         stim(a, c).Angle = params.Angles(a);
         stim(a, c).FaceColor = params.FaceColors(c, :);
     end
 end
 
 % --- CONVERT 2D to 1D matrix
-allStim = reshape(stim, [(numAngles * numColors), 1]);
+allStim = reshape(stim, [(params.numAngles * params.numColors), 1]);
 
-% --- RANDOMLY PERMUTE 1D matrix to randomize cue and noise stimuli
+% --- RANDOMLY PERMUTE 1D matrix to randomize stimuli
 randStim = allStim(randperm(size(allStim, 1)), :);
 
 % --- ADD ID NUM to each stim to keep track of stim through process
@@ -47,7 +31,6 @@ end
 for cs = 1 : params.numCueStim
     blockStim.cue(cs).EdgeColor = randStim(cs).FaceColor;
     blockStim.cue(cs).FaceColor = randStim(cs).FaceColor;
-    blockStim.cue(cs).Size = params.Size;
     blockStim.cue(cs).Angle = randStim(cs).Angle;
     blockStim.cue(cs).FileName = findFileName(randStim(cs));
     blockStim.cue(cs).id = randStim(cs).id;
@@ -57,12 +40,10 @@ for ns = 1 : (length(randStim) - params.numCueStim)
     rndIndx = ns + params.numCueStim;
     blockStim.noise(ns).EdgeColor = randStim(rndIndx).FaceColor;
     blockStim.noise(ns).FaceColor = randStim(rndIndx).FaceColor;
-    blockStim.noise(ns).Size = params.Size;
     blockStim.noise(ns).Angle = randStim(rndIndx).Angle;
     blockStim.noise(ns).FileName = findFileName(randStim(rndIndx));
     blockStim.noise(ns).id = randStim(rndIndx).id;
 end
-
 
 bob = 1;
 
