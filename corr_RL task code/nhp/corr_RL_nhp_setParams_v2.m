@@ -66,15 +66,19 @@ params.barNoiseMode = 'breakPairs';
 
 % --- TRAINING OPTIONS
 params.colorCue = false;  % color bars for one state as crutch
-params.fixPairSeq = false;  % hold pair sequence constant over trials
+params.fixPairSeq = false;  % hold pair order within movies constant over trials
 
+% --- control feedback
 params.toneFeedback = true;
 params.correctToneDur = 500;
 params.correctToneFreq = 800;
 params.errorToneDur = 500;
 params.errorToneFreq = 0;
+params.errorFeedback = true;  % enable visual stim for error feedback
 
-params.errorZeroRew = true;
+% --- simulate multiple hits by zeroing networks on each error, rather than
+% decrementing by 1
+params.zero_netWins_onError = true;
 
 % --- CURVE CONTROL
 % determine whether to use bars with xPairs algorithm or curves with Dave's

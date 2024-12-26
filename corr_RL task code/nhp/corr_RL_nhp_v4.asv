@@ -682,7 +682,7 @@ else  % NO VALID RESPONSE
 end
 
 % if enabled, simulate multiple hits by zeroing newtins on error
-if params.zero_netWins_onError && choices.choseCorrect == false
+if params.zero_netWins_onError
     TrialRecord.User.netWins = 0;
 end
 
