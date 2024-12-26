@@ -18,7 +18,8 @@ params.numStates = 2; % this overwritten by curveParams if curveMovie at present
 
 % --- bar stim angle range
 % params.Angles = [0 90];
-params.Angles = [0 45 90 135];  
+params.Angles = [0 45 90];  
+% params.Angles = [0 45 90 135];  
 % params.Angles = [0 30 60 90 120 150];
 
 % --- bar stim color range
@@ -55,9 +56,9 @@ params.movieMode = 'simPairs';  % simultaneous pairs
 % controlling what stim are generated and how they are paired to cue
 % state 
 
-% params.pairMode = 'newPairs_each_block'; % generate new stim lists each block
+params.pairMode = 'newPairs_each_block'; % generate new stim lists each block
 % params.pairMode = 'newPairs_each_run'; % generate new stim list once at program start, but randomize
-params.pairMode = 'fixedPairs'; % same stim pairs same order, all blocks and all runs
+% params.pairMode = 'fixedPairs'; % same stim pairs same order, all blocks and all runs
 
 % --- control how stim correlation is degraded
 params.barNoiseMode = 'breakPairs';
