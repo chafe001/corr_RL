@@ -26,17 +26,17 @@ switch params.numCueStim
 
     case 3
         % stateA
-        % 1 2
+        % 1 3
         % 2 1
-        % 3 3
+        % 3 2
 
         % stateB
-        % 1 3
+        % 1 2
         % 2 3
         % 3 1
 
-        stateA_pairVect = [1 2; 2 1; 3 3];
-        stateB_pairVect = [1 3; 2 3; 3 1];
+        stateA_pairVect = [1 3; 2 1; 3 2];
+        stateB_pairVect = [1 2; 2 3; 3 1];
 
     case 4
         % stateA

@@ -26,17 +26,17 @@ switch params.numCueStim
 
     case 3
         % stateA
-        % 1 2
+        % 1 3
         % 2 1
-        % 3 3
+        % 3 2
 
         % stateB
-        % 1 3
+        % 1 2
         % 2 3
         % 3 1
 
-        stateA_pairVect = [1 2; 2 1; 3 3];
-        stateB_pairVect = [1 3; 2 3; 3 1];
+        stateA_pairVect = [1 3; 2 1; 3 2];
+        stateB_pairVect = [1 2; 2 3; 3 1];
 
     case 4
         % stateA
@@ -51,10 +51,8 @@ switch params.numCueStim
         % 3 2
         % 4 1
 
-        stateA_pairVect = [1 2; 2 1; 3 3];
-        stateB_pairVect = [1 3; 2 3; 3 1];
-
-
+        stateA_pairVect = [1 3; 2 1; 3 4; 4 2];
+        stateB_pairVect = [1 4; 2 3; 3 2; 4 1];
 
     otherwise
 
@@ -62,37 +60,6 @@ switch params.numCueStim
 
 
 end
-
-
-stateA_leftVect = (1:params.numCueStim)';  % start with vector 1:n for left
-% randomly permute this vector for right stim
-stateA_rightVect = stateA_leftVect(randperm(params.numCueStim));
-% combine left and right to make pair for stateA
-stateA_pairVect = [stateA_leftVect stateA_rightVect];
-
-% --- generates pairs of left and right stimuli for stateB.  Make sure
-% stateB pairs ~= stateA pairs
-stateB_leftVect = (1:params.numCueStim)';  % start with vector 1:n for left
-% search for stateB_rightVect that is different from stateA_rightvect to
-% keep pairs distinct between states
-
-bFound = false;
-while ~bFound
-    % generate test stateB_rightVect
-    stateB_rightVect = stateB_leftVect(randperm(params.numCueStim));
-    % pair with stateB_leftVect
-    stateB_pairVect = [stateB_leftVect stateB_rightVect];
-    % ensure stateB_pairVect ~= stateA_pairVect (states have distinct
-    % pairs). Check for rows common to both stateA_pairVect and
-    % stateB_pairVect, if there are none, good to go.
-    samePairs = ismember(stateA_pairVect, stateB_pairVect, 'rows');
-    if sum(samePairs) == 0  % no rows in common bwt stateA and stateB
-        bFound = true;
-    end
-end
-
-
-% --- USE SEQUENCE OF L/R STIM NUMS TO BUILD PAIR STRUCT
 
 % --- STATE A PAIRS
 stateA_ids = [];
@@ -109,7 +76,7 @@ end
 
 % --- STATE B PAIRS
 stateB_ids = [];
-for p = 1 : length(stateB_leftVect)  % same number of cue pairs as number of cue stimuli
+for p = 1 : length(stateB_pairVect)  % same number of cue pairs as number of cue stimuli
     stateB_pairs(p).leftStim = blockStim.cue(stateB_pairVect(p, 1));
     stateB_pairs(p).leftStim.Position = params.leftPos;
     stateB_pairs(p).rightStim = blockStim.cue(stateB_pairVect(p, 2));
@@ -120,10 +87,5 @@ for p = 1 : length(stateB_leftVect)  % same number of cue pairs as number of cue
     stateB_ids = [stateB_ids; stateB_pairs(p).pairID ];
 end
 
-
-
-% --- CHECK PAIRS to make sure so pairs in common across state
-
-bob = 1;
 
 end
