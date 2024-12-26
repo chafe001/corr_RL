@@ -57,7 +57,7 @@ params.barNoiseMode = 'breakPairs';
 
 % --- TRAINING OPTIONS
 params.colorCue = false;  % color bars for one state as crutch
-params.fixPairSeq = false;  % hold pair order within movies constant over trials
+params.fixPairSeq = true;  % hold pair order within movies constant over trials
 
 % --- control feedback
 params.toneFeedback = true;
