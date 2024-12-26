@@ -17,8 +17,8 @@ params.numStates = 2; % this overwritten by curveParams if curveMovie at present
 % --- INDIVIDUAL STIMULUS CONTROL
 
 % --- bar stim angle range
-% params.Angles = [0 90];
-params.Angles = [0 45 90];  
+params.Angles = [0 90];
+% params.Angles = [0 45 90];  
 % params.Angles = [0 45 90 135];  
 % params.Angles = [0 30 60 90 120 150];
 
@@ -56,8 +56,8 @@ params.movieMode = 'simPairs';  % simultaneous pairs
 % controlling what stim are generated and how they are paired to cue
 % state 
 
-params.pairMode = 'newPairs_each_block'; % generate new stim lists each block
-% params.pairMode = 'newPairs_each_run'; % generate new stim list once at program start, but randomize
+% params.pairMode = 'newPairs_each_block'; % generate new stim lists each block
+params.pairMode = 'newPairs_each_run'; % generate new stim list once at program start, but randomize
 % params.pairMode = 'fixedPairs'; % same stim pairs same order, all blocks and all runs
 
 % --- control how stim correlation is degraded
@@ -65,10 +65,9 @@ params.barNoiseMode = 'breakPairs';
 % params.barNoiseMode = 'noisePairs';
 
 % --- TRAINING OPTIONS
-% params.constantPairs = true;  % show fixed stim pairs over blocks
-% params.onePairPerCond = true;  % show one stim pair per trial
-% params.fixPairSeq = true;  % holds order of pairs in each movie constant
-params.colorCue = false;
+params.colorCue = false;  % color bars for one state as crutch
+params.fixPairSeq = false;  % hold pair sequence constant over trials
+
 params.toneFeedback = true;
 params.correctToneDur = 500;
 params.correctToneFreq = 800;

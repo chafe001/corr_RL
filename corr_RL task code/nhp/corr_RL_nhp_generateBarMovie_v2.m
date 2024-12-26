@@ -49,8 +49,10 @@ switch params.barNoiseMode
         pairSeq(noiseIndx) = [];
         % add left stim only and right stim only
         pairSeq = [pairSeq bp_left bp_right];
-        % randomize sequence
-        pairSeq = pairSeq(randperm(size(pairSeq, 2)));
+        % randomize sequence, if not fixed for training
+        if ~params.fixPairSeq
+            pairSeq = pairSeq(randperm(size(pairSeq, 2)));
+        end
 
         for p = 1 : length(pairSeq)
 
