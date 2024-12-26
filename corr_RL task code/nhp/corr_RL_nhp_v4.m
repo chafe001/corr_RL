@@ -187,7 +187,7 @@ b = TrialRecord.CurrentBlock;
 
 % set the choice feebback images
 choices.rewImg = 'rewRing.png';
-choices.errorImg = 'errorCross.png';
+choices.noRewImg = 'noRewCross.png';
 choices.choiceImg = 'choiceRing.png';
 
 % init choice variables
@@ -623,7 +623,7 @@ else  % NO VALID RESPONSE
 end % made valid reponse
 
 
-% --- DETERMINE PROBABILISTIC/DETERMINISTIC REWARD TRIAL
+% --- DETERMINE PROBABILISTIC/DETERMINISTIC REWARD 
 % select random number between 0 and 1 to determine probabilistic reward
 % if high rew prob == 1 and low rew prob == 0, this is equivalent to
 % deterministic reward
@@ -689,24 +689,33 @@ netWinBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
 rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWinBox_height], [netWinBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 
 % --- INSTANTIATE IMAGECHANGER OBJ for FEEDBACK MOVIE
+% base visual feedback on probabilistic reward rather than whether correct
+% (high prob) choice was made or not.  Rationale is that all correlates of
+% reward (juice, tone, increment of counter) should reflect probabilistic
+% reward to keep cues consistent and not confound RL modeling with
+% conflicting feedback for correct direction and probabilistic reward
+% delivery
 sc5_rewImg = ImageChanger(rewBox);
 if choices.madeValidResp
     if choices.rewardTrial
         sc5_rewImg.List = ...
-            {{choices.choiceImg}, [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.sc5_joyResp_choiceRingOn; ...
-            {choices.rewImg}, [0 0], times.sc5_rewRing_frames, TrialRecord.User.codes.sc5_joyResp_rewRingOn};  
+            {{choices.choiceImg}, [0 0], times.sc5_choiceImg_frames, TrialRecord.User.codes.sc5_joyResp_choiceImgOn; ...
+            {choices.rewImg}, [0 0], times.sc5_rewImg_frames, TrialRecord.User.codes.sc5_joyResp_rewImgOn};
+    elseif TrialRecord.User.params.noRewImg
+        sc5_rewImg.List = ...
+            {{choices.choiceImg}, [0 0], times.sc5_choiceImg_frames, TrialRecord.User.codes.sc5_joyResp_choiceImgOn; ...
+            {choices.noRewImg}, [0 0], times.sc5_noRewImg_frames, TrialRecord.User.codes.sc5_joyResp_noRewImgOn};
     else
         sc5_rewImg.List = ...
-            {{choices.choiceImg}, [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.sc5_joyResp_choiceRingOn};
+            {{choices.choiceImg}, [0 0], times.sc5_choiceImg_frames, TrialRecord.User.codes.sc5_joyResp_choiceImgOn};
     end
 else
     sc5_rewImg.List = ...
-        {[], [0 0], times.sc5_choiceRing_frames, TrialRecord.User.codes.noResp};
+        {[], [0 0], times.sc5_choiceImg_frames, TrialRecord.User.codes.noResp};
 
 end
 
 % --- INSTANTIATE TONE FEEDBACK, IF ENABLED
-
 if TrialRecord.User.params.toneFeedback
     sc5_tone_feedback = AudioSound(sc5_rewImg);
     if choices.rewardTrial

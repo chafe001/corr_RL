@@ -37,8 +37,9 @@ switch COMPUTER
         times.sc4_joy_holdTime_ms = 75;
 
         % --- sc5: feedback
-        times.sc5_choiceRing_frames = 10;
-        times.sc5_rewRing_frames = 10;
+        times.sc5_choiceImg_frames = 10;
+        times.sc5_rewImg_frames = 10;
+        times.sc5_noRewImg_frames = 10;
 
 
     case 'DESKTOP-7CHQEHS'
@@ -74,8 +75,9 @@ switch COMPUTER
         times.sc4_joy_holdTime_ms = 75;
 
         % --- sc5: feedback
-        times.sc5_choiceRing_frames = 10;
-        times.sc5_rewRing_frames = 10;
+        times.sc5_choiceImg_frames = 10;
+        times.sc5_rewImg_frames = 10;
+        times.sc5_noRewImg_frames = 10;
 
     case 'MATT_MICRO'
         % video runs at 120 Hz
@@ -110,9 +112,9 @@ switch COMPUTER
         times.sc4_joy_holdTime_ms = 75;
 
         % --- sc5: feedback
-        times.sc5_choiceRing_frames = 10;
-        times.sc5_rewRing_frames = 10;       % TOTAL FEEDBACK DURATION: Time required to hold eye and joystick fixation at center while feedback ring appears.
-
+        times.sc5_choiceImg_frames = 10;
+        times.sc5_rewImg_frames = 10;      
+        times.sc5_noRewImg_frames = 10;
 
     case 'LAPTOP-42DLT8TH'
                % video runs at 60 Hz
@@ -147,8 +149,9 @@ switch COMPUTER
         times.sc4_joy_holdTime_ms = 75;
 
         % --- sc5: feedback
-        times.sc5_choiceRing_frames = 10;
-        times.sc5_rewRing_frames = 10;
+        times.sc5_choiceImg_frames = 10;
+        times.sc5_rewImg_frames = 10;
+        times.sc5_noRewImg_frames = 10;
 
     case 'DAVIDLAPTOP'
                 % video runs at 60 Hz
@@ -183,8 +186,9 @@ switch COMPUTER
         times.sc4_joy_holdTime_ms = 75;
 
         % --- sc5: feedback
-        times.sc5_choiceRing_frames = 10;
-        times.sc5_rewRing_frames = 10;
+        times.sc5_choiceImg_frames = 10;
+        times.sc5_rewImg_frames = 10;
+        times.sc5_noRewImg_frames = 10;
 
     case '3080Y25-G0Y3FF'
         % augsburg desktop at 60 Hz (copied from DESKTOP-RJQAES2)
@@ -220,8 +224,9 @@ switch COMPUTER
         times.sc4_joy_holdTime_ms = 75;
 
         % --- sc5: feedback
-        times.sc5_choiceRing_frames = 10;
-        times.sc5_rewRing_frames = 10;
+        times.sc5_choiceImg_frames = 10;
+        times.sc5_rewImg_frames = 10;
+        times.sc5_noRewImg_frames = 10;
 
     case 'DESKTOP-RJQAES2'
 
@@ -258,8 +263,9 @@ switch COMPUTER
         times.sc4_joy_holdTime_ms = 75;
 
         % --- sc5: feedback
-        times.sc5_choiceRing_frames = 10;
-        times.sc5_rewRing_frames = 10;
+        times.sc5_choiceImg_frames = 10;
+        times.sc5_rewImg_frames = 10;
+        times.sc5_noRewImg_frames = 10;
 
     case 'DESKTOP-RV80PF6'  % lab monkeyLogic computer
 
@@ -282,10 +288,6 @@ switch COMPUTER
         times.sc3_stim_frames = 18; % *** EASY ***
         times.sc3_interPair_frames = 10; % *** EASY ***
 
-        % faster timing for more bars per trials
-%         times.sc3_stim_frames = 10;  % *** HARD ***
-%         times.sc3_interPair_frames = 5; % *** HARD ***
-
         times.sc3_soa_frames = 2;
 
         times.sc3_curve_frames = 10;
@@ -302,8 +304,9 @@ switch COMPUTER
         times.sc4_joy_holdTime_ms = 75;
 
         % --- sc5: feedback
-        times.sc5_choiceRing_frames = 10;
-        times.sc5_rewRing_frames = 10;
+        times.sc5_choiceImg_frames = 10;
+        times.sc5_rewImg_frames = 10;
+        times.sc5_noRewImg_frames = 10;
 
 
 
@@ -326,8 +329,8 @@ times.postMovieDur = 30;
 times.sc1_pretrial_frames = 30;
 times.sc2_movie_maxFrames = 1000;
 times.sc3_feedback_frames = 500; % duration of scene depends on choice ring timing
-times.choiceRing_frames = 10;
-times.rewRing_frames = 10;               % screen refresh units
+times.choiceImg_frames = 10;
+times.rewImg_frames = 10;               % screen refresh units
 
 
 

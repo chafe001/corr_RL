@@ -26,8 +26,9 @@ codes.sc5_joyResp_incorrectChoice = 35;
 codes.sc5_joyResp_probRew = 36;
 codes.sc5_joyResp_probNoRew = 37;
 codes.sc5_joyResp_rewDrop = 38;
-codes.sc5_joyResp_choiceRingOn = 40;
-codes.sc5_joyResp_rewRingOn = 41;
+codes.sc5_joyResp_choiceImgOn = 40;
+codes.sc5_joyResp_rewImgOn = 41;
+codes.sc5_joyResp_noRewImgOn = 42;
 % error codes
 codes.neverFix = 50;
 codes.brokeGazeFix = 51;
