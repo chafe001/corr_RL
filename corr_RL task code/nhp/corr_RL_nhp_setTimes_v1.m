@@ -85,7 +85,7 @@ switch COMPUTER
 
         % --- sc6: post trial
         times.sc6_postTrial_short_ms = 500;
-        times.sc6_postTrial_long_ms = 10000;
+        times.sc6_postTrial_long_ms = 2000;
 
     case 'MATT_MICRO'
         % new Dell laptop @ 120 Hz

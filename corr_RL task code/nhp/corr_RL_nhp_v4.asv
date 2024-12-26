@@ -359,6 +359,8 @@ netWinBox_faceColor = [0.3010 0.7459 0.9330];
 % of the white bar is screen center -1/2 black bar width +1/2 white bar
 % width
 netWinBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
+
+% rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWinBox_center TrialRecord.User.TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWinBox_height], [netWinBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 
 % pass rewBox to TimeCounter
@@ -726,6 +728,7 @@ TrialRecord.User.Choices = choices;
 % --- UPDATE REWARD BOX WITH THIS RESULT
 netWinBox_width = TrialRecord.User.netWins * TrialRecord.User.params.rewBox_degPerWin;
 netWinBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
+% rewBox.List = {[1 1 1], [1 1 1], [netWinBox_width netWinBox_height], [netWinBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWinBox_height], [netWinBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 
 % --- INSTANTIATE IMAGECHANGER OBJ for FEEDBACK MOVIE
@@ -804,27 +807,22 @@ end
 % -------------------------------------------------------------------------
 % SCENE 6: POST TRIAL
 
-% --- instantiate TimeCounter
+% instantiate TimeCounter
 sc6_tc = TimeCounter(null_);
+
+sc6_postTrial = AllContinue(sc6_tc);
+sc6_joyResp.add(rewBox);
 
 if TrialRecord.User.netWins == TrialRecord.User.params.netWin_criterion
     sc6_tc.Duration = times.sc6_postTrial_long_ms;
     dashboard(4, 'SCENE: POST TRIAL LONG (6)', 'FontSize', 8);
-    % --- RESET NETWINS BAR TO 0 
-    netWinBox_width = 0;
-    netWinBox_center = (netWinBox_width / 2) - (maxWinBox_width / 2);
-    rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWinBox_height], [netWinBox_center TrialRecord.User.params.rewBox_yPos]; [0 0 0], [0 0 0], [maxWinBox_width netWinBox_height], [0 TrialRecord.User.params.rewBox_yPos - netWinBox_height]};
 else
     sc6_tc.Duration = times.sc6_postTrial_short_ms;
     dashboard(4, 'SCENE: POST TRIAL SHORT (6)', 'FontSize', 8);
 end
 
-% --- add reward box
-sc6_postTrial = AllContinue(sc6_tc);
-sc6_postTrial.add(rewBox);
-
 % --- RUN SCENE
-scene6 = create_scene(sc6_postTrial);
+scene6 = create_scene(sc6_tc);
 run_scene(scene6, TrialRecord.User.codes.sc6_postTrial);
 
 

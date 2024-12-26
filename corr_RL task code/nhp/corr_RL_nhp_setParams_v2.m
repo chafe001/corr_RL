@@ -82,6 +82,12 @@ params.nCurvesPerMovie = 8;
 params.highRewProb = 1;
 params.lowRewProb = 0;
 
+% --- REWARD NUMBER AND SETTINGS
+params.numDropsEach = 0;
+params.numDropsBlock = 10;
+params.dur = 120;
+params.pauseTime = 100;
+
 % --- JOYSTICK RESPONSE WINDOW
 params.leftJoyRespWin = [-8, 0];
 params.rightJoyRespWin = [8, 0];
