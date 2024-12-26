@@ -78,24 +78,6 @@ function [stateA_pairs, stateB_pairs] = corr_RL_nhp_pairStimuli_v2(blockStim, pa
 LEFT = 1;
 RIGHT = 2;
 
-
-% % generate fixed seqeunce of numbers without randomization to create a
-% % constant sequence of stimulus pairs for stateA and stateB
-% forwardVect = (1:params.numCueStim)';
-% backwardVect = (params.numCueStim:-1:1)';
-%
-% stateA_leftVect = forwardVect;
-% stateA_rightVect = forwardVect;
-% stateA_pairVect = [stateA_leftVect stateA_rightVect];
-%
-% stateB_leftVect = forwardVect;
-% stateB_rightVect = backwardVect;
-% stateB_pairVect = [stateB_leftVect stateB_rightVect];
-%
-% bob = 1;
-
-
-
 stateA_leftVect = (1:params.numCueStim)';  % start with vector 1:n for left
 % randomly permute this vector for right stim
 stateA_rightVect = stateA_leftVect(randperm(params.numCueStim));
@@ -124,9 +106,7 @@ while ~bFound
 end
 
 
-
-
-% --- USE SEQUENCE OF L/R STIM NUMS TO BUILD PAIR STRUCT
+% --- TRANSLATE INDICES (VECT) INTO BLOCKSTIM INTO STIM PAIRS FOR EA STATE
 
 % --- STATE A PAIRS
 stateA_ids = [];
@@ -143,7 +123,7 @@ end
 
 % --- STATE B PAIRS
 stateB_ids = [];
-for p = 1 : length(stateB_leftVect)  % same number of cue pairs as number of cue stimuli
+for p = 1 : length(stateB_pairVect)  % same number of cue pairs as number of cue stimuli
     stateB_pairs(p).leftStim = blockStim.cue(stateB_pairVect(p, 1));
     stateB_pairs(p).leftStim.Position = params.leftPos;
     stateB_pairs(p).rightStim = blockStim.cue(stateB_pairVect(p, 2));
@@ -153,10 +133,6 @@ for p = 1 : length(stateB_leftVect)  % same number of cue pairs as number of cue
     % accumulate ids for pair checking below
     stateB_ids = [stateB_ids; stateB_pairs(p).pairID ];
 end
-
-
-
-% --- CHECK PAIRS to make sure so pairs in common across state
 
 bob = 1;
 

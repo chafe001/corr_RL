@@ -73,8 +73,6 @@ switch params.stimulusType
                     end
                 end
 
-                bob = 1;
-
             case 'newPairs_each_run'
                 % sampleStimSpace and pairStimuli once and hold constant
                 % over blocks, to simplify learning.  New stimuli and pairs
@@ -133,26 +131,14 @@ switch params.stimulusType
                     end
                 end
 
-                bob = 1;
-
-
             case 'fixedPairs'
                 % hard code stim pairs to facilitate learning pair-state
                 % relationship
 
-                % --- 1. select feature combinations of individual stimuli for this block
-                [blockStim] = corr_RL_nhp_sampleStimSpace_v1(params);  % new for corr_RL v5
-
-
-
-
-
-
-
-
-
-                % --- 2. map unique stimulus pairs to LEFT and RIGHT responses
-                [stateA_pairs, stateB_pairs] = corr_RL_nhp_pairStimuli_v2(blockStim, params); % new for corr_RL v5
+                % --- 1. FIX feature combinations of individual stimuli for this block
+                [blockStim] = corr_RL_nhp_fixStimSpace_v1(params);  % new for corr_RL v5
+                % --- 2. FIX stimulus pairs associated with stateA and stateB
+                [stateA_pairs, stateB_pairs] = corr_RL_nhp_fixStimPairs_v1(blockStim, params); % new for corr_RL v5
                 % --- 3. recolor stateA or stateB pairs if color cue enabled
                 if params.colorCue
                     [stateA_pairs] = recolorStim(stateA_pairs);
@@ -200,13 +186,9 @@ switch params.stimulusType
                         condArray = [condArray; thisCond];
                     end
                 end
-
-                bob = 1;
-
-
-
         end
 
+        bob = 1;
 
     case 'curves'
 
