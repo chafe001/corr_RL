@@ -3,11 +3,71 @@ function [stateA_pairs, stateB_pairs] = corr_RL_nhp_pairStimuli_v2(blockStim, pa
 % and returns the stimuli organized into unique pairs associated with stateA and
 % stateB. 
 
+% The algorithm generates a n x 2 matrix of integers indicating which 
+% stimuli to show at left (first col) and right (second col) locations in
+% the display.  The numbers are used as indices into the blockStim array
+% containing the stimulus info (filename) used to generate movies later.
+
+% Rows in the matrix is equal to number of pairs specified.
+% Two matrices are generated, one for stateA, one for stateB that have
+% unique pairs (no pairs in common), but that have equal numbers of pairs
+% and equal numbers of stimulus repetitions on each side.  The intention is
+% that movies generated using these pairs will not vary in low level visual
+% features between states.
+
+% example: stateA_pairs = 
+% 1  3
+% 2  2
+% 3  4
+% 4  1
+
+% stateB_pairs
+% 1  2
+% 2  4
+% 3  1
+% 4  3
+
+% --- Desired functionality, achieved by interaction between buildTrials,
+% sampleStimSpace, and pairStimuli:
+
+% 1. randomized pairs at the start of each block (final design)
+% 2. randomized pairs at start of run but held constant over blocks, 
+% varying (randomly initialized) over runs of the program (training stage)
+% 3. fixed pairs at start of run held constant over blocks, and over runs
+% of the program (training stage).  To implement must modify 
+% sampleStimSpace so that it is not random, as pairStimuli only
+% produces indices into the blockStim structure produced by 
+% sampleStimSpace, and if stimuli in blockStim vary, using a fixed set of 
+% indices into blockStim will yield  different stimuli and produce 
+% different movies
+
+% 4. one pair per state, and one pair per trial (training stage)
+
+% To generate stateA pairs, the algorithm
+
+% 1. generates a sequential list indicating the cues to show on the left 
+% side of the display, from 1:n where n is the params.numCueStim, defined 
+% as the number of combinations of angles and colors specified,
+
+% 2. then randomly permutes this list to determine the stimuli to show on
+% the right side of the display for each pair.  This yields the output
+% variable stateA_pairs
+
+% To generate stateB pairs the algorithm
+
+% 1. generates a sequential list indicating the cues to show on the left 
+% side of the display, from 1:n where n is the params.numCueStim, defined 
+% as the number of combinations of angles and colors specified (as above),
+
+% 2. continues to randomly permute this list to determine the stimuli to
+% show on the right side of the display for each pair, until the newly
+% generated matrix has no pairs in common with stateA_pairs.  This
+% determines the output variable stateB_pairs.
+
 % VERSION HISTORY
 
-% v1: The same vector of stimuli will be shown at
-% screen left and right every trial.  Only the order of presentation will
-% be controlled to alter pairing.  
+% v1: first implementation for nhp of the algorithm defining stateA and
+% stateB as different pairings of the same set of stimuli
 
 % v2: adding onePair functionality, where only a single pair is shown each
 % trial (and generalization happens over trials)
@@ -15,17 +75,6 @@ function [stateA_pairs, stateB_pairs] = corr_RL_nhp_pairStimuli_v2(blockStim, pa
 % --- constants
 LEFT = 1;
 RIGHT = 2;
-
-% --- RANDOMLY PAIR LEFT and RIGHT CUE STIMULI
-% generate vectors of numbers specifying which stimuli will be shown on the
-% left and right sides of the display over frames in the movie. Numbers in
-% vector serve as indices into blockStim, and control which stimuli are
-% selected for each pair
-
-% desired behaviors:
-% 1. fixed pairs: the same stimulus pairs are shown for state A and B in every
-% block.  
-% 3. one pair: one stimulus pair per trial
 
 if params.constantPairs
     % generate fixed seqeunce of numbers without randomization to create a
