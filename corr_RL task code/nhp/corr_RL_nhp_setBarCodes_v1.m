@@ -29,6 +29,7 @@ codes.sc5_joyResp_rewDrop = 38;
 codes.sc5_joyResp_choiceImgOn = 40;
 codes.sc5_joyResp_rewImgOn = 41;
 codes.sc5_joyResp_noRewImgOn = 42;
+codes.sc6_postTrial = 43;
 % error codes
 codes.neverFix = 50;
 codes.brokeGazeFix = 51;

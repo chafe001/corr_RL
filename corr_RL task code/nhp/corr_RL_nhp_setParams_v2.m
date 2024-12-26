@@ -64,7 +64,7 @@ params.toneFeedback = true;
 params.correctToneDur = 500;
 params.correctToneFreq = 800;
 params.errorToneDur = 500;
-params.errorToneFreq = 0;
+params.errorToneFreq = 100;
 params.noRewImg = true;  % display feedback image indicating no reward
 
 % --- simulate multiple hits by zeroing networks on each error, rather than

@@ -585,7 +585,6 @@ end
 % -------------------------------------------------------------------------
 % SCENE 5: GIVE PROBABILISTIC REWARD AND DISPLAY FEEDBACK
 
-
 % --- DETERMINE WHETHER CORRECT RESPONSE WAS MADE 
 % correct means subj selected the high reward probability choice given
 % the state indicated by the cue movie
@@ -769,7 +768,26 @@ switch TrialRecord.User.params.stimulusType
 
 end
 
+% -------------------------------------------------------------------------
+% SCENE 6: POST TRIAL
 
+% instantiate TimeCounter
+sc6_tc = TimeCounter(null_);
+
+if TrialRecord.User.netWins == TrialRecord.User.params.netWin_criterion
+    sc6_tc.Duration = times.sc6_postTrial_long_ms;
+    dashboard(4, 'SCENE: POST TRIAL LONG (6)', 'FontSize', 8);
+else
+    sc6_tc.Duration = times.sc6_postTrial_short_ms;
+    dashboard(4, 'SCENE: POST TRIAL SHORT (6)', 'FontSize', 8);
+end
+
+% --- RUN SCENE
+scene6 = create_scene(sc6_tc);
+run_scene(scene6, TrialRecord.User.codes.sc6_postTrial);
+
+
+% -------------------------------------------------------------------------
 % --- SAVE DATA TO BHV2 FILE
 % NOTE!!: Make sure 'File type' dropdown in GUI is set to BHV2.  Matlab
 % format (.mat) works but can't figure out how to control which variables

@@ -691,7 +691,10 @@ rewBox.List = {netWinBox_edgeColor, netWinBox_faceColor, [netWinBox_width netWin
 % --- INSTANTIATE IMAGECHANGER OBJ for FEEDBACK MOVIE
 % base visual feedback on probabilistic reward rather than whether correct
 % (high prob) choice was made or not.  Rationale is that all correlates of
-% reward (
+% reward (juice, tone, increment of counter) should reflect probabilistic
+% reward to keep cues consistent and not confound RL modeling with
+% conflicting feedback for correct direction and probabilistic reward
+% delivery
 sc5_rewImg = ImageChanger(rewBox);
 if choices.madeValidResp
     if choices.rewardTrial
@@ -713,7 +716,6 @@ else
 end
 
 % --- INSTANTIATE TONE FEEDBACK, IF ENABLED
-
 if TrialRecord.User.params.toneFeedback
     sc5_tone_feedback = AudioSound(sc5_rewImg);
     if choices.rewardTrial
@@ -766,6 +768,17 @@ switch TrialRecord.User.params.stimulusType
         dashboard(2, respStr, [0 0 0], 'FontSize', 8);
 
 end
+
+% -------------------------------------------------------------------------
+% SCENE 6: POST TRIAL
+
+
+
+
+
+
+
+
 
 
 % --- SAVE DATA TO BHV2 FILE

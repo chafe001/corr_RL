@@ -6,7 +6,7 @@ COMPUTER = getenv('COMPUTERNAME');
 switch COMPUTER
     case 'MATTWALLIN'
         % video runs at 60 Hz
-
+        
         % --- sc1: preTrial
         times.sc1_preTrial_ms = 1000;
 
@@ -47,8 +47,8 @@ switch COMPUTER
 
 
     case 'DESKTOP-7CHQEHS'
-        % HOME OFFICE @ 60 Hz refresh
-
+        % video runs at 60 Hz
+        
         % --- sc1: preTrial
         times.sc1_preTrial_ms = 1000;
 
@@ -83,13 +83,9 @@ switch COMPUTER
         times.sc5_rewImg_frames = 10;
         times.sc5_noRewImg_frames = 10;
 
-        % --- sc6: post trial
-        times.sc6_postTrial_short_ms = 500;
-        times.sc6_postTrial_long_ms = 10000;
-
     case 'MATT_MICRO'
-        % new Dell laptop @ 120 Hz
-
+        % video runs at 120 Hz
+        
         % --- sc1: preTrial
         times.sc1_preTrial_ms = 1000;
 
@@ -121,16 +117,12 @@ switch COMPUTER
 
         % --- sc5: feedback
         times.sc5_choiceImg_frames = 10;
-        times.sc5_rewImg_frames = 10;
+        times.sc5_rewImg_frames = 10;      
         times.sc5_noRewImg_frames = 10;
-
-        % --- sc6: post trial
-        times.sc6_postTrial_short_ms = 500;
-        times.sc6_postTrial_long_ms = 2000;
 
     case 'LAPTOP-42DLT8TH'
-        % video runs at 60 Hz
-
+               % video runs at 60 Hz
+        
         % --- sc1: preTrial
         times.sc1_preTrial_ms = 1000;
 
@@ -164,14 +156,10 @@ switch COMPUTER
         times.sc5_choiceImg_frames = 10;
         times.sc5_rewImg_frames = 10;
         times.sc5_noRewImg_frames = 10;
-
-        % --- sc6: post trial
-        times.sc6_postTrial_short_ms = 500;
-        times.sc6_postTrial_long_ms = 2000;
 
     case 'DAVIDLAPTOP'
-        % video runs at 60 Hz
-
+                % video runs at 60 Hz
+        
         % --- sc1: preTrial
         times.sc1_preTrial_ms = 1000;
 
@@ -205,15 +193,11 @@ switch COMPUTER
         times.sc5_choiceImg_frames = 10;
         times.sc5_rewImg_frames = 10;
         times.sc5_noRewImg_frames = 10;
-
-        % --- sc6: post trial
-        times.sc6_postTrial_short_ms = 500;
-        times.sc6_postTrial_long_ms = 2000;
 
     case '3080Y25-G0Y3FF'
         % augsburg desktop at 60 Hz (copied from DESKTOP-RJQAES2)
-        % video runs at 60 Hz
-
+                % video runs at 60 Hz
+        
         % --- sc1: preTrial
         times.sc1_preTrial_ms = 1000;
 
@@ -247,14 +231,12 @@ switch COMPUTER
         times.sc5_choiceImg_frames = 10;
         times.sc5_rewImg_frames = 10;
         times.sc5_noRewImg_frames = 10;
-
-        % --- sc6: post trial
-        times.sc6_postTrial_short_ms = 500;
-        times.sc6_postTrial_long_ms = 2000;
 
     case 'DESKTOP-RJQAES2'
-        % video runs at 60 Hz
 
+        % laptop at 120 Hz
+                % video runs at 60 Hz
+        
         % --- sc1: preTrial
         times.sc1_preTrial_ms = 1000;
 
@@ -288,15 +270,11 @@ switch COMPUTER
         times.sc5_choiceImg_frames = 10;
         times.sc5_rewImg_frames = 10;
         times.sc5_noRewImg_frames = 10;
-
-        % --- sc6: post trial
-        times.sc6_postTrial_short_ms = 500;
-        times.sc6_postTrial_long_ms = 2000;
 
     case 'DESKTOP-RV80PF6'  % lab monkeyLogic computer
 
-        % video runs at 60 Hz
-
+       % video runs at 60 Hz
+        
         % --- sc1: preTrial
         times.sc1_preTrial_ms = 500;
 
@@ -333,10 +311,6 @@ switch COMPUTER
         times.sc5_choiceImg_frames = 10;
         times.sc5_rewImg_frames = 10;
         times.sc5_noRewImg_frames = 10;
-
-        % --- sc6: post trial
-        times.sc6_postTrial_short_ms = 500;
-        times.sc6_postTrial_long_ms = 2000;
 
 
 
