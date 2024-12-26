@@ -598,7 +598,6 @@ if choices.madeValidResp
                 eventmarker(TrialRecord.User.codes.sc5_joyResp_probRew);
                 TrialRecord.User.blockWins = TrialRecord.User.blockWins + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
-
                 choices.resultStr = 'RESULT: WIN SELECTING HIGH PROB';
             else  % --- LOSS, HIGH PROB ---
                 choices.rewardTrial = false;
@@ -624,10 +623,6 @@ if choices.madeValidResp
                 choices.resultStr = 'RESULT: LOSS SELECTING LOW PROB';
             end
 
-            % zero netWins if error
-            if TrialRecord.User.params.errorZeroRew
-                TrialRecord.User.netWins = 0;
-            end
         end
 
     elseif choices.respDir == RIGHT
@@ -648,11 +643,6 @@ if choices.madeValidResp
                 TrialRecord.User.blockLosses = TrialRecord.User.blockLosses + 1;
                 TrialRecord.User.netWins = TrialRecord.User.blockWins - TrialRecord.User.blockLosses;
                 choices.resultStr = 'RESULT: LOSS SELECTING LOW PROB';
-            end
-
-            % zero netWins if error
-            if TrialRecord.User.params.errorZeroRew
-                TrialRecord.User.netWins = 0;
             end
 
         elseif TrialRecord.User.condArray(c).state == RIGHT
@@ -681,9 +671,11 @@ else  % NO VALID RESPONSE
     choices.resultStr = 'RESULT: NO VALID RESP';
 end
 
-% if enabled, simulate multiple hits by zeroing newtins on error
-if params.zero_netWins_onError && choices.choseCorrect == false
+% SIMULATE MULTIPLE HITS by zeroing newtins on error, if enabled
+if choices.choseCorrect == false && TrialRecord.User.params.zero_netWins_onError
     TrialRecord.User.netWins = 0;
+    TrialRecord.User.blockWins = 0;
+    TrialRecord.User.blockLosses = 0;
 end
 
 % --- if blockLosses > blockWins, reset counters to 0 to prevent

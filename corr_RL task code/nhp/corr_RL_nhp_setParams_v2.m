@@ -96,9 +96,6 @@ params.highRewProb = 1;
 params.lowRewProb = 0;
 
 % --- JOYSTICK RESPONSE
-% params.leftJoyRespWin = [-9.5, 0];
-% params.rightJoyRespWin = [9.5, 0];
-
 params.leftJoyRespWin = [-8, 0];
 params.rightJoyRespWin = [8, 0];
 
@@ -108,7 +105,7 @@ params.rightJoyRespWin = [8, 0];
 params.eye_radius = 4;
 params.joy_radius = 5;
 
-% --- FEEDBACK
+% --- NETWINS COUNTER STIM CONTROL
 params.rewBox_width = 10; % degrees visual angle
 params.rewBox_height = 1;
 params.rewBox_degPerWin = params.rewBox_width/ params.netWin_criterion;
