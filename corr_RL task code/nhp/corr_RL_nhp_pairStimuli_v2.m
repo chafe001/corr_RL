@@ -31,8 +31,10 @@ function [stateA_pairs, stateB_pairs] = corr_RL_nhp_pairStimuli_v2(blockStim, pa
 % sampleStimSpace, and pairStimuli:
 
 % 1. randomized pairs at the start of each block (final design)
+
 % 2. randomized pairs at start of run but held constant over blocks, 
 % varying (randomly initialized) over runs of the program (training stage)
+
 % 3. fixed pairs at start of run held constant over blocks, and over runs
 % of the program (training stage).  To implement must modify 
 % sampleStimSpace so that it is not random, as pairStimuli only
