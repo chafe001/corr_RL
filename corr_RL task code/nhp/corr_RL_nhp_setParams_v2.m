@@ -26,8 +26,11 @@ params.numCueStim = params.numAngles * params.numColors;
 % --- set bar locations on screen
 % params.leftPos = [-1.5 3];
 % params.rightPos = [1.5 3];
-params.leftPos = [-1.5 2.75];
-params.rightPos = [1.5 2.75];
+% params.leftPos = [-1.5 2.75];
+% params.rightPos = [1.5 2.75];
+
+params.leftPos = [-4 0];
+params.rightPos = [4 0];
 
 % --- MOVIE CONTROL
 % --- number of times to show each pair in each movie
